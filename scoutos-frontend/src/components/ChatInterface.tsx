@@ -9,6 +9,16 @@ interface Memory {
   tags: string[];
   timestamp: string;
 }
+import { useUser } from "../hooks/useUser";
+
+interface Memory {
+  id: number;
+  user_id: number;
+  content: string;
+  topic: string;
+  tags: string[];
+  timestamp: string;
+}
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -20,8 +30,10 @@ export default function ChatInterface() {
   async function sendMessage() {
     if (!input.trim()) return;
 
+    // Show the user's message immediately
     setMessages([...messages, { sender: 'user', text: input }]);
     const userText = input;
+    setMessages((msgs) => [...msgs, { sender: 'user', text: userText }]);
     setInput('');
 
     if (!user) return;
