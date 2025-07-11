@@ -20,6 +20,16 @@ def test_user_service_create_and_get():
     db.close()
 
 
+def test_user_service_password_verify():
+    db = SessionLocal()
+    service = UserService(db)
+    username = f"charlie_{uuid.uuid4().hex[:8]}"
+    user = service.create_user({"username": username, "password": "secret"})
+
+    assert service.pw_hasher.verify(user.password_hash, "secret")
+    db.close()
+
+
 def test_memory_service_crud():
     db = SessionLocal()
     user_service = UserService(db)
