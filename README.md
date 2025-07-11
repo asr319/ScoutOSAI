@@ -15,7 +15,7 @@ Run the setup script to install backend and frontend dependencies:
 1. Install dependencies:
    ```bash
    cd scoutos-backend
-   pip install -r requirements.txt
+   pip install -r requirements.txt -r requirements-dev.txt
    ```
 2. Set your OpenAI API key as an environment variable before running the app:
    ```bash
@@ -69,6 +69,7 @@ request.
 Tests use `pytest`. After installing dev dependencies, run:
 ```bash
 cd scoutos-backend
+pip install -r requirements.txt -r requirements-dev.txt
 python -m pytest
 ```
 
