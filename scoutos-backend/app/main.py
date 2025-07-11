@@ -25,6 +25,7 @@ app.include_router(user.router, prefix="/user")
 app.include_router(agent.router, prefix="/agent")
 app.include_router(ai.router, prefix="/ai")
 
+
 @app.get("/")
 async def root():
     return {"status": "ScoutOSAI backend running"}

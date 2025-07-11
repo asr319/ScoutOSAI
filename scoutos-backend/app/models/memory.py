@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, JSON
 import datetime
 from .base import Base
 
+
 class Memory(Base):
     __tablename__ = "memories"
     id = Column(Integer, primary_key=True, index=True)
