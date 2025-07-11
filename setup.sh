@@ -15,8 +15,4 @@ npm install
 # Return to the repository root when finished
 cd "$REPO_ROOT"
 
-#!/bin/bash
-set -e
-cd scoutos-backend && pip install -r requirements.txt -r requirements-dev.txt
-cd ../scoutos-frontend && npm install
 
