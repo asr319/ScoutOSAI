@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from pydantic import BaseModel
 from typing import List
 import openai
@@ -11,7 +11,11 @@ class MemoryIn(BaseModel):
     user_id: int
     content: str
     topic: str
-    tags: List[str]
+    tags: List[str] = []
+
+# Temporary in-memory store until database integration
+fake_memories: List[dict] = []
+
 
 @router.post("/add")
 def add_memory(mem: MemoryIn):
