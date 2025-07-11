@@ -28,6 +28,15 @@ class MemoryOut(MemoryIn):
     timestamp: datetime.datetime
     model_config = {"from_attributes": True}
 
+    class Config:
+        orm_mode = True
+
+
+class MemorySavedResponse(BaseModel):
+    message: str
+    memory: MemoryOut
+
+
 @router.post("/add")
 def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     db_mem = Memory(

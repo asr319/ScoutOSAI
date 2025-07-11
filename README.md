@@ -36,7 +36,7 @@ Run the setup script to install backend and frontend dependencies:
 1. Install packages:
    ```bash
    cd scoutos-frontend
-   npm install
+   pnpm install
    ```
    Copy `.env.example` to `.env` and update the API URL if needed:
    ```bash
@@ -44,7 +44,7 @@ Run the setup script to install backend and frontend dependencies:
    ```
 2. Start the dev server:
    ```bash
-   npm run dev
+   pnpm run dev
    ```
    Visit the app at `http://localhost:5173` by default.
 
@@ -73,15 +73,14 @@ request.
 Tests use `pytest`. After installing dev dependencies, run:
 ```bash
 cd scoutos-backend
-pip install -r requirements.txt -r requirements-dev.txt
-python -m pytest
+pytest
 ```
 
 ### Frontend Tests
 If you add tests using a framework like Jest or Vitest, run:
 ```bash
 cd scoutos-frontend
-npm test
+pnpm test
 ```
 ## Contributing
 Pull requests are welcome. Please run tests before submitting.
