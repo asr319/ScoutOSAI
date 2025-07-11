@@ -9,4 +9,4 @@ def test_add_memory():
     data = {"user_id": 1, "content": "test", "topic": "t", "tags": []}
     resp = client.post("/memory/add", json=data)
     assert resp.status_code == 200
-    assert resp.json()["memory"]["content"] == "test"
+    assert resp.json()["content"] == "test"
