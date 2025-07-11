@@ -3,8 +3,14 @@ from pydantic import BaseModel, Field
 from typing import List
 from app.db import SessionLocal
 from app.services.memory_service import MemoryService
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel, Field
+from typing import List
+from app.db import SessionLocal
+from app.services.memory_service import MemoryService
 
 router = APIRouter()
+
 
 
 def get_db():
