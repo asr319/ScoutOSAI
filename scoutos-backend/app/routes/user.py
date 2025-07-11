@@ -15,36 +15,18 @@ def get_db():
         db.close()
 
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 class UserIn(BaseModel):
     username: str
     password: str
 
-@router.post("/register")
-def register(user: UserIn, db: Session = Depends(get_db)):
-    service = UserService(db)
-    if service.get_by_username(user.username):
-        raise HTTPException(status_code=400, detail="Username taken")
-    return {"message": "User registered", "id": (service.create_user({"username": user.username, "password": user.password})).id}
-
-
-
-@router.post("/login")
-def login(user: UserIn, db: Session = Depends(get_db)):
-    service = UserService(db)
-    db_user = service.get_by_username(user.username)
-    if not db_user:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    try:
-        service.pw_hasher.verify(db_user.password_hash, user.password)
-    except Exception:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    return {"message": "Login successful", "id": db_user.id}
-
-def login(user: UserIn):
-    for u in fake_users:
-        if (
-            u["username"] == user.username
-            and PasswordHasher().verify(u["password_hash"], user.password)
-        ):
-            return {"message": "Login successful", "id": u["id"]}
-    raise HTTPException(status_code=401, detail="Invalid credentials")
+@router.post("/create")
+def create_user(user: UserIn):
+    # TODO: Create user in database
+    return {"message": "User created", "user": user}
