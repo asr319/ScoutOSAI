@@ -4,11 +4,27 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState<{sender: string, text: string}[]>([]);
   const [input, setInput] = useState('');
 
-  function sendMessage() {
+  async function sendMessage() {
     if (!input.trim()) return;
     setMessages([...messages, {sender: 'user', text: input}]);
+    const userText = input;
     setInput('');
-    // TODO: Connect to backend for AI assistant reply
+
+    // Save to backend memory
+    await fetch('http://localhost:8000/memory/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: 1, content: userText, topic: '', tags: [] })
+    });
+
+    // Get AI reply
+    const aiRes = await fetch('http://localhost:8000/ai/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: userText })
+    });
+    const aiData = await aiRes.json();
+    setMessages(msgs => [...msgs, { sender: 'assistant', text: aiData.response }]);
   }
 
   return (
