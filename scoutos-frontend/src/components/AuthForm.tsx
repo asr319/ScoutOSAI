@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 export default function AuthForm({ onAuth }: { onAuth: (user: any) => void }) {
   const [mode, setMode] = useState("login");
   const [username, setUsername] = useState("");
@@ -8,7 +10,7 @@ export default function AuthForm({ onAuth }: { onAuth: (user: any) => void }) {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const res = await fetch(`http://localhost:8000/user/${mode}`, {
+    const res = await fetch(`${API_URL}/user/${mode}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),

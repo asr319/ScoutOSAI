@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
-from app.models.memory import Memory, Base
+from app.models.memory import Memory
 from pydantic import BaseModel
 from typing import List, Optional
 import datetime
@@ -33,7 +33,7 @@ class MemoryOut(MemoryIn):
     id: int
     timestamp: datetime.datetime
 
-@router.post("/add", response_model=MemoryOut)
+@router.post("/add")
 def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     db_mem = Memory(
         user_id=mem.user_id,
@@ -45,7 +45,7 @@ def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     db.add(db_mem)
     db.commit()
     db.refresh(db_mem)
-    return db_mem
+    return {"memory": db_mem}
 
 
 @router.get("/list", response_model=List[MemoryOut])
