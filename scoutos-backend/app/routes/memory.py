@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
 from app.models.memory import Memory
+from app.services.memory_service import MemoryService
 from pydantic import BaseModel, Field
 from typing import List, Optional
 import datetime
 
 router = APIRouter()
-
 
 def get_db():
     db = SessionLocal()
@@ -15,7 +15,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
 
 class MemoryIn(BaseModel):
     user_id: int
@@ -37,7 +36,7 @@ class MemorySavedResponse(BaseModel):
     memory: MemoryOut
 
 
-@router.post("/add", response_model=MemorySavedResponse)
+@router.post("/add")
 def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     db_mem = Memory(
         user_id=mem.user_id,
@@ -49,7 +48,7 @@ def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     db.add(db_mem)
     db.commit()
     db.refresh(db_mem)
-    return {"message": "Memory saved", "memory": db_mem}
+    return {"memory": db_mem}
 
 
 @router.get("/list", response_model=List[MemoryOut])
@@ -80,3 +79,12 @@ def delete_memory(memory_id: int, db: Session = Depends(get_db)):
     db.delete(mem)
     db.commit()
     return {"detail": "Memory deleted"}
+
+
+@router.put("/update/{memory_id}")
+def update_memory(memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)):
+    service = MemoryService(db)
+    updated = service.update_memory(memory_id, mem.dict())
+    if not updated:
+        raise HTTPException(status_code=404, detail="Memory not found")
+    return {"memory": updated}

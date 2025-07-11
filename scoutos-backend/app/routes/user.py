@@ -19,7 +19,6 @@ class UserIn(BaseModel):
     username: str
     password: str
 
-
 @router.post("/register")
 def register(user: UserIn, db: Session = Depends(get_db)):
     service = UserService(db)
