@@ -22,6 +22,10 @@ ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose s
    cd scoutos-frontend
    npm install
    ```
+   Copy `.env.example` to `.env` and update the API URL if needed:
+   ```bash
+   cp .env.example .env
+   ```
 2. Start the dev server:
    ```bash
    npm run dev
