@@ -33,7 +33,6 @@ jobs:
         cache: 'pnpm'
         cache-dependency-path: scoutos-frontend/pnpm-lock.yaml
     - run: corepack enable
-        cache-dependency-path: scoutos-frontend/package-lock.json
     - run: pnpm install --frozen-lockfile
     - run: pnpm run build --if-present
-    - run: pnpm test --if-present --if-present
+    - run: pnpm test --if-present
