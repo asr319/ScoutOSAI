@@ -73,7 +73,7 @@ python -m pytest
 ```
 
 ### Frontend Tests
-If you add tests using a framework like Jest or Vitest, run:
+The frontend uses [Vitest](https://vitest.dev). Run tests with:
 ```bash
 cd scoutos-frontend
 npm test
