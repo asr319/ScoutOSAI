@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List
+import openai
+import os
 
 router = APIRouter()
 
+openai.api_key = os.getenv("OPENAI_API_KEY")
 class MemoryIn(BaseModel):
     user_id: int
     content: str
@@ -16,27 +19,15 @@ fake_memories: List[dict] = []
 
 @router.post("/add")
 def add_memory(mem: MemoryIn):
-    """Add a memory entry for a user."""
-    fake_memories.append(mem.dict())
-    return {"message": "Memory saved!", "memory": mem}
+    # TODO: Store in database
+    if not mem.tags:
+        resp = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": f"Suggest 3 tags for this memory: {mem.content}"}],
+            max_tokens=30
+        )
+        tags = [t.strip() for t in resp.choices[0].message["content"].split(',')]
+    else:
+        tags = mem.tags
 
-
-@router.get("/list")
-def list_memories(user_id: int = Query(..., description="ID of the user")):
-    """Return all memories for the given user."""
-    return [m for m in fake_memories if m["user_id"] == user_id]
-
-
-@router.get("/search")
-def search_memories(
-    user_id: int,
-    topic: Optional[str] = None,
-    tag: Optional[str] = None,
-):
-    """Search memories for a user filtered by topic or tag."""
-    result = [m for m in fake_memories if m["user_id"] == user_id]
-    if topic:
-        result = [m for m in result if m["topic"] == topic]
-    if tag:
-        result = [m for m in result if tag in m.get("tags", [])]
-    return result
+    return {"message": "Memory added", "memory": {**mem.dict(), "tags": tags}}
