@@ -2,9 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import os
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", "postgresql://postgres:password@localhost:5432/scoutos"
-)
+env_url = os.getenv("DATABASE_URL")
+DATABASE_URL = env_url if env_url else "sqlite:///./test.db"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
