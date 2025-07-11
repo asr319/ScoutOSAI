@@ -53,3 +53,21 @@ def test_memory_service_crud():
     assert mem_service.delete_memory(mem.id) is True
     assert mem_service.get_memory(mem.id) is None
     db.close()
+
+
+def test_memory_service_merge():
+    db = SessionLocal()
+    user_service = UserService(db)
+    username = f"merge_{uuid.uuid4().hex[:8]}"
+    user = user_service.create_user({"username": username, "password": "pw"})
+
+    mem_service = MemoryService(db)
+    m1 = mem_service.add_memory({"user_id": user.id, "content": "a", "topic": "t", "tags": ["x"]})
+    m2 = mem_service.add_memory({"user_id": user.id, "content": "b", "topic": "t", "tags": ["y"]})
+
+    merged = mem_service.merge_memories([m1.id, m2.id], user.id)
+    assert merged.content == "a\nb"
+    assert set(merged.tags) == {"x", "y"}
+    assert mem_service.get_memory(m1.id) is None
+    assert mem_service.get_memory(m2.id) is None
+    db.close()

@@ -50,3 +50,37 @@ class MemoryService:
         self.db.delete(mem)
         self.db.commit()
         return True
+
+    def merge_memories(self, memory_ids: list[int], user_id: int) -> Memory | None:
+        """Merge multiple memories into a single entry and delete the originals."""
+
+        if not memory_ids:
+            return None
+
+        mems = (
+            self.db.query(Memory)
+            .filter(Memory.id.in_(memory_ids), Memory.user_id == user_id)
+            .all()
+        )
+
+        if not mems:
+            return None
+
+        combined_content = "\n".join(m.content for m in mems)
+        tags = []
+        for m in mems:
+            if m.tags:
+                tags.extend(m.tags)
+
+        merged = Memory(
+            user_id=user_id,
+            content=combined_content,
+            topic=mems[0].topic,
+            tags=list(dict.fromkeys(tags)),
+        )
+        self.db.add(merged)
+        for m in mems:
+            self.db.delete(m)
+        self.db.commit()
+        self.db.refresh(merged)
+        return merged
