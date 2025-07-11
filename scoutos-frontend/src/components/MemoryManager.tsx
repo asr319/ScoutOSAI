@@ -30,7 +30,7 @@ export default function MemoryManager() {
     }
   }
 
-  useEffect(() => { loadMemories(); }, []);
+  useEffect(() => { loadMemories(); }, [user]);
 
   async function addMemory() {
     if (!user) return;
