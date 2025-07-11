@@ -20,7 +20,12 @@ class MemoryIn(BaseModel):
     user_id: int
     content: str
     topic: str
-    tags: List[str] # type: ignore
+    tags: List[str] = Field(default_factory=list)
+
+
+class MemoryOut(MemoryIn):
+    id: int
+    timestamp: datetime.datetime
 
 @router.post("/add")
 def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
