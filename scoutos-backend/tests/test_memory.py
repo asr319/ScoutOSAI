@@ -21,3 +21,20 @@ def test_update_memory():
     resp = client.put(f"/memory/update/{memory_id}", json=updated)
     assert resp.status_code == 200
     assert resp.json()["memory"]["content"] == "updated"
+
+
+def test_list_and_search_memory():
+    data = {"user_id": 2, "content": "hello", "topic": "greet", "tags": ["a"]}
+    client.post("/memory/add", json=data)
+
+    list_resp = client.get("/memory/list", params={"user_id": 2})
+    assert list_resp.status_code == 200
+    assert isinstance(list_resp.json(), list)
+    assert list_resp.json()[0]["content"] == "hello"
+
+    search_resp = client.get(
+        "/memory/search",
+        params={"user_id": 2, "topic": "greet", "tag": "a"},
+    )
+    assert search_resp.status_code == 200
+    assert search_resp.json()[0]["topic"] == "greet"
