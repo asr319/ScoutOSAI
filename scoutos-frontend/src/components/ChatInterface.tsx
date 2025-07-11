@@ -1,5 +1,14 @@
 import { useState } from "react";
 
+interface Memory {
+  id: number;
+  user_id: number;
+  content: string;
+  topic: string;
+  tags: string[];
+  timestamp: string;
+}
+
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function ChatInterface() {
@@ -26,11 +35,15 @@ export default function ChatInterface() {
         }),
       });
       const data = await response.json();
+      const saved: Memory | undefined = data.memory;
 
-      // Display confirmation from the API
+      // Display confirmation from the API using returned memory data
+      const confirmation = saved
+        ? `Memory "${saved.content}" saved (id ${saved.id}).`
+        : 'Memory saved!';
       setMessages((msgs) => [
         ...msgs,
-        { sender: 'assistant', text: data.message || 'Memory saved!' },
+        { sender: 'assistant', text: confirmation },
       ]);
     } catch (err) {
       console.error(err);
