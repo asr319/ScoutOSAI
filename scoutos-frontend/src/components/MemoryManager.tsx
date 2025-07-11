@@ -43,7 +43,7 @@ export default function MemoryManager() {
     });
     if (res.ok) {
       const mem = await res.json();
-      setMemories([...memories, mem]);
+      setMemories([...memories, mem.memory]);
       setContent("");
       setTopic("");
       setTags("");
