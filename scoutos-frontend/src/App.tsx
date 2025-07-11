@@ -1,4 +1,13 @@
 import ChatInterface from './components/ChatInterface';
+import MemoryManager from './components/MemoryManager';
+import AuthForm from './components/AuthForm';
+import { Toaster } from 'react-hot-toast';
+import { UserProvider, useUser } from './context/UserContext';
+import MemoryManager from './components/MemoryManager';
+import AuthForm from './components/AuthForm';
+import { Toaster } from 'react-hot-toast';
+import { UserProvider } from './context/UserContext';
+import { useUser } from './hooks/useUser';
 import './index.css';
 
 function Main() {
