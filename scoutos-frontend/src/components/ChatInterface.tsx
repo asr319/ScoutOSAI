@@ -1,30 +1,46 @@
 import { useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 export default function ChatInterface() {
   const [messages, setMessages] = useState<{sender: string, text: string}[]>([]);
   const [input, setInput] = useState('');
 
   async function sendMessage() {
+  async function sendMessage() {
     if (!input.trim()) return;
-    setMessages([...messages, {sender: 'user', text: input}]);
+
+    // Show the user's message immediately
+    setMessages([...messages, { sender: 'user', text: input }]);
     const userText = input;
     setInput('');
 
-    // Save to backend memory
-    await fetch('http://localhost:8000/memory/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: 1, content: userText, topic: '', tags: [] })
-    });
+    // Call the backend to store the memory
+    try {
+      const response = await fetch(`${API_URL}/memory/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: 1, // Replace with real user/session info
+          content: userText,
+          topic: 'General',
+          tags: [],
+        }),
+      });
+      const data = await response.json();
 
-    // Get AI reply
-    const aiRes = await fetch('http://localhost:8000/ai/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: userText })
-    });
-    const aiData = await aiRes.json();
-    setMessages(msgs => [...msgs, { sender: 'assistant', text: aiData.response }]);
+      // Display confirmation from the API
+      setMessages((msgs) => [
+        ...msgs,
+        { sender: 'assistant', text: data.message || 'Memory saved!' },
+      ]);
+    } catch (err) {
+      console.error(err);
+      setMessages((msgs) => [
+        ...msgs,
+        { sender: 'assistant', text: 'Error saving memory!' },
+      ]);
+    }
   }
 
   return (
