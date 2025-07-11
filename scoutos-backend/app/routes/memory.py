@@ -4,6 +4,8 @@ from typing import List
 
 router = APIRouter()
 
+fake_memories = []  # Replace with real DB in production
+
 class MemoryIn(BaseModel):
     user_id: int
     content: str
@@ -12,5 +14,17 @@ class MemoryIn(BaseModel):
 
 @router.post("/add")
 def add_memory(mem: MemoryIn):
-    # TODO: Store in database
-    return {"message": "Memory added", "memory": mem}
+    memory_entry = {
+        "id": len(fake_memories) + 1,
+        "user_id": mem.user_id,
+        "content": mem.content,
+        "topic": mem.topic,
+        "tags": mem.tags,
+    }
+    fake_memories.append(memory_entry)
+    return {"message": "Memory added", "memory": memory_entry}
+
+@router.get("/list/{user_id}")
+def list_memories(user_id: int):
+    user_mems = [m for m in fake_memories if m["user_id"] == user_id]
+    return {"memories": user_mems}

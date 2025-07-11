@@ -1,22 +1,22 @@
 import { useState } from "react";
 
-export default function ChatInterface() {
-  const [messages, setMessages] = useState<{sender: string, text: string}[]>([]);
-  const [input, setInput] = useState('');
+export default function ChatInterface({ user }: { user: any }) {
+  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
+  const [input, setInput] = useState("");
 
   function sendMessage() {
     if (!input.trim()) return;
-    setMessages([...messages, {sender: 'user', text: input}]);
-    setInput('');
-    // TODO: Connect to backend for AI assistant reply
+    setMessages([...messages, { sender: "user", text: input }]);
+    setInput("");
+    // TODO: Connect to backend for AI assistant reply, passing user.id
   }
 
   return (
     <div className="w-full max-w-xl mx-auto my-8 bg-white rounded-2xl shadow-lg p-4">
       <div className="mb-4 h-80 overflow-y-auto">
         {messages.map((msg, i) => (
-          <div key={i} className={msg.sender === 'user' ? 'text-right' : 'text-left'}>
-            <span className={`inline-block p-2 my-1 rounded-lg ${msg.sender === 'user' ? 'bg-blue-200' : 'bg-gray-200'}`}>
+          <div key={i} className={msg.sender === "user" ? "text-right" : "text-left"}>
+            <span className={`inline-block p-2 my-1 rounded-lg ${msg.sender === "user" ? "bg-blue-200" : "bg-gray-200"}`}>
               {msg.text}
             </span>
           </div>
@@ -26,14 +26,13 @@ export default function ChatInterface() {
         <input
           className="flex-1 border p-2 rounded-xl"
           value={input}
-          onChange={e => setInput(e.target.value)}
+          onChange={(e) => setInput(e.target.value)}
           placeholder="Ask ScoutOS..."
-          onKeyDown={e => e.key === 'Enter' && sendMessage()}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded-xl"
-          onClick={sendMessage}
-        >Send</button>
+        <button className="bg-blue-600 text-white px-4 py-2 rounded-xl" onClick={sendMessage}>
+          Send
+        </button>
       </div>
     </div>
   );
