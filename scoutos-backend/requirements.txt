@@ -8,4 +8,4 @@ python-dotenv==1.1.1
 httpx>=0.25,<0.29
 openai==1.95.0
 argon2-cffi==25.1.0
-starlette==0.47.1
+starlette==0.46.1
