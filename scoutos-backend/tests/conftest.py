@@ -1,6 +1,11 @@
 import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
+# Ensure the backend package is on the Python path when running from the
+# repository root. PyTest may invoke this file with a working directory that
+# does not include ``scoutos-backend`` on ``sys.path``.
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 # Override the database URL so tests use a local SQLite file
 os.environ["DATABASE_URL"] = "sqlite:///./test.db"
 

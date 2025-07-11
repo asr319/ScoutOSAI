@@ -38,7 +38,7 @@ def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     db.add(db_mem)
     db.commit()
     db.refresh(db_mem)
-    return {"memory": db_mem}
+    return db_mem
 
 
 @router.get("/list", response_model=List[MemoryOut])
