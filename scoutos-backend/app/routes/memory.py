@@ -74,7 +74,7 @@ def search_memories(
 
 @router.delete("/delete/{memory_id}")
 def delete_memory(memory_id: int, db: Session = Depends(get_db)):
-    mem = db.query(Memory).get(memory_id)
+    mem = db.get(Memory, memory_id)
     if not mem:
         raise HTTPException(status_code=404, detail="Memory not found")
     db.delete(mem)
