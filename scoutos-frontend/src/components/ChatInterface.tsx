@@ -1,14 +1,16 @@
 import { useState } from "react";
 
-export default function ChatInterface({ user }: { user: any }) {
-  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
-  const [input, setInput] = useState("");
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-  function sendMessage() {
+export default function ChatInterface() {
+  const [messages, setMessages] = useState<{sender: string, text: string}[]>([]);
+  const [input, setInput] = useState('');
+
+  async function sendMessage() {
     if (!input.trim()) return;
-    setMessages([...messages, { sender: "user", text: input }]);
-    setInput("");
-    // TODO: Connect to backend for AI assistant reply, passing user.id
+    setMessages([...messages, {sender: 'user', text: input}]);
+    setInput('');
+    // TODO: Connect to backend for AI assistant reply
   }
 
   return (
