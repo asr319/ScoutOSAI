@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, JSON
-from app.models.base import Base
+from .base import Base
 import datetime
 
 class Memory(Base):

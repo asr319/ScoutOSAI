@@ -2,6 +2,11 @@
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
 name: Node.js CI
+permissions:
+  contents: read
+defaults:
+  run:
+    working-directory: scoutos-frontend
 
 on:
   push:
@@ -26,6 +31,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: scoutos-frontend/package-lock.json
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    - run: npm test --if-present
