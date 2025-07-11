@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import memory, user, agent
+from app.routes import memory, user, agent, ai
 
 app = FastAPI(title="ScoutOSAI Backend")
 
