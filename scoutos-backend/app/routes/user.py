@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import hashlib
+from argon2 import PasswordHasher
 
 router = APIRouter()
 
@@ -16,7 +16,7 @@ def register(user: UserIn):
         raise HTTPException(status_code=400, detail="Username taken")
     user_entry = {
         "username": user.username,
-        "password_hash": hashlib.sha256(user.password.encode()).hexdigest(),
+        "password_hash": PasswordHasher().hash(user.password),
         "id": len(fake_users) + 1
     }
     fake_users.append(user_entry)
@@ -25,6 +25,6 @@ def register(user: UserIn):
 @router.post("/login")
 def login(user: UserIn):
     for u in fake_users:
-        if u["username"] == user.username and u["password_hash"] == hashlib.sha256(user.password.encode()).hexdigest():
+        if u["username"] == user.username and PasswordHasher().verify(u["password_hash"], user.password):
             return {"message": "Login successful", "id": u["id"]}
     raise HTTPException(status_code=401, detail="Invalid credentials")

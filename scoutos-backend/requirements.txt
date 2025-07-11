@@ -5,3 +5,5 @@ asyncpg
 psycopg2-binary
 pydantic
 python-dotenv
+
+argon2-cffi==25.1.0
