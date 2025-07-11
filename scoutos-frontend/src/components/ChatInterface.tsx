@@ -3,14 +3,42 @@ import { useState } from "react";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function ChatInterface() {
-  const [messages, setMessages] = useState<{sender: string, text: string}[]>([]);
+  const [messages, setMessages] = useState<{ sender: string, text: string }[]>([]);
   const [input, setInput] = useState('');
 
   async function sendMessage() {
     if (!input.trim()) return;
-    setMessages([...messages, {sender: 'user', text: input}]);
+
+    setMessages([...messages, { sender: 'user', text: input }]);
+    const userText = input;
     setInput('');
-    // TODO: Connect to backend for AI assistant reply
+
+    // Call the backend to store the memory
+    try {
+      const response = await fetch(`${API_URL}/memory/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: 1, // Replace with real user/session info
+          content: userText,
+          topic: 'General',
+          tags: [],
+        }),
+      });
+      const data = await response.json();
+
+      // Display confirmation from the API
+      setMessages((msgs) => [
+        ...msgs,
+        { sender: 'assistant', text: data.message || 'Memory saved!' },
+      ]);
+    } catch (err) {
+      console.error(err);
+      setMessages((msgs) => [
+        ...msgs,
+        { sender: 'assistant', text: 'Error saving memory!' },
+      ]);
+    }
   }
 
   return (
