@@ -5,15 +5,9 @@ from app.models.memory import Memory, Base
 from pydantic import BaseModel
 from typing import List, Optional
 import datetime
-import openai
-import os
 
 router = APIRouter()
 
-fake_memories: List[dict] = []  # Replace with real DB in production
-
-
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def get_db():
     db = SessionLocal()
@@ -33,7 +27,13 @@ class MemoryOut(MemoryIn):
     id: int
     timestamp: datetime.datetime
 
-@router.post("/add", response_model=MemoryOut)
+
+class MemorySavedResponse(BaseModel):
+    message: str
+    memory: MemoryOut
+
+
+@router.post("/add", response_model=MemorySavedResponse)
 def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     db_mem = Memory(
         user_id=mem.user_id,
@@ -45,7 +45,7 @@ def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     db.add(db_mem)
     db.commit()
     db.refresh(db_mem)
-    return db_mem
+    return {"message": "Memory saved", "memory": db_mem}
 
 
 @router.get("/list", response_model=List[MemoryOut])
