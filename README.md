@@ -10,11 +10,16 @@ ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose s
    cd scoutos-backend
    pip install -r requirements.txt
    ```
-2. Start the API:
+2. Set your OpenAI API key as an environment variable before running the app:
+   ```bash
+   export OPENAI_API_KEY=<your-key>
+   ```
+3. Start the API:
    ```bash
    uvicorn app.main:app --reload
    ```
    The API will be available at `http://localhost:8000`.
+   The backend exposes an `/ai/chat` endpoint which proxies requests to OpenAI.
 
 ### Frontend
 1. Install packages:
