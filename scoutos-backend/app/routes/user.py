@@ -14,14 +14,6 @@ def get_db():
     finally:
         db.close()
 
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 class UserIn(BaseModel):
     username: str
     password: str
