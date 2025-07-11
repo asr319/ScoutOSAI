@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
 from app.models.memory import Memory
+from app.services.memory_service import MemoryService
 from pydantic import BaseModel, Field
 from typing import List, Optional
 import datetime
@@ -69,3 +70,12 @@ def delete_memory(memory_id: int, db: Session = Depends(get_db)):
     db.delete(mem)
     db.commit()
     return {"detail": "Memory deleted"}
+
+
+@router.put("/update/{memory_id}")
+def update_memory(memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)):
+    service = MemoryService(db)
+    updated = service.update_memory(memory_id, mem.dict())
+    if not updated:
+        raise HTTPException(status_code=404, detail="Memory not found")
+    return {"memory": updated}

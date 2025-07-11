@@ -10,3 +10,14 @@ def test_add_memory():
     resp = client.post("/memory/add", json=data)
     assert resp.status_code == 200
     assert resp.json()["memory"]["content"] == "test"
+
+
+def test_update_memory():
+    data = {"user_id": 1, "content": "init", "topic": "t", "tags": []}
+    resp = client.post("/memory/add", json=data)
+    memory_id = resp.json()["memory"]["id"]
+
+    updated = {"user_id": 1, "content": "updated", "topic": "t", "tags": []}
+    resp = client.put(f"/memory/update/{memory_id}", json=updated)
+    assert resp.status_code == 200
+    assert resp.json()["memory"]["content"] == "updated"
