@@ -20,37 +20,7 @@ class MemoryIn(BaseModel):
     user_id: int
     content: str
     topic: str
-    tags: List[str] = Field(default_factory=list)
-
-
-class MemoryOut(MemoryIn):
-    id: int
-    timestamp: datetime.datetime
-
-    class Config:
-        orm_mode = True
-
-
-class MemorySavedResponse(BaseModel):
-    message: str
-    memory: MemoryOut
-
-    tags: List[str] = Field(default_factory=list)
-
-
-class MemoryOut(MemoryIn):
-    id: int
-    timestamp: datetime.datetime
-    model_config = {"from_attributes": True}
-
-    class Config:
-        orm_mode = True
-
-
-class MemorySavedResponse(BaseModel):
-    message: str
-    memory: MemoryOut
-
+    tags: List[str] # type: ignore
 
 @router.post("/add")
 def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):

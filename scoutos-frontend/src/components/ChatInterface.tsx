@@ -31,7 +31,6 @@ export default function ChatInterface() {
     if (!input.trim()) return;
 
     // Show the user's message immediately
-    setMessages([...messages, { sender: 'user', text: input }]);
     const userText = input;
     setMessages((msgs) => [...msgs, { sender: 'user', text: userText }]);
     setInput('');

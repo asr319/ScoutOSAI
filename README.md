@@ -25,7 +25,7 @@ Run the setup script to install backend and frontend dependencies:
    ```bash
    export OPENAI_API_KEY=<your-key>
    ```
-3. Start the API:
+4. Start the API:
    ```bash
    uvicorn app.main:app --reload
    ```
@@ -73,7 +73,8 @@ request.
 Tests use `pytest`. After installing dev dependencies, run:
 ```bash
 cd scoutos-backend
-pytest
+pip install -r requirements.txt -r requirements-dev.txt
+python -m pytest
 ```
 
 ### Frontend Tests
