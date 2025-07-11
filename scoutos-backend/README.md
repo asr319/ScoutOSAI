@@ -37,7 +37,12 @@ host environment.
 
 ## Tests
 
-Run `pytest` from this folder to execute the unit tests.
+Install the development requirements before running the unit tests:
+
+```bash
+pip install -r requirements.txt -r requirements-dev.txt
+pytest
+```
 
 Contributions are welcome!  See the repository root `README.md` for more
 information.
