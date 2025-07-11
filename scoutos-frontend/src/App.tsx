@@ -3,8 +3,14 @@ import './index.css';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100">
+<<<<<<< HEAD
+    <div className="min-h-screen bg-gray-100 p-4 space-y-4">
+=======
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      <Toaster position="top-right" />
+>>>>>>> origin/main
       <ChatInterface />
+      <MemoryManager />
     </div>
   );
 }

@@ -5,4 +5,4 @@ asyncpg
 psycopg2-binary
 pydantic
 python-dotenv
-openai
+httpx
