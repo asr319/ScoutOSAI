@@ -17,11 +17,15 @@ Run the setup script to install backend and frontend dependencies:
    cd scoutos-backend
    pip install -r requirements.txt
    ```
-2. Set your OpenAI API key as an environment variable before running the app:
+2. Copy `.env.example` to `.env` and update credentials if needed:
+   ```bash
+   cp .env.example .env
+   ```
+3. Set your OpenAI API key as an environment variable before running the app:
    ```bash
    export OPENAI_API_KEY=<your-key>
    ```
-3. Start the API:
+4. Start the API:
    ```bash
    uvicorn app.main:app --reload
    ```
