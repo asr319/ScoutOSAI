@@ -5,11 +5,15 @@
 
 version: 2
 updates:
-  - package-ecosystem: pip
+  - package-ecosystem: "pip"
     directory: "/scoutos-backend"
     schedule:
       interval: "weekly"
-  - package-ecosystem: npm
+  - package-ecosystem: "npm"
     directory: "/scoutos-frontend"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
       interval: "weekly"
