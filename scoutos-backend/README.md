@@ -7,6 +7,7 @@ for user and memory management.
 
 ```bash
 pip install -r requirements.txt
+cp .env.example .env  # configure DATABASE_URL if needed
 ```
 
 ## Development
