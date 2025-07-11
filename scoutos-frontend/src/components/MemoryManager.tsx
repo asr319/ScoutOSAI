@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 interface Memory {
   id: number;
   user_id: number;
@@ -19,7 +21,7 @@ export default function MemoryManager() {
   const userId = 1;
 
   async function loadMemories() {
-    const res = await fetch(`http://localhost:8000/memory/list?user_id=${userId}`);
+    const res = await fetch(`${API_URL}/memory/list?user_id=${userId}`);
     if (res.ok) {
       const data = await res.json();
       setMemories(data);
@@ -29,7 +31,7 @@ export default function MemoryManager() {
   useEffect(() => { loadMemories(); }, []);
 
   async function addMemory() {
-    const res = await fetch("http://localhost:8000/memory/add", {
+    const res = await fetch(`${API_URL}/memory/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -53,7 +55,7 @@ export default function MemoryManager() {
     params.append("user_id", String(userId));
     if (searchTopic) params.append("topic", searchTopic);
     if (searchTag) params.append("tag", searchTag);
-    const res = await fetch(`http://localhost:8000/memory/search?${params.toString()}`);
+    const res = await fetch(`${API_URL}/memory/search?${params.toString()}`);
     if (res.ok) {
       const data = await res.json();
       setMemories(data);
@@ -61,7 +63,7 @@ export default function MemoryManager() {
   }
 
   async function deleteMemory(id: number) {
-    await fetch(`http://localhost:8000/memory/delete/${id}`, { method: 'DELETE' });
+    await fetch(`${API_URL}/memory/delete/${id}`, { method: 'DELETE' });
     setMemories(memories.filter(m => m.id !== id));
   }
 
