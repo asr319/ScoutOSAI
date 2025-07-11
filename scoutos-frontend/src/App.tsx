@@ -3,6 +3,12 @@ import { Toaster } from 'react-hot-toast';
 import './index.css';
 
 function App() {
+  const [user, setUser] = useState<any>(null);
+
+  if (!user) {
+    return <AuthForm onAuth={setUser} />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       <Toaster position="top-right" />
