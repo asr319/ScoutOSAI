@@ -25,7 +25,7 @@ Run the setup script to install backend and frontend dependencies:
    ```bash
    export OPENAI_API_KEY=<your-key>
    ```
-4. Start the API:
+3. Start the API:
    ```bash
    uvicorn app.main:app --reload
    ```
