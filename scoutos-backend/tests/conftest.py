@@ -1,4 +1,5 @@
-import os
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # Override the database URL so tests use a local SQLite file
 os.environ["DATABASE_URL"] = "sqlite:///./test.db"
