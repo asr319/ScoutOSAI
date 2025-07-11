@@ -24,8 +24,7 @@ app.add_middleware(
 )
 
 # Create tables if they do not exist
-UserBase.metadata.create_all(bind=engine)
-MemoryBase.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app.include_router(memory.router, prefix="/memory")
 app.include_router(user.router, prefix="/user")
