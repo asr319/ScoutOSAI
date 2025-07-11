@@ -22,7 +22,7 @@ class MemoryService:
     def get_memory(self, memory_id: int) -> Memory | None:
         """Retrieve a ``Memory`` by primary key."""
 
-        return self.db.query(Memory).get(memory_id)
+        return self.db.get(Memory, memory_id)
 
     def list_memories(self, user_id: int) -> list[Memory]:
         """Return all memories for a user."""
@@ -32,7 +32,7 @@ class MemoryService:
     def update_memory(self, memory_id: int, update_data: dict) -> Memory | None:
         """Update fields on a ``Memory`` and persist the changes."""
 
-        mem = self.get_memory(memory_id)
+        mem = self.db.get(Memory, memory_id)
         if mem is None:
             return None
         for key, value in update_data.items():
@@ -44,7 +44,7 @@ class MemoryService:
     def delete_memory(self, memory_id: int) -> bool:
         """Delete a ``Memory`` by id."""
 
-        mem = self.get_memory(memory_id)
+        mem = self.db.get(Memory, memory_id)
         if mem is None:
             return False
         self.db.delete(mem)
