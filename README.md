@@ -1,6 +1,6 @@
 # ScoutOSAI
 
-ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose sets up the backend and a PostgreSQL database.
+ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose sets up the backend and a PostgreSQL database.  This repository also contains basic CI and deployment instructions for hosting the project in the cloud.  Each subdirectory contains its own README with additional details.
 
 ## Getting Started
 
@@ -10,7 +10,8 @@ ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose s
    cd scoutos-backend
    pip install -r requirements.txt
    ```
-2. Start the API:
+2. Copy `.env.example` to `.env` and edit values as needed.
+3. Start the API:
    ```bash
    uvicorn app.main:app --reload
    ```
@@ -22,7 +23,8 @@ ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose s
    cd scoutos-frontend
    npm install
    ```
-2. Start the dev server:
+2. Copy `.env.example` to `.env` and set `VITE_API_URL`.
+3. Start the dev server:
    ```bash
    npm run dev
    ```
@@ -34,13 +36,26 @@ Alternatively start both backend and database using Docker:
 docker-compose up
 ```
 
+## Deployment
+
+The backend is packaged in a Dockerfile and can be deployed to platforms such as
+Railway or Fly.io.  The frontend can be deployed to Vercel or Netlify.
+
+1. Build and push the backend image, setting the `DATABASE_URL` and `OPENAI_API_KEY`
+   environment variables in your hosting provider.
+2. Deploy the `scoutos-frontend` directory as a static site.  Set the
+   environment variable `VITE_API_URL` to the public URL of the backend API.
+
+Basic CI is configured using GitHub Actions and runs backend tests on each pull
+request.
+
 ## Running Tests
 
 ### Backend Tests
 Tests use `pytest`. After installing dev dependencies, run:
 ```bash
 cd scoutos-backend
-pytest
+python -m pytest
 ```
 
 ### Frontend Tests
@@ -49,3 +64,8 @@ If you add tests using a framework like Jest or Vitest, run:
 cd scoutos-frontend
 npm test
 ```
+## Contributing
+Pull requests are welcome. Please run tests before submitting.
+
+
+
