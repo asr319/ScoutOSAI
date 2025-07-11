@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useUser } from "../context/UserContext";
 
 interface Memory {
   id: number;
@@ -12,6 +13,7 @@ interface Memory {
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function ChatInterface() {
+  const { user } = useUser();
   const [messages, setMessages] = useState<{ sender: string, text: string }[]>([]);
   const [input, setInput] = useState('');
 
@@ -22,13 +24,15 @@ export default function ChatInterface() {
     const userText = input;
     setInput('');
 
+    if (!user) return;
+
     // Call the backend to store the memory
     try {
       const response = await fetch(`${API_URL}/memory/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          user_id: 1, // Replace with real user/session info
+          user_id: user.id,
           content: userText,
           topic: 'General',
           tags: [],
