@@ -4,6 +4,13 @@ ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose s
 
 ## Getting Started
 
+Run the setup script to install backend and frontend dependencies:
+
+```bash
+./setup.sh
+```
+
+
 ### Backend
 1. Install dependencies:
    ```bash
