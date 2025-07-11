@@ -26,6 +26,7 @@ class MemoryIn(BaseModel):
 class MemoryOut(MemoryIn):
     id: int
     timestamp: datetime.datetime
+    model_config = {"from_attributes": True}
 
 @router.post("/add")
 def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
