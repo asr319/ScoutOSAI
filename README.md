@@ -17,7 +17,11 @@ Run the setup script to install backend and frontend dependencies:
    cd scoutos-backend
    pip install -r requirements.txt -r requirements-dev.txt
    ```
-2. Set your OpenAI API key as an environment variable before running the app:
+2. Copy `.env.example` to `.env` and update credentials if needed:
+   ```bash
+   cp .env.example .env
+   ```
+3. Set your OpenAI API key as an environment variable before running the app:
    ```bash
    export OPENAI_API_KEY=<your-key>
    ```
@@ -32,7 +36,7 @@ Run the setup script to install backend and frontend dependencies:
 1. Install packages:
    ```bash
    cd scoutos-frontend
-   npm install
+   pnpm install
    ```
    Copy `.env.example` to `.env` and update the API URL if needed:
    ```bash
@@ -40,7 +44,7 @@ Run the setup script to install backend and frontend dependencies:
    ```
 2. Start the dev server:
    ```bash
-   npm run dev
+   pnpm run dev
    ```
    Visit the app at `http://localhost:5173` by default.
 
@@ -74,10 +78,10 @@ python -m pytest
 ```
 
 ### Frontend Tests
-If you add tests using a framework like Jest or Vitest, run:
+The frontend uses [Vitest](https://vitest.dev). Run tests with:
 ```bash
 cd scoutos-frontend
-npm test
+pnpm test
 ```
 ## Contributing
 Pull requests are welcome. Please run tests before submitting.

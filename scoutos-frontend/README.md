@@ -6,7 +6,7 @@ the backend API and provides a simple chat interface.
 ## Setup
 
 ```bash
-npm install
+pnpm install
 ```
 
 During development the app expects the backend URL in `VITE_API_URL`.
@@ -19,7 +19,7 @@ VITE_API_URL=http://localhost:8000
 Run the development server with
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ## Deployment
@@ -29,7 +29,14 @@ Ensure the `VITE_API_URL` environment variable points to your deployed backend.
 
 ## Linting and Tests
 
-`npm run lint` will run ESLint.  If you add tests with a framework such as Jest
-or Vitest they can be run with `npm test`.
+`npm run lint` will run ESLint.
+
+### Running Tests
+
+Tests are written with [Vitest](https://vitest.dev). Execute them with:
+
+```bash
+npm test
+```
 
 Contributions are welcome!
