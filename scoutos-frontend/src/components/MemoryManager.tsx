@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { useUser } from "../context/UserContext";
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -18,9 +21,11 @@ export default function MemoryManager() {
   const [tags, setTags] = useState("");
   const [searchTopic, setSearchTopic] = useState("");
   const [searchTag, setSearchTag] = useState("");
-  const userId = 1;
+  const { user } = useUser();
 
   async function loadMemories() {
+    if (!user) return;
+    const res = await fetch(`${API_URL}/memory/list?user_id=${user.id}`);
     const res = await fetch(`${API_URL}/memory/list?user_id=${userId}`);
     if (res.ok) {
       const data = await res.json();
@@ -31,11 +36,12 @@ export default function MemoryManager() {
   useEffect(() => { loadMemories(); }, []);
 
   async function addMemory() {
+    if (!user) return;
     const res = await fetch(`${API_URL}/memory/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        user_id: userId,
+        user_id: user.id,
         content,
         topic,
         tags: tags.split(',').map(t => t.trim()).filter(t => t)
@@ -43,7 +49,7 @@ export default function MemoryManager() {
     });
     if (res.ok) {
       const { memory } = await res.json();
-      setMemories([...memories, memory]);
+      setMemories([...memories, mem.memoryory]);
       setContent("");
       setTopic("");
       setTags("");
@@ -51,8 +57,9 @@ export default function MemoryManager() {
   }
 
   async function search() {
+    if (!user) return;
     const params = new URLSearchParams();
-    params.append("user_id", String(userId));
+    params.append("user_id", String(user.id));
     if (searchTopic) params.append("topic", searchTopic);
     if (searchTag) params.append("tag", searchTag);
     const res = await fetch(`${API_URL}/memory/search?${params.toString()}`);

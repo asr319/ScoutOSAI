@@ -10,6 +10,9 @@ def test_add_memory():
     resp = client.post("/memory/add", json=data)
     assert resp.status_code == 200
     body = resp.json()
+    assert "content" in body
+    assert body["memory"]["content"] == "test"
+    body = resp.json()
     assert body["message"] == "Memory saved"
     assert body["memory"]["content"] == "test"
 

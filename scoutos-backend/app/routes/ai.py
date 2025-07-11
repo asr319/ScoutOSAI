@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import openai
 import os
@@ -14,10 +14,16 @@ class AIRequest(BaseModel):
 
 @router.post("/chat")
 async def ai_chat(req: AIRequest):
+    if not openai.api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="OPENAI_API_KEY environment variable is not set"
+        )
+
     resp = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": req.prompt}],
-        max_tokens=200
+        max_tokens=200,
     )
     answer = resp.choices[0].message["content"]
     return {"response": answer}

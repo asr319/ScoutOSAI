@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { useUser } from "../context/UserContext";
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-export default function AuthForm({ onAuth }: { onAuth: (user: any) => void }) {
+export default function AuthForm() {
+  const { setUser } = useUser();
   const [mode, setMode] = useState("login");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +22,7 @@ export default function AuthForm({ onAuth }: { onAuth: (user: any) => void }) {
     const data = await res.json();
     if (res.ok) {
       setMsg(data.message);
-      onAuth({ username, id: data.id });
+      setUser({ username, id: data.id });
     } else {
       setMsg(data.detail);
     }

@@ -1,10 +1,18 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 from argon2 import PasswordHasher
+from app.db import SessionLocal
+from app.services.user_service import UserService
 
 router = APIRouter()
 
-fake_users = []  # Replace with real DB in production
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 class UserIn(BaseModel):
@@ -13,19 +21,26 @@ class UserIn(BaseModel):
 
 
 @router.post("/register")
-def register(user: UserIn):
-    if any(u["username"] == user.username for u in fake_users):
+def register(user: UserIn, db: Session = Depends(get_db)):
+    service = UserService(db)
+    if service.get_by_username(user.username):
         raise HTTPException(status_code=400, detail="Username taken")
-    user_entry = {
-        "username": user.username,
-        "password_hash": PasswordHasher().hash(user.password),
-        "id": len(fake_users) + 1
-    }
-    fake_users.append(user_entry)
-    return {"message": "User registered", "id": user_entry["id"]}
+    return {"message": "User registered", "id": (service.create_user({"username": user.username, "password": user.password})).id}
+
 
 
 @router.post("/login")
+def login(user: UserIn, db: Session = Depends(get_db)):
+    service = UserService(db)
+    db_user = service.get_by_username(user.username)
+    if not db_user:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    try:
+        service.pw_hasher.verify(db_user.password_hash, user.password)
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    return {"message": "Login successful", "id": db_user.id}
+
 def login(user: UserIn):
     for u in fake_users:
         if (
