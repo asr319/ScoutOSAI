@@ -7,13 +7,6 @@ from app.services.memory_service import MemoryService
 router = APIRouter()
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 @router.get("/status")
 def agent_status():
     return {"status": "Agent module placeholder"}

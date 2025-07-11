@@ -27,6 +27,15 @@ class MemoryOut(MemoryIn):
     id: int
     timestamp: datetime.datetime
 
+    class Config:
+        orm_mode = True
+
+
+class MemorySavedResponse(BaseModel):
+    message: str
+    memory: MemoryOut
+
+
 @router.post("/add")
 def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     db_mem = Memory(
