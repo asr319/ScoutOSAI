@@ -1,16 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
 from app.models.memory import Memory
 from pydantic import BaseModel, Field
 from typing import List, Optional
 import datetime
-import openai
-import os
 
 router = APIRouter()
-
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def get_db():
     db = SessionLocal()
