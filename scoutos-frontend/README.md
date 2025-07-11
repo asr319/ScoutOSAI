@@ -29,7 +29,14 @@ Ensure the `VITE_API_URL` environment variable points to your deployed backend.
 
 ## Linting and Tests
 
-`pnpm run lint` will run ESLint.  If you add tests with a framework such as Jest
-or Vitest they can be run with `pnpm test`.
+`npm run lint` will run ESLint.
+
+### Running Tests
+
+Tests are written with [Vitest](https://vitest.dev). Execute them with:
+
+```bash
+npm test
+```
 
 Contributions are welcome!
