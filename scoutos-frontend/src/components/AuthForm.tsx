@@ -2,7 +2,12 @@ import React, { useState } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-export default function AuthForm({ onAuth }: { onAuth: (user: any) => void }) {
+interface User {
+  id: number;
+  username: string;
+}
+
+export default function AuthForm({ onAuth }: { onAuth: (user: User) => void }) {
   const [mode, setMode] = useState("login");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
