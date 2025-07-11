@@ -4,6 +4,13 @@ ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose s
 
 ## Getting Started
 
+Run the setup script to install backend and frontend dependencies:
+
+```bash
+./setup.sh
+```
+
+
 ### Backend
 1. Install dependencies:
    ```bash
@@ -14,7 +21,9 @@ ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose s
    ```bash
    export OPENAI_API_KEY=<your-key>
    ```
-3. Start the API:
+3. *(Optional)* Set `ALLOWED_ORIGINS` with a comma-separated list of allowed
+   origins for CORS. The default is `http://localhost:5173`.
+4. Start the API:
    ```bash
    uvicorn app.main:app --reload
    ```
@@ -25,7 +34,7 @@ ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose s
 1. Install packages:
    ```bash
    cd scoutos-frontend
-   npm install
+   pnpm install
    ```
    Copy `.env.example` to `.env` and update the API URL if needed:
    ```bash
@@ -33,7 +42,7 @@ ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose s
    ```
 2. Start the dev server:
    ```bash
-   npm run dev
+   pnpm run dev
    ```
    Visit the app at `http://localhost:5173` by default.
 
@@ -69,7 +78,7 @@ python -m pytest
 If you add tests using a framework like Jest or Vitest, run:
 ```bash
 cd scoutos-frontend
-npm test
+pnpm test
 ```
 ## Contributing
 Pull requests are welcome. Please run tests before submitting.

@@ -11,4 +11,4 @@ def test_add_memory():
     assert resp.status_code == 200
     body = resp.json()
     assert "content" in body
-    assert body["content"] == "test"
+    assert body["memory"]["content"] == "test"

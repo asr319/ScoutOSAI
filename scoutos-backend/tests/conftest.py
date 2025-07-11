@@ -1,5 +1,5 @@
-import os
-import sys
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # Ensure the backend package is on the Python path when running from the
 # repository root. PyTest may invoke this file with a working directory that
@@ -11,14 +11,13 @@ os.environ["DATABASE_URL"] = "sqlite:///./test.db"
 
 # Import engine after setting DATABASE_URL so it picks up the test URI
 from app.db import engine
-from app.models.user import Base as UserBase, User
-from app.models.memory import Base as MemoryBase, Memory
+from app.models.base import Base
 
-# Ensure all tables exist for the test database
-# Copy the user table onto the memory metadata so SQLAlchemy resolves the
-# foreign key correctly during table creation and inserts.
-User.__table__.to_metadata(MemoryBase.metadata)
-MemoryBase.metadata.create_all(bind=engine)
+# Import models so their metadata is registered with Base
+from app.models import user as user_model, memory as memory_model
+
+# Create all tables for the test database
+Base.metadata.create_all(bind=engine)
 
 # No fixtures are required here, but this file ensures the test DB is initialised
 
