@@ -7,6 +7,7 @@ export default function ChatInterface() {
   const [input, setInput] = useState('');
 
   async function sendMessage() {
+  async function sendMessage() {
     if (!input.trim()) return;
 
     // Show the user's message immediately
