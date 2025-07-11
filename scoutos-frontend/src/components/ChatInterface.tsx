@@ -1,4 +1,14 @@
 import { useState } from "react";
+import { useUser } from "../context/UserContext";
+
+interface Memory {
+  id: number;
+  user_id: number;
+  content: string;
+  topic: string;
+  tags: string[];
+  timestamp: string;
+}
 import { useUser } from "../hooks/useUser";
 
 interface Memory {
