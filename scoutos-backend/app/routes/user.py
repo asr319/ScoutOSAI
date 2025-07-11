@@ -14,17 +14,20 @@ def get_db():
     finally:
         db.close()
 
+
 class UserIn(BaseModel):
     username: str
     password: str
+
 
 @router.post("/register")
 def register(user: UserIn, db: Session = Depends(get_db)):
     service = UserService(db)
     if service.get_by_username(user.username):
         raise HTTPException(status_code=400, detail="Username taken")
-    new_user = service.create_user({"username": user.username, "password": user.password})
-    return {"message": "User registered", "id": new_user.id}
+    return {"message": "User registered", "id": (service.create_user({"username": user.username, "password": user.password})).id}
+
+
 
 @router.post("/login")
 def login(user: UserIn, db: Session = Depends(get_db)):
@@ -38,3 +41,11 @@ def login(user: UserIn, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return {"message": "Login successful", "id": db_user.id}
 
+def login(user: UserIn):
+    for u in fake_users:
+        if (
+            u["username"] == user.username
+            and PasswordHasher().verify(u["password_hash"], user.password)
+        ):
+            return {"message": "Login successful", "id": u["id"]}
+    raise HTTPException(status_code=401, detail="Invalid credentials")

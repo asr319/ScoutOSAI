@@ -3,6 +3,8 @@ import { useUser } from "../context/UserContext";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 interface Memory {
   id: number;
   user_id: number;
@@ -24,6 +26,7 @@ export default function MemoryManager() {
   async function loadMemories() {
     if (!user) return;
     const res = await fetch(`${API_URL}/memory/list?user_id=${user.id}`);
+    const res = await fetch(`${API_URL}/memory/list?user_id=${userId}`);
     if (res.ok) {
       const data = await res.json();
       setMemories(data);
@@ -45,8 +48,8 @@ export default function MemoryManager() {
       })
     });
     if (res.ok) {
-      const mem = await res.json();
-      setMemories([...memories, mem.memory]);
+      const { memory } = await res.json();
+      setMemories([...memories, mem.memoryory]);
       setContent("");
       setTopic("");
       setTags("");

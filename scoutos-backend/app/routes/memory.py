@@ -8,12 +8,14 @@ import datetime
 
 router = APIRouter()
 
+
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
 
 class MemoryIn(BaseModel):
     user_id: int
@@ -26,7 +28,16 @@ class MemoryOut(MemoryIn):
     id: int
     timestamp: datetime.datetime
 
-@router.post("/add")
+    class Config:
+        orm_mode = True
+
+
+class MemorySavedResponse(BaseModel):
+    message: str
+    memory: MemoryOut
+
+
+@router.post("/add", response_model=MemorySavedResponse)
 def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     db_mem = Memory(
         user_id=mem.user_id,
@@ -38,7 +49,7 @@ def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     db.add(db_mem)
     db.commit()
     db.refresh(db_mem)
-    return db_mem
+    return {"message": "Memory saved", "memory": db_mem}
 
 
 @router.get("/list", response_model=List[MemoryOut])
@@ -63,7 +74,7 @@ def search_memories(
 
 @router.delete("/delete/{memory_id}")
 def delete_memory(memory_id: int, db: Session = Depends(get_db)):
-    mem = db.query(Memory).get(memory_id)
+    mem = db.get(Memory, memory_id)
     if not mem:
         raise HTTPException(status_code=404, detail="Memory not found")
     db.delete(mem)

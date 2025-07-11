@@ -3,6 +3,8 @@ import { useUser } from "../context/UserContext";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 export default function AuthForm() {
   const { setUser } = useUser();
   const [mode, setMode] = useState("login");

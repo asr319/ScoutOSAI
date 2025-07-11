@@ -7,3 +7,4 @@ node_modules/
 .DS_Store
 # Ignore SQLite test database
 scoutos-backend/test.db
+*.db
