@@ -18,7 +18,8 @@ uvicorn app.main:app --reload
 ```
 
 The service reads the `DATABASE_URL` environment variable to connect to
-PostgreSQL.
+PostgreSQL. Allowed CORS origins can be set with the `ALLOWED_ORIGINS`
+environment variable (comma separated).
 
 ## API Endpoints
 
