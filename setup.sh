@@ -10,7 +10,10 @@ pip install -r requirements.txt -r requirements-dev.txt
 
 # Install frontend dependencies
 cd "$REPO_ROOT/scoutos-frontend"
-npm install
+if ! command -v pnpm >/dev/null 2>&1; then
+  corepack enable
+fi
+pnpm install
 
 # Return to the repository root when finished
 cd "$REPO_ROOT"
