@@ -6,9 +6,11 @@ router = APIRouter()
 
 fake_users = []  # Replace with real DB in production
 
+
 class UserIn(BaseModel):
     username: str
     password: str
+
 
 @router.post("/register")
 def register(user: UserIn):
@@ -22,9 +24,13 @@ def register(user: UserIn):
     fake_users.append(user_entry)
     return {"message": "User registered", "id": user_entry["id"]}
 
+
 @router.post("/login")
 def login(user: UserIn):
     for u in fake_users:
-        if u["username"] == user.username and PasswordHasher().verify(u["password_hash"], user.password):
+        if (
+            u["username"] == user.username
+            and PasswordHasher().verify(u["password_hash"], user.password)
+        ):
             return {"message": "Login successful", "id": u["id"]}
     raise HTTPException(status_code=401, detail="Invalid credentials")

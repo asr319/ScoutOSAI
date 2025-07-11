@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
-from app.models.memory import Memory, Base
+from app.models.memory import Memory
 from pydantic import BaseModel
 from typing import List, Optional
 import datetime
@@ -15,6 +15,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 class MemoryIn(BaseModel):
     user_id: int
