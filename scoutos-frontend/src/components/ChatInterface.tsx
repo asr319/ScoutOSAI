@@ -3,35 +3,19 @@ import { useState } from "react";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function ChatInterface() {
-  const [messages, setMessages] = useState<{sender: string, text: string}[]>([]);
+  const [messages, setMessages] = useState<{ sender: string, text: string }[]>([]);
   const [input, setInput] = useState('');
 
   async function sendMessage() {
-<<<<<<< HEAD
-  async function sendMessage() {
-=======
->>>>>>> origin/main
     if (!input.trim()) return;
 
-    // Show the user's message immediately
     setMessages([...messages, { sender: 'user', text: input }]);
     const userText = input;
-<<<<<<< HEAD
-=======
-
-    // Show the user's message immediately
-    setMessages([...messages, { sender: 'user', text: input }]);
-    const userText = input;
->>>>>>> origin/main
     setInput('');
 
     // Call the backend to store the memory
     try {
-<<<<<<< HEAD
       const response = await fetch(`${API_URL}/memory/add`, {
-=======
-      const response = await fetch('http://localhost:8000/memory/add', {
->>>>>>> origin/main
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
