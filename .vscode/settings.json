@@ -3,5 +3,7 @@
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "python.analysis.typeCheckingMode": "strict",
-  "gitlens.launchpad.indicator.useColors": true
+  "gitlens.launchpad.indicator.useColors": true,
+  "github-actions.workflows.pinned.refresh.enabled": true,
+  "editor.formatOnSave": true
 }
