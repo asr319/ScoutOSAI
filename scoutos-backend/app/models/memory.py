@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, JSON
 from .base import Base
 import datetime
+from .base import Base
+
 
 class Memory(Base):
     __tablename__ = "memories"

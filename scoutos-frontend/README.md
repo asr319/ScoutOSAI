@@ -6,7 +6,7 @@ the backend API and provides a simple chat interface.
 ## Setup
 
 ```bash
-npm install
+pnpm install
 ```
 
 During development the app expects the backend URL in `VITE_API_URL`.
@@ -19,7 +19,7 @@ VITE_API_URL=http://localhost:8000
 Run the development server with
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ## Deployment
