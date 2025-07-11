@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import memory, user, agent, ai
+from app.db import engine
+from app.models.base import Base
+from app.models import memory as memory_model, user as user_model
 
 app = FastAPI(title="ScoutOSAI Backend")
 
@@ -12,6 +15,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Create tables if they do not exist
+Base.metadata.create_all(bind=engine)
 
 app.include_router(memory.router, prefix="/memory")
 app.include_router(user.router, prefix="/user")
