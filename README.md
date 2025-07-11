@@ -83,3 +83,7 @@ Pull requests are welcome. Please run tests before submitting.
 
 
 
+
+## License
+This project is licensed under the [MIT License](LICENSE).
+
