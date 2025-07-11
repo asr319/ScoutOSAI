@@ -27,6 +27,9 @@ class MemoryOut(MemoryIn):
     id: int
     timestamp: datetime.datetime
 
+    class Config:
+        orm_mode = True
+
 
 class MemorySavedResponse(BaseModel):
     message: str
