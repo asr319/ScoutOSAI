@@ -10,9 +10,6 @@ import os
 
 router = APIRouter()
 
-fake_memories: List[dict] = []  # Replace with real DB in production
-
-
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def get_db():
