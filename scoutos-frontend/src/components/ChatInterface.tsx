@@ -42,7 +42,7 @@ export default function ChatInterface() {
   }
 
   return (
-    <div className="w-full max-w-xl mx-auto my-8 bg-white rounded-2xl shadow-lg p-4">
+    <div className="w-full max-w-xl mx-auto my-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4">
       <div className="mb-4 h-80 overflow-y-auto">
         {messages.map((msg, i) => (
           <div key={i} className={msg.sender === "user" ? "text-right" : "text-left"}>
@@ -54,7 +54,7 @@ export default function ChatInterface() {
       </div>
       <div className="flex gap-2">
         <input
-          className="flex-1 border p-2 rounded-xl"
+          className="flex-1 border p-2 rounded-xl bg-white dark:bg-gray-700 dark:text-white"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask ScoutOS..."
