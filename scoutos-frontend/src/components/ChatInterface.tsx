@@ -1,4 +1,14 @@
 import { useState } from "react";
+import { useUser } from "../hooks/useUser";
+
+interface Memory {
+  id: number;
+  user_id: number;
+  content: string;
+  topic: string;
+  tags: string[];
+  timestamp: string;
+}
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
