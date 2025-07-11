@@ -1,13 +1,30 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from argon2 import PasswordHasher
 
 router = APIRouter()
 
+fake_users = []  # Replace with real DB in production
+
 class UserIn(BaseModel):
     username: str
-    email: str
+    password: str
 
-@router.post("/create")
-def create_user(user: UserIn):
-    # TODO: Create user in database
-    return {"message": "User created", "user": user}
+@router.post("/register")
+def register(user: UserIn):
+    if any(u["username"] == user.username for u in fake_users):
+        raise HTTPException(status_code=400, detail="Username taken")
+    user_entry = {
+        "username": user.username,
+        "password_hash": PasswordHasher().hash(user.password),
+        "id": len(fake_users) + 1
+    }
+    fake_users.append(user_entry)
+    return {"message": "User registered", "id": user_entry["id"]}
+
+@router.post("/login")
+def login(user: UserIn):
+    for u in fake_users:
+        if u["username"] == user.username and PasswordHasher().verify(u["password_hash"], user.password):
+            return {"message": "Login successful", "id": u["id"]}
+    raise HTTPException(status_code=401, detail="Invalid credentials")

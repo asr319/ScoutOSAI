@@ -1,13 +1,20 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Query, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
 from app.models.memory import Memory, Base
 from pydantic import BaseModel
 from typing import List, Optional
 import datetime
+import openai
+import os
 
 router = APIRouter()
 
+fake_memories = []  # Replace with real DB in production
+
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+>>>>>>> origin/main
 
 def get_db():
     db = SessionLocal()
@@ -21,6 +28,10 @@ class MemoryIn(BaseModel):
     content: str
     topic: str
     tags: List[str] = []
+
+# Temporary in-memory store until database integration
+fake_memories: List[dict] = []
+ = []
 
 
 class MemoryOut(MemoryIn):
