@@ -3,7 +3,7 @@ import { useState } from "react";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function ChatInterface() {
-  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
+  const [messages, setMessages] = useState<{sender: string, text: string}[]>([]);
   const [input, setInput] = useState('');
 
   async function sendMessage() {
@@ -40,6 +40,7 @@ export default function ChatInterface() {
         { sender: 'assistant', text: 'Error saving memory!' },
       ]);
     }
+    // TODO: Connect to backend for AI assistant reply
   }
 
   return (

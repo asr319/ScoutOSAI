@@ -12,3 +12,20 @@ def test_ai_missing_api_key(monkeypatch):
     resp = client.post("/ai/chat", json={"prompt": "hello"})
     assert resp.status_code == 500
     assert "OPENAI_API_KEY" in resp.json()["detail"]
+
+
+def test_ai_chat_returns_mocked_text(monkeypatch):
+    """POST /ai/chat should return the text from the mocked OpenAI API."""
+    from types import SimpleNamespace
+
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+    monkeypatch.setattr(openai, "api_key", "sk-test")
+
+    fake_resp = SimpleNamespace(
+        choices=[SimpleNamespace(message={"content": "mocked reply"})]
+    )
+    monkeypatch.setattr(openai.ChatCompletion, "create", lambda **_: fake_resp)
+
+    resp = client.post("/ai/chat", json={"prompt": "hi"})
+    assert resp.status_code == 200
+    assert resp.json() == {"response": "mocked reply"}
