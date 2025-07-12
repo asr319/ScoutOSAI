@@ -11,6 +11,13 @@ export default function ChatInterface() {
     if (!input.trim()) return;
 
     // Show the user's message immediately
+    setMessages([...messages, { sender: 'user', text: input }]);
+    const userText = input;
+<<<<<<< HEAD
+=======
+
+    // Show the user's message immediately
+    setMessages([...messages, { sender: 'user', text: input }]);
     const userText = input;
     setMessages((msgs) => [...msgs, { sender: 'user', text: userText }]);
     setInput('');
@@ -19,7 +26,11 @@ export default function ChatInterface() {
 
     // Call the backend to store the memory
     try {
+<<<<<<< HEAD
       const response = await fetch(`${API_URL}/memory/add`, {
+=======
+      const response = await fetch('http://localhost:8000/memory/add', {
+>>>>>>> origin/main
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
