@@ -37,6 +37,18 @@ class MemoryService:
 
         return self.db.query(Memory).filter(Memory.user_id == user_id).all()
 
+    def search_memories(
+        self, user_id: int, topic: str | None = None, tag: str | None = None
+    ) -> List[Memory]:
+        """Return ``Memory`` rows filtered by optional topic and tag."""
+
+        query = self.db.query(Memory).filter(Memory.user_id == user_id)
+        if topic:
+            query = query.filter(Memory.topic == topic)
+        if tag:
+            query = query.filter(Memory.tags.contains(tag))
+        return query.all()
+
     def update_memory(self, memory_id: int, updates: dict) -> Memory | None:
         """Update an existing ``Memory`` with provided values."""
 
