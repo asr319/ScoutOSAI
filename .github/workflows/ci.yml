@@ -1,11 +1,12 @@
-# @format
-
 name: CI
 
 on:
   pull_request:
   push:
     branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   test-backend:
@@ -17,9 +18,10 @@ jobs:
           python-version: "3.x"
       - name: Install dependencies
         run: |
-          pip install -r scoutos-backend/requirements.txt
-          pip install pytest
+          pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt
       - name: Run tests
+        env:
+          DATABASE_URL: sqlite:///./test.db
         run: |
           cd scoutos-backend
           python -m pytest
