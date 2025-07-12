@@ -1,6 +1,8 @@
+<!-- @format -->
+
 # ScoutOSAI
 
-ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose sets up the backend and a PostgreSQL database.  This repository also contains basic CI and deployment instructions for hosting the project in the cloud.  Each subdirectory contains its own README with additional details.
+ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose sets up the backend and a PostgreSQL database. This repository also contains basic CI and deployment instructions for hosting the project in the cloud. Each subdirectory contains its own README with additional details.
 
 ## Getting Started
 
@@ -10,8 +12,8 @@ Run the setup script to install backend and frontend dependencies:
 ./setup.sh
 ```
 
-
 ### Backend
+
 1. Install dependencies:
    ```bash
    cd scoutos-backend
@@ -33,6 +35,7 @@ Run the setup script to install backend and frontend dependencies:
    The backend exposes an `/ai/chat` endpoint which proxies requests to OpenAI.
 
 ### Frontend
+
 1. Install packages:
    ```bash
    cd scoutos-frontend
@@ -49,7 +52,9 @@ Run the setup script to install backend and frontend dependencies:
    Visit the app at `http://localhost:5173` by default.
 
 ### Docker Compose
+
 Alternatively start both backend and database using Docker:
+
 ```bash
 docker-compose up
 ```
@@ -57,11 +62,11 @@ docker-compose up
 ## Deployment
 
 The backend is packaged in a Dockerfile and can be deployed to platforms such as
-Railway or Fly.io.  The frontend can be deployed to Vercel or Netlify.
+Railway or Fly.io. The frontend can be deployed to Vercel or Netlify.
 
 1. Build and push the backend image, setting the `DATABASE_URL` and `OPENAI_API_KEY`
    environment variables in your hosting provider.
-2. Deploy the `scoutos-frontend` directory as a static site.  Set the
+2. Deploy the `scoutos-frontend` directory as a static site. Set the
    environment variable `VITE_API_URL` to the public URL of the backend API.
 
 Basic CI is configured using GitHub Actions and runs backend tests on each pull
@@ -70,7 +75,9 @@ request.
 ## Running Tests
 
 ### Backend Tests
+
 Tests use `pytest`. After installing dev dependencies, run:
+
 ```bash
 cd scoutos-backend
 pip install -r requirements.txt -r requirements-dev.txt
@@ -78,17 +85,18 @@ python -m pytest
 ```
 
 ### Frontend Tests
+
 The frontend uses [Vitest](https://vitest.dev). Run tests with:
+
 ```bash
 cd scoutos-frontend
 pnpm test
 ```
+
 ## Contributing
+
 Pull requests are welcome. Please run tests before submitting.
 
-
-
-
 ## License
-This project is licensed under the [MIT License](LICENSE).
 
+This project is licensed under the [MIT License](LICENSE).
