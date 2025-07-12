@@ -1,8 +1,9 @@
 import ChatInterface from './components/ChatInterface';
-import MemoryManager from './components/MemoryManager';
-import AuthForm from './components/AuthForm';
-import { Toaster } from 'react-hot-toast';
-import { UserProvider, useUser } from './context/UserContext';
+// Temporarily unused components
+// import MemoryManager from './components/MemoryManager';
+// import AuthForm from './components/AuthForm';
+// import { Toaster } from 'react-hot-toast';
+// import { UserProvider, useUser } from './context/UserContext';
 import './index.css';
 
 function App() {
