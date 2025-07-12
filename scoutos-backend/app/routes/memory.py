@@ -17,15 +17,12 @@ class MemoryIn(BaseModel):
 def add_memory(mem: MemoryIn):
     # TODO: Store in database
     if not mem.tags:
-        if not openai.api_key:
-            tags = []
-        else:
-            resp = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": f"Suggest 3 tags for this memory: {mem.content}"}],
-                max_tokens=30,
-            )
-            tags = [t.strip() for t in resp.choices[0].message["content"].split(',')]
+        resp = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": f"Suggest 3 tags for this memory: {mem.content}"}],
+            max_tokens=30
+        )
+        tags = [t.strip() for t in resp.choices[0].message["content"].split(',')]
     else:
         tags = mem.tags
 
