@@ -4,6 +4,9 @@
 name: Node.js CI
 permissions:
   contents: read
+defaults:
+  run:
+    working-directory: scoutos-frontend
 
 on:
   push:
@@ -22,16 +25,15 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: scoutos-frontend/package-lock.json
-      - run: npm ci
-        working-directory: scoutos-frontend
-      - run: npm run build --if-present
-        working-directory: scoutos-frontend
-      - run: npm test
-        working-directory: scoutos-frontend
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+        cache-dependency-path: scoutos-frontend/pnpm-lock.yaml
+    - run: corepack enable
+        cache-dependency-path: scoutos-frontend/package-lock.json
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm run build --if-present
+    - run: pnpm test --if-present --if-present
