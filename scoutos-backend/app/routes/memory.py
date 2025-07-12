@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from app.db import SessionLocal
-from app.models.memory import Memory
-from app.services.memory_service import MemoryService
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import List, Optional
-import datetime
+from sqlalchemy.orm import Session
+
+from app.db import SessionLocal
+from app.services.memory_service import MemoryService
 
 router = APIRouter()
+
 
 def get_db():
     db = SessionLocal()
@@ -16,67 +16,66 @@ def get_db():
     finally:
         db.close()
 
+
 class MemoryIn(BaseModel):
     user_id: int
     content: str
     topic: str
-    tags: List[str] = Field(default_factory=list)
+    tags: List[str] = []
 
 
-class MemoryOut(MemoryIn):
-    id: int
-    timestamp: datetime.datetime
-    model_config = {"from_attributes": True}
+def _serialize(mem):
+    return {
+        "id": mem.id,
+        "user_id": mem.user_id,
+        "content": mem.content,
+        "topic": mem.topic,
+        "tags": mem.tags,
+    }
+
 
 @router.post("/add")
 def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
-    db_mem = Memory(
-        user_id=mem.user_id,
-        content=mem.content,
-        topic=mem.topic,
-        tags=mem.tags,
-        timestamp=datetime.datetime.utcnow(),
-    )
-    db.add(db_mem)
-    db.commit()
-    db.refresh(db_mem)
-    return {"memory": db_mem}
+    service = MemoryService(db)
+    new_mem = service.add_memory(mem.dict())
+    return {"message": "Memory added", "memory": _serialize(new_mem)}
 
 
-@router.get("/list", response_model=List[MemoryOut])
+@router.put("/update/{memory_id}")
+def update_memory(memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)):
+    service = MemoryService(db)
+    updated = service.update_memory(memory_id, mem.dict())
+    if not updated:
+        raise HTTPException(status_code=404, detail="Memory not found")
+    return {"message": "Memory updated", "memory": _serialize(updated)}
+
+
+@router.get("/list")
 def list_memories(user_id: int, db: Session = Depends(get_db)):
-    return db.query(Memory).filter(Memory.user_id == user_id).all()
+    service = MemoryService(db)
+    mems = service.list_memories(user_id)
+    return [_serialize(m) for m in mems]
 
 
-@router.get("/search", response_model=List[MemoryOut])
+@router.get("/search")
 def search_memories(
     user_id: int,
     topic: Optional[str] = None,
     tag: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
-    query = db.query(Memory).filter(Memory.user_id == user_id)
+    service = MemoryService(db)
+    mems = service.list_memories(user_id)
     if topic:
-        query = query.filter(Memory.topic == topic)
+        mems = [m for m in mems if m.topic == topic]
     if tag:
-        query = query.filter(Memory.tags.contains([tag]))
-    return query.all()
+        mems = [m for m in mems if m.tags and tag in m.tags]
+    return [_serialize(m) for m in mems]
 
 
 @router.delete("/delete/{memory_id}")
 def delete_memory(memory_id: int, db: Session = Depends(get_db)):
-    mem = db.get(Memory, memory_id)
-    if not mem:
-        raise HTTPException(status_code=404, detail="Memory not found")
-    db.delete(mem)
-    db.commit()
-    return {"detail": "Memory deleted"}
-
-
-@router.put("/update/{memory_id}")
-def update_memory(memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)):
     service = MemoryService(db)
-    updated = service.update_memory(memory_id, mem.model_dump())
-    if not updated:
+    if not service.delete_memory(memory_id):
         raise HTTPException(status_code=404, detail="Memory not found")
-    return {"memory": updated}
+    return {"message": "Memory deleted"}
