@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "../hooks/useUser";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -21,16 +21,16 @@ export default function MemoryManager() {
   const [searchTag, setSearchTag] = useState("");
   const { user } = useUser();
 
-  const loadMemories = useCallback(async () => {
+  async function loadMemories() {
     if (!user) return;
     const res = await fetch(`${API_URL}/memory/list?user_id=${user.id}`);
     if (res.ok) {
       const data = await res.json();
       setMemories(data);
     }
-  }, [user]);
+  }
 
-  useEffect(() => { loadMemories(); }, [loadMemories]);
+  useEffect(() => { loadMemories(); }, [user]);
 
   async function addMemory() {
     if (!user) return;
