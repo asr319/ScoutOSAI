@@ -84,6 +84,9 @@ class MemoryService:
         if len(mems) != len(memory_ids):
             return None
 
+        if any(m.user_id != user_id for m in mems):
+            return None
+
         content = "\n".join(m.content for m in mems)
         tags = set()
         for m in mems:
