@@ -71,3 +71,20 @@ def test_memory_service_merge():
     assert mem_service.get_memory(m1.id) is None
     assert mem_service.get_memory(m2.id) is None
     db.close()
+
+
+def test_merge_memories_user_mismatch():
+    db = SessionLocal()
+    user_service = UserService(db)
+    u1 = user_service.create_user({"username": f"u1_{uuid.uuid4().hex[:8]}", "password": "pw"})
+    u2 = user_service.create_user({"username": f"u2_{uuid.uuid4().hex[:8]}", "password": "pw"})
+
+    mem_service = MemoryService(db)
+    m1 = mem_service.add_memory({"user_id": u1.id, "content": "a", "topic": "t", "tags": []})
+    m2 = mem_service.add_memory({"user_id": u2.id, "content": "b", "topic": "t", "tags": []})
+
+    merged = mem_service.merge_memories([m1.id, m2.id], u1.id)
+    assert merged is None
+    assert mem_service.get_memory(m1.id) is not None
+    assert mem_service.get_memory(m2.id) is not None
+    db.close()
