@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 from sqlalchemy.orm import Session
 
@@ -21,7 +21,7 @@ class MemoryIn(BaseModel):
     user_id: int
     content: str
     topic: str
-    tags: List[str] = []
+    tags: List[str] = Field(default_factory=list)
 
 
 def _serialize(mem):
