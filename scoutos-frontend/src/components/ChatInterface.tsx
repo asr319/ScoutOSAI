@@ -11,13 +11,6 @@ export default function ChatInterface() {
     if (!input.trim()) return;
 
     // Show the user's message immediately
-    setMessages([...messages, { sender: 'user', text: input }]);
-    const userText = input;
-<<<<<<< HEAD
-=======
-
-    // Show the user's message immediately
-    setMessages([...messages, { sender: 'user', text: input }]);
     const userText = input;
     setMessages((msgs) => [...msgs, { sender: 'user', text: userText }]);
     setInput('');
@@ -28,9 +21,6 @@ export default function ChatInterface() {
     try {
 <<<<<<< HEAD
       const response = await fetch(`${API_URL}/memory/add`, {
-=======
-      const response = await fetch('http://localhost:8000/memory/add', {
->>>>>>> origin/main
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -79,10 +69,9 @@ export default function ChatInterface() {
           placeholder="Ask ScoutOS..."
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded-xl"
-          onClick={sendMessage}
-        >Send</button>
+        <button className="bg-blue-600 text-white px-4 py-2 rounded-xl" onClick={sendMessage}>
+          Send
+        </button>
       </div>
     </div>
   );
