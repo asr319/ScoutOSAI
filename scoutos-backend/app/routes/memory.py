@@ -65,11 +65,7 @@ def search_memories(
     db: Session = Depends(get_db),
 ):
     service = MemoryService(db)
-    mems = service.list_memories(user_id)
-    if topic:
-        mems = [m for m in mems if m.topic == topic]
-    if tag:
-        mems = [m for m in mems if m.tags and tag in m.tags]
+    mems = service.search_memories(user_id, topic=topic, tag=tag)
     return [_serialize(m) for m in mems]
 
 
