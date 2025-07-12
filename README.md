@@ -1,60 +1,94 @@
-<!-- @format -->
-
 # ScoutOSAI
 
-ScoutOSAI is a small full‑stack example for building an AI agent with long term memory. The repository contains a FastAPI backend and a React/Vite frontend. The backend exposes endpoints for user accounts and storing or merging "memories" in a PostgreSQL database while the frontend provides a simple chat style interface.
+ScoutOSAI is split into a FastAPI backend and a React frontend. Docker Compose sets up the backend and a PostgreSQL database.  This repository also contains basic CI and deployment instructions for hosting the project in the cloud.  Each subdirectory contains its own README with additional details.
 
 ## Getting Started
 
-Use the provided `setup.sh` script to install all backend and frontend dependencies. It will install Python packages for the API and `pnpm` packages for the web client.
+Run the setup script to install backend and frontend dependencies:
 
 ```bash
 ./setup.sh
 ```
 
-### Running the Backend
 
-The API lives in `scoutos-backend`. After installing dependencies you can start a development server with:
+### Backend
+1. Install dependencies:
+   ```bash
+   cd scoutos-backend
+   pip install -r requirements.txt -r requirements-dev.txt
+   ```
+2. Copy `.env.example` to `.env` and update credentials if needed:
+   ```bash
+   cp .env.example .env
+   ```
+3. Set your OpenAI API key as an environment variable before running the app:
+   ```bash
+   export OPENAI_API_KEY=<your-key>
+   ```
+4. Start the API:
+   ```bash
+   uvicorn app.main:app --reload
+   ```
+   The API will be available at `http://localhost:8000`.
+   The backend exposes an `/ai/chat` endpoint which proxies requests to OpenAI.
 
+### Frontend
+1. Install packages:
+   ```bash
+   cd scoutos-frontend
+   pnpm install
+   ```
+   Copy `.env.example` to `.env` and update the API URL if needed:
+   ```bash
+   cp .env.example .env
+   ```
+2. Start the dev server:
+   ```bash
+   pnpm run dev
+   ```
+   Visit the app at `http://localhost:5173` by default.
+
+### Docker Compose
+Alternatively start both backend and database using Docker:
+```bash
+docker-compose up
+```
+
+## Deployment
+
+The backend is packaged in a Dockerfile and can be deployed to platforms such as
+Railway or Fly.io.  The frontend can be deployed to Vercel or Netlify.
+
+1. Build and push the backend image, setting the `DATABASE_URL` and `OPENAI_API_KEY`
+   environment variables in your hosting provider.
+2. Deploy the `scoutos-frontend` directory as a static site.  Set the
+   environment variable `VITE_API_URL` to the public URL of the backend API.
+
+Basic CI is configured using GitHub Actions and runs backend tests on each pull
+request.
+
+## Running Tests
+
+### Backend Tests
+Tests use `pytest`. After installing dev dependencies, run:
 ```bash
 cd scoutos-backend
-uvicorn app.main:app --reload
+pip install -r requirements.txt -r requirements-dev.txt
+python -m pytest
 ```
 
-`DATABASE_URL` should point at your PostgreSQL instance. During early development all CORS origins are allowed.
-
-Backend tests are executed with `pytest`:
-
-```bash
-pytest
-```
-
-### Running the Frontend
-
-The web client resides in `scoutos-frontend`. Create a `.env` file with the backend URL:
-
-```
-VITE_API_URL=http://localhost:8000
-```
-
-Then launch the dev server:
-
+### Frontend Tests
+The frontend uses [Vitest](https://vitest.dev). Run tests with:
 ```bash
 cd scoutos-frontend
-pnpm run dev
+pnpm test
 ```
+## Contributing
+Pull requests are welcome. Please run tests before submitting.
 
-Run the frontend test suite with:
 
-```bash
-npm test
-```
 
-## Repository Layout
 
-- `scoutos-backend` – FastAPI service with memory and user endpoints
-- `scoutos-frontend` – React/Vite app communicating with the API
-- `setup.sh` – helper script to install all project dependencies
-
-Both projects include additional README files with further details.
+## License
+This project is licensed under the [MIT License](LICENSE).
 
