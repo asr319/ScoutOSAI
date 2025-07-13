@@ -22,8 +22,9 @@ async def ai_chat(req: AIRequest) -> Dict[str, str]:
             detail="OPENAI_API_KEY environment variable is not set",
         )
 
+    client = AsyncOpenAI(api_key=api_key)
+
     try:
-        client = AsyncOpenAI(api_key=api_key)
         resp = await client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": req.prompt}],
