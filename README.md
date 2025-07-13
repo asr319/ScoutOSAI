@@ -16,6 +16,14 @@ export OPENAI_API_KEY=sk-...
 docker-compose up
 ```
 
+Sample environment files are provided for development, staging, and production.
+Copy the appropriate file to `.env` and pass it to docker-compose:
+
+```bash
+cp .env.staging.example .env  # or .env.prod.example
+docker-compose --env-file .env up
+```
+
 The backend service uses these values when constructing `DATABASE_URL` and when
 calling the OpenAI API for the demo AI endpoints.
 
