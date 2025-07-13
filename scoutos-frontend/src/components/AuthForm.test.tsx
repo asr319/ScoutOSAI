@@ -1,5 +1,5 @@
-import { describe, it, vi, expect, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest'
+import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
 import AuthForm from './AuthForm'
 import { UserContext, type User } from '../context/UserContext'
 
@@ -15,6 +15,10 @@ describe('AuthForm', () => {
   beforeEach(() => {
     vi.resetAllMocks()
   })
+  afterEach(() => {
+    vi.restoreAllMocks()
+    cleanup()
+  })
 
   it('renders inputs', () => {
     const { container } = renderWithProvider(() => {})
@@ -23,17 +27,40 @@ describe('AuthForm', () => {
 
   it('submits login data', async () => {
     const setUser = vi.fn()
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ id: 1 }) })
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ id: 1, token: 't' }) })
     vi.stubGlobal('fetch', fetchMock)
 
     renderWithProvider(setUser)
 
     fireEvent.change(screen.getAllByPlaceholderText('Username')[0], { target: { value: 'bob' } })
     fireEvent.change(screen.getAllByPlaceholderText('Password')[0], { target: { value: 'pw' } })
-    fireEvent.click(screen.getAllByRole('button', { name: /login/i })[0])
+    const loginButtons = screen.getAllByRole('button', { name: /login/i })
+    loginButtons.forEach(btn => fireEvent.click(btn))
 
     await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalled()
+      expect(setUser).toHaveBeenCalledWith({ id: 1, username: 'bob', token: 't' })
+    })
+    vi.restoreAllMocks()
+  })
+
+  it('registers then logs in', async () => {
+    const setUser = vi.fn()
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ id: 2 }) })
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ id: 2, token: 'x' }) })
+    vi.stubGlobal('fetch', fetchMock)
+
+    renderWithProvider(setUser)
+
+    fireEvent.click(screen.getAllByText('Need an account? Register')[0])
+    fireEvent.change(screen.getAllByPlaceholderText('Username')[0], { target: { value: 'alice' } })
+    fireEvent.change(screen.getAllByPlaceholderText('Password')[0], { target: { value: 'pw' } })
+    const regButtons = screen.getAllByRole('button', { name: /^Register$/i })
+    regButtons.forEach(btn => fireEvent.click(btn))
+
+    await waitFor(() => {
+      expect(setUser).toHaveBeenCalledWith({ id: 2, username: 'alice', token: 'x' })
     })
     vi.restoreAllMocks()
   })
