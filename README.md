@@ -2,12 +2,16 @@
 
 ## Setup
 
-`docker-compose.yml` expects the database password in `POSTGRES_PASSWORD` and
-an OpenAI API key in `OPENAI_API_KEY`. Set these variables before starting the stack:
+`docker-compose.yml` expects the database password in `POSTGRES_PASSWORD`, an
+OpenAI API key in `OPENAI_API_KEY`, and two encryption keys: `FERNET_KEY` and
+`APP_ENCRYPTION_KEY`. Generate each key with `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`
+and set the variables before starting the stack:
 
 ```bash
 export POSTGRES_PASSWORD=yourpassword
 export OPENAI_API_KEY=sk-...
+export FERNET_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
+export APP_ENCRYPTION_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
 docker-compose up
 ```
 
@@ -26,7 +30,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-The service reads `DATABASE_URL` to connect to PostgreSQL (tests override this with SQLite). Set `APP_ENCRYPTION_KEY` to a random string so `Memory.content` can be encrypted. See [`scoutos-backend/README.md`](scoutos-backend/README.md) for more details on environment variables and endpoints.
+The service reads `DATABASE_URL` to connect to PostgreSQL (tests override this with SQLite). Set both `FERNET_KEY` and `APP_ENCRYPTION_KEY` to random strings so `Memory.content` can be encrypted. See [`scoutos-backend/README.md`](scoutos-backend/README.md) for more details on environment variables and endpoints.
 
 Run the backend unit tests from the same directory:
 
