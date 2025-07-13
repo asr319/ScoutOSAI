@@ -1,15 +1,17 @@
+from typing import Any, Dict, Generator
+
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from typing import Any, Dict, Generator
+
 from app.db import SessionLocal
-from app.services.user_service import UserService
 from app.services.auth_service import create_access_token
+from app.services.user_service import UserService
 
 router = APIRouter()
 
 
-def get_db():
+def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
     try:
         yield db
