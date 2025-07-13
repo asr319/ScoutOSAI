@@ -62,7 +62,11 @@ describe('AuthForm', () => {
     regButtons.forEach(btn => fireEvent.click(btn))
 
     await waitFor(() => {
-      expect(setUser).toHaveBeenCalledWith({ id: 2, username: 'alice', token: 'x' })
+      expect(setUser).toHaveBeenNthCalledWith(1, { id: 2, username: 'alice', token: 'x' })
     })
+    await waitFor(() => {
+      expect(setUser).toHaveBeenCalled()
+    })
+    expect(setUser).toHaveBeenCalledWith({ id: 1, username: 'bob', token: 'abc' })
   })
 })
