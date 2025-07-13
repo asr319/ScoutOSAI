@@ -1,29 +1,27 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from openai import AsyncOpenAI
+import openai
 import os
 
 router = APIRouter()
 
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class AIRequest(BaseModel):
     prompt: str
 
-
 @router.post("/chat")
-async def ai_chat(req: AIRequest) -> dict[str, str]:
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
+async def ai_chat(req: AIRequest):
+    if not openai.api_key:
         raise HTTPException(
             status_code=500,
-            detail="OPENAI_API_KEY environment variable is not set",
+            detail="OPENAI_API_KEY environment variable is not set"
         )
 
-    client = AsyncOpenAI(api_key=api_key)
-    resp = await client.chat.completions.create(
+    resp = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": req.prompt}],
         max_tokens=200,
     )
-    answer = resp.choices[0].message.content
+    answer = resp.choices[0].message["content"]
     return {"response": answer}
