@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from openai import AsyncOpenAI
 import os
 
+
 router = APIRouter()
 
 
@@ -20,14 +21,20 @@ async def ai_chat(req: AIRequest):
             detail="OPENAI_API_KEY environment variable is not set",
         )
 
-    client = AsyncOpenAI(api_key=api_key)
+    try:
+        client = AsyncOpenAI(api_key=api_key)
 
     try:
-        resp = await client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": req.prompt}],
-            max_tokens=200,
+        resp = await await client.chat.completions.acreate(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": req.prompt}],
+                max_tokens=200,
+            )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=503, detail=f"OpenAI request failed: {exc}"
         )
+
     except Exception as exc:
         raise HTTPException(status_code=503, detail=f"OpenAI request failed: {exc}")
 

@@ -45,8 +45,9 @@ class MemoryService:
         """Return all ``Memory`` rows for a given user."""
         mems = self.db.query(Memory).filter(Memory.user_id == user_id).all()
         for mem in mems:
-            mem.content = decrypt_text(mem.content)
+            decrypted = decrypt_text(mem.content)
             self.db.expunge(mem)
+            mem.content = decrypted
         return mems
 
     def search_memories(
@@ -61,8 +62,9 @@ class MemoryService:
             query = query.filter(Memory.tags.contains(tag))
         mems = query.all()
         for mem in mems:
-            mem.content = decrypt_text(mem.content)
+            decrypted = decrypt_text(mem.content)
             self.db.expunge(mem)
+            mem.content = decrypted
         return mems
 
     def update_memory(self, memory_id: int, updates: dict) -> Memory | None:
@@ -94,7 +96,9 @@ class MemoryService:
         self.db.commit()
         return True
 
-    def merge_memories(self, memory_ids: List[int], user_id: int) -> Memory | None:
+    def merge_memories(
+        self, memory_ids: List[int], user_id: int
+    ) -> Memory | None:
         """Merge multiple ``Memory`` entries into a single one."""
 
         if not memory_ids:

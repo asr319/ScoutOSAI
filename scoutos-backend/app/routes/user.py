@@ -2,12 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from typing import Any, Dict
-from argon2 import PasswordHasher
+from typing import Any, Dict
+
 from app.db import SessionLocal
 from app.services.user_service import UserService
 from app.services.auth_service import create_access_token
 
 router = APIRouter()
+
 
 def get_db():
     db = SessionLocal()
@@ -16,17 +18,22 @@ def get_db():
     finally:
         db.close()
 
+
 class UserIn(BaseModel):
     username: str
     password: str
+
 
 @router.post("/register")
 def register(user: UserIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
     service = UserService(db)
     if service.get_by_username(user.username):
         raise HTTPException(status_code=400, detail="Username taken")
-    new_user = service.create_user({"username": user.username, "password": user.password})
+    new_user = service.create_user(
+        {"username": user.username, "password": user.password}
+    )
     return {"message": "User registered", "id": new_user.id}
+
 
 @router.post("/login")
 def login(user: UserIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
@@ -40,4 +47,3 @@ def login(user: UserIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     token = create_access_token({"sub": str(db_user.id)})
     return {"message": "Login successful", "id": db_user.id, "token": token}
-

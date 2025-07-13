@@ -1,7 +1,9 @@
 from fastapi.testclient import TestClient
-import sys, os, uuid
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from app.main import app
+import os
+import sys
+, uuid
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from app.main import app  # noqa: E402
 
 client = TestClient(app)
 

@@ -10,7 +10,9 @@ origins_env = os.getenv("ALLOWED_ORIGINS")
 allowed_origins: list[str]
 
 if origins_env:
-    allowed_origins = [origin.strip() for origin in origins_env.split(",") if origin.strip()]
+    allowed_origins = [
+        origin.strip() for origin in origins_env.split(",") if origin.strip()
+    ]
 else:
     allowed_origins = ["http://localhost:5173", "http://localhost:3000"]
 

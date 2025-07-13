@@ -16,9 +16,9 @@ def get_current_user(
 ) -> dict:
     return verify_token(credentials.credentials)
 
+from app.routes.memory import _serialize
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
-
 
 
 def get_db():
@@ -27,6 +27,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 @router.get("/status")
 def agent_status() -> Dict[str, str]:
@@ -39,7 +40,9 @@ class MergeRequest(BaseModel):
 
 
 @router.post("/merge")
-def merge_memories(req: MergeRequest, db: Session = Depends(get_db)) -> Dict[str, Any]:
+def merge_memories(
+    req: MergeRequest, db: Session = Depends(get_db)
+) -> Dict[str, Any]:
     service = MemoryService(db)
     merged = service.merge_memories(req.memory_ids, req.user_id)
     if not merged:

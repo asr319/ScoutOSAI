@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from pydantic import BaseModel, Field
-from typing import Any, Dict, List, Optional
+from pydantic import BaseModel, Field, Field
+from typing import Any, Dict, Any, Dict, List, Optional
 from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
@@ -64,7 +64,9 @@ def update_memory(
 
 
 @router.get("/list")
-def list_memories(user_id: int, db: Session = Depends(get_db)) -> List[Dict[str, Any]]:
+def list_memories(
+    user_id: int, db: Session = Depends(get_db)
+) -> List[Dict[str, Any]] -> List[Dict[str, Any]]:
     service = MemoryService(db)
     mems = service.list_memories(user_id)
     return [_serialize(m) for m in mems]
@@ -83,7 +85,9 @@ def search_memories(
 
 
 @router.delete("/delete/{memory_id}")
-def delete_memory(memory_id: int, db: Session = Depends(get_db)) -> Dict[str, str]:
+def delete_memory(
+    memory_id: int, db: Session = Depends(get_db)
+) -> Dict[str, str] -> Dict[str, str]:
     service = MemoryService(db)
     if not service.delete_memory(memory_id):
         raise HTTPException(status_code=404, detail="Memory not found")
