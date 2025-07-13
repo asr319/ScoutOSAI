@@ -1,9 +1,10 @@
 import ChatInterface from './components/ChatInterface';
 import AuthForm from './components/AuthForm';
+import { UserProvider } from './context/UserContext';
 import { useUser } from './hooks/useUser';
 import './index.css';
 
-function App() {
+function AppContent() {
   const { user } = useUser();
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -12,4 +13,10 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <UserProvider>
+      <AppContent />
+    </UserProvider>
+  );
+}
