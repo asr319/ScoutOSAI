@@ -24,16 +24,16 @@ async def ai_chat(req: AIRequest) -> Dict[str, str]:
 
     try:
         client = AsyncOpenAI(api_key=api_key)
-        resp = await client.chat.completions.acreate(
+        resp = await client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": req.prompt}],
             max_tokens=200,
         )
+        answer = resp.choices[0].message.content
     except Exception as exc:
         raise HTTPException(
             status_code=503,
             detail=f"OpenAI request failed: {exc}",
         )
 
-    answer = resp.choices[0].message.content
     return {"response": answer}

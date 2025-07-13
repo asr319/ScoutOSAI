@@ -12,10 +12,10 @@ from cryptography.fernet import Fernet
 from sqlalchemy.orm import Session
 
 from app.models.memory import Memory
+from app.utils.encryption import encrypt_text, decrypt_text
 
 # Deterministic fallback key so tests work without configuration
 DEFAULT_KEY = b"1OGaT5SwPuHVrxTp1lT7ZnkSeBAkiqdSqsgTbDuSwIs="
-from app.utils.encryption import encrypt_text, decrypt_text
 
 
 class MemoryService:
@@ -128,8 +128,12 @@ class MemoryService:
         if any(m.user_id != user_id for m in mems):
             return None
 
-        content = "\n".join(self._decrypt_mem(m).content for m in mems)
-        tags = set()
+        for m in mems:
+            self._decrypt_mem(m)
+
+        content = "\n".join(m.content for m in mems)
+
+        tags: set[str] = set()
         for m in mems:
             tags.update(m.tags or [])
 

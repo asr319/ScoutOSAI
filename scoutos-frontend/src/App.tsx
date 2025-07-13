@@ -1,6 +1,5 @@
 import ChatInterface from './components/ChatInterface';
 import AuthForm from './components/AuthForm';
-import { UserProvider } from './context/UserContext';
 import { useUser } from './hooks/useUser';
 import './index.css';
 
@@ -14,9 +13,5 @@ function AppContent() {
 }
 
 export default function App() {
-  return (
-    <UserProvider>
-      <AppContent />
-    </UserProvider>
-  );
+  return <AppContent />;
 }

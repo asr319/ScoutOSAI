@@ -18,7 +18,8 @@ jobs:
           python-version: "3.x"
       - name: Install dependencies
         run: |
-          pip install -r scoutos-backend/requirements.txt
+          cd scoutos-backend
+          pip install -r requirements.txt
           pip install pytest
       - name: Run tests
         env:
