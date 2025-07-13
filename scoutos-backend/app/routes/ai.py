@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import openai
 import os
 
+
 router = APIRouter()
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
