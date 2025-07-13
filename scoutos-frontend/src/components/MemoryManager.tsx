@@ -23,6 +23,7 @@ export default function MemoryManager() {
   const [mergeSuggestion, setMergeSuggestion] = useState("");
   const [searchTopic, setSearchTopic] = useState("");
   const [searchTag, setSearchTag] = useState("");
+  const [searchContent, setSearchContent] = useState("");
   const [editing, setEditing] = useState<Memory | null>(null);
   const [editContent, setEditContent] = useState("");
   const [editTopic, setEditTopic] = useState("");
@@ -103,6 +104,7 @@ export default function MemoryManager() {
     params.append("user_id", String(user.id));
     if (searchTopic) params.append("topic", searchTopic);
     if (searchTag) params.append("tag", searchTag);
+    if (searchContent) params.append("content", searchContent);
     try {
       const res = await fetch(`${API_URL}/memory/search?${params.toString()}`, {
         headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
@@ -234,6 +236,7 @@ export default function MemoryManager() {
       </div>
 
       <div className="flex gap-2 mb-4">
+        <input className="border p-2 rounded" placeholder="Search text" value={searchContent} onChange={e => setSearchContent(e.target.value)} />
         <input className="border p-2 rounded" placeholder="Search topic" value={searchTopic} onChange={e => setSearchTopic(e.target.value)} />
         <input className="border p-2 rounded" placeholder="Search tag" value={searchTag} onChange={e => setSearchTag(e.target.value)} />
         <button

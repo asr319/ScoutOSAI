@@ -9,6 +9,14 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
       - db
+  frontend:
+    build: ./scoutos-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://backend:8000
+    depends_on:
+      - backend
   db:
     image: postgres:15
     restart: always
