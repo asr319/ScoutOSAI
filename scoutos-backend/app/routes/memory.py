@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
-from typing import Any, List, Optional, Dict, Generator
+from typing import Any, Dict, Generator, List, Optional
 from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
@@ -13,7 +13,7 @@ security = HTTPBearer()
 
 def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
-) -> dict:
+) -> Dict[str, Any]:
     return verify_token(credentials.credentials)
 
 
