@@ -7,10 +7,9 @@ export default function ChatInterface() {
   const { user } = useUser();
   const [messages, setMessages] = useState<{sender: string, text: string}[]>([]);
   const [input, setInput] = useState('');
-  const { user } = useUser();
 
   async function sendMessage() {
-    if (!input.trim() || !user || !user) return;
+    if (!input.trim() || !user) return;
     if (!user) {
       setMessages([...messages, { sender: 'assistant', text: 'You must be logged in to send messages.' }]);
       return;
