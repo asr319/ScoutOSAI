@@ -12,6 +12,7 @@ export POSTGRES_PASSWORD=yourpassword
 export OPENAI_API_KEY=sk-...
 export FERNET_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
 export APP_ENCRYPTION_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
+export OPENAI_API_KEY=sk-...
 docker-compose up
 ```
 

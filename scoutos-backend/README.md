@@ -27,7 +27,7 @@ demo endpoints can call the OpenAI API.
 
 ### Environment variables
 
-Database credentials, API keys and encryption keys are provided via a `.env` file. From the repository root,
+Database credentials and your OpenAI key, API keys and encryption keys are provided via a `.env` file. From the repository root,
 copy `.env.example` to `.env` and adjust the values as needed:
 
 ```bash
