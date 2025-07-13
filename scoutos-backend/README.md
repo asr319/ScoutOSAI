@@ -22,12 +22,12 @@ PostgreSQL. The backend uses SQLAlchemy's **sync** engine so the URL must
 use the standard `postgresql://` scheme (not the `postgresql+asyncpg://`
 variant). Allowed CORS origins are configured with the `ALLOWED_ORIGINS`
 environment variable. Provide a comma–separated list of origins; by default `*`
-is used to allow all origins during development.  Set `OPENAI_API_KEY` for the AI
-demo endpoints.
+is used to allow all origins during development.  Set `OPENAI_API_KEY` so the AI
+demo endpoints can call the OpenAI API.
 
 ### Environment variables
 
-Database credentials are provided via a `.env` file. From the repository root,
+Database credentials and your OpenAI key are provided via a `.env` file. From the repository root,
 copy `.env.example` to `.env` and adjust the values as needed:
 
 ```bash
