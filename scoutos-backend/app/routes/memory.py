@@ -37,14 +37,14 @@ def _serialize(mem):
 @router.post("/add")
 def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
     service = MemoryService(db)
-    new_mem = service.add_memory(mem.dict())
+    new_mem = service.add_memory(mem.model_dump())
     return {"message": "Memory added", "memory": _serialize(new_mem)}
 
 
 @router.put("/update/{memory_id}")
 def update_memory(memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)):
     service = MemoryService(db)
-    updated = service.update_memory(memory_id, mem.dict())
+    updated = service.update_memory(memory_id, mem.model_dump())
     if not updated:
         raise HTTPException(status_code=404, detail="Memory not found")
     return {"message": "Memory updated", "memory": _serialize(updated)}
