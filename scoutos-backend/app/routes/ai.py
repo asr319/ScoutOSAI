@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import openai
 import os
+from typing import Dict
 
 router = APIRouter()
 
@@ -13,7 +14,7 @@ class AIRequest(BaseModel):
 
 
 @router.post("/chat")
-async def ai_chat(req: AIRequest):
+async def ai_chat(req: AIRequest) -> Dict[str, str]:
     if not openai.api_key:
         raise HTTPException(
             status_code=500,
