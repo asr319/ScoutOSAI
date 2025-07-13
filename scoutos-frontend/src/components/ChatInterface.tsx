@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useUser } from "../hooks/useUser";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState<{sender: string, text: string}[]>([]);
   const [input, setInput] = useState('');
+  const { user } = useUser();
 
   async function sendMessage() {
     if (!input.trim()) return;
@@ -18,9 +20,12 @@ export default function ChatInterface() {
     try {
       const response = await fetch(`${API_URL}/memory/add`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(user?.token ? { Authorization: `Bearer ${user.token}` } : {}),
+        },
         body: JSON.stringify({
-          user_id: 1, // Replace with real user/session info
+          user_id: user?.id ?? 0,
           content: userText,
           topic: 'General',
           tags: [],

@@ -16,5 +16,7 @@ def test_register_and_login():
 
     resp = client.post("/user/login", json={"username": username, "password": password})
     assert resp.status_code == 200
-    assert resp.json()["id"] == user_id
+    body = resp.json()
+    assert body["id"] == user_id
+    assert "token" in body
 

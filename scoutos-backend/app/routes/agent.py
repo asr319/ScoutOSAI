@@ -1,10 +1,21 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 from typing import List
 from app.db import SessionLocal
 from app.services.memory_service import MemoryService
+from app.services.auth_service import verify_token
 
-router = APIRouter()
+security = HTTPBearer()
+
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+) -> dict:
+    return verify_token(credentials.credentials)
+
+
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 
