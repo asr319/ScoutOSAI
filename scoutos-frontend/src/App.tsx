@@ -5,7 +5,6 @@ import LogoutButton from './components/LogoutButton';
 import AuthForm from './components/AuthForm';
 import { useUser } from './hooks/useUser';
 import { Toaster } from 'react-hot-toast';
-import { UserProvider } from './context/UserContext';
 import './index.css';
 
 function AppContent() {

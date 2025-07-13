@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
 from app.services.memory_service import MemoryService
+from app.services.agent_service import AgentService
 
 router = APIRouter()
 
@@ -19,6 +20,31 @@ def get_db() -> Generator[Session, None, None]:
         yield db
     finally:
         db.close()
+
+
+async def _ask_openai(prompt: str, max_tokens: int = 200) -> str:
+    """Helper for direct OpenAI calls used in certain routes."""
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="OPENAI_API_KEY environment variable is not set",
+        )
+    client = AsyncOpenAI(api_key=api_key)
+    completions = client.chat.completions
+    if hasattr(completions, "create"):
+        resp = await completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=max_tokens,
+        )
+    else:
+        resp = await completions.acreate(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=max_tokens,
+        )
+    return resp.choices[0].message.content
 
 
 class AIRequest(BaseModel):
@@ -38,16 +64,8 @@ class TagRequest(BaseModel):
 
 @router.post("/tags")
 async def ai_tags(req: TagRequest) -> Dict[str, List[str]]:
-    prompt = (
-        "Suggest 3 to 5 short single-word tags for the following text. "
-        "Return only a comma separated list of the tags.\n" + req.text
-    )
-    answer = await _ask_openai(prompt)
-    tags = [t.strip() for t in answer.split(";") if t.strip()]
-    if len(tags) == 1:
-        tags = [t.strip() for t in answer.split(",") if t.strip()]
     service = AgentService()
-    tags = await service.generate_tags(req.content)
+    tags = await service.generate_tags(req.text)
     return {"tags": tags}
 
 
@@ -76,10 +94,6 @@ async def ai_merge(
     )
     answer = await _ask_openai(prompt)
     return {"verdict": answer}
-async def ai_merge(req: MergeAdviceRequest) -> Dict[str, str]:
-    service = AgentService()
-    answer = await service.merge_advice(req.memory_a, req.memory_b)
-    return {"response": answer}
 
 
 class SummaryRequest(BaseModel):
