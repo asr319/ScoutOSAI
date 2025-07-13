@@ -113,7 +113,12 @@ class MemoryService:
     def merge_memories(
         self, memory_ids: List[int], user_id: int
     ) -> Memory | None:
-        """Merge multiple ``Memory`` entries into a single one if all belong to ``user_id``."""
+        """Merge multiple ``Memory`` rows into one.
+
+        The contents of all memories are concatenated and their tags are
+        aggregated into a unique set. The merge only occurs if all memories
+        belong to ``user_id``.
+        """
 
         if not memory_ids:
             return None
