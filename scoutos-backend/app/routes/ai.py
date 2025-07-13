@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from openai import AsyncOpenAI
 import os
-
+from typing import Dict
 
 router = APIRouter()
 
@@ -13,7 +13,7 @@ class AIRequest(BaseModel):
     prompt: str
 
 @router.post("/chat")
-async def ai_chat(req: AIRequest):
+async def ai_chat(req: AIRequest) -> Dict[str, str]:
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise HTTPException(

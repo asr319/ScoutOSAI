@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from typing import Any, Dict
 from typing import Any, Dict
 
+from typing import Any, Dict, Generator
 from app.db import SessionLocal
 from app.services.user_service import UserService
 from app.services.auth_service import create_access_token
