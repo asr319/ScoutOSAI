@@ -1,9 +1,12 @@
 from fastapi.testclient import TestClient
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from app.main import app
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from app.main import app  # noqa: E402
 
 client = TestClient(app)
+
 
 def test_root():
     resp = client.get("/")
