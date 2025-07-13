@@ -15,9 +15,9 @@ function AppContent() {
 
 export default function App() {
   return (
-    <UserProvider>
+    <>
       <AppContent />
       <Toaster position="top-right" />
-    </UserProvider>
+    </>
   );
 }
