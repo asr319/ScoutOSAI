@@ -11,10 +11,6 @@ export default function ChatInterface() {
 
   async function sendMessage() {
     if (!input.trim() || !user) return;
-    if (!user) {
-      setMessages([...messages, { sender: 'assistant', text: 'You must be logged in to send messages.' }]);
-      return;
-    }
 
     // Show the user's message immediately
     setMessages([...messages, { sender: 'user', text: input }]);

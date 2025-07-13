@@ -14,19 +14,44 @@ export default function AuthForm() {
 
   async function handleSubmit() {
     setError('');
-    const path = mode === 'login' ? 'login' : 'register';
     try {
-      const res = await fetch(`${API_URL}/user/${path}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.detail || 'Request failed');
+      let data: { id: number; token: string } | null = null;
+
+      if (mode === 'register') {
+        const registerRes = await fetch(`${API_URL}/user/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        if (!registerRes.ok) {
+          const body = await registerRes.json().catch(() => ({}));
+          throw new Error(body.detail || 'Request failed');
+        }
+
+        const loginRes = await fetch(`${API_URL}/user/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        if (!loginRes.ok) {
+          const body = await loginRes.json().catch(() => ({}));
+          throw new Error(body.detail || 'Login failed');
+        }
+        data = await loginRes.json();
+      } else {
+        const loginRes = await fetch(`${API_URL}/user/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        if (!loginRes.ok) {
+          const body = await loginRes.json().catch(() => ({}));
+          throw new Error(body.detail || 'Request failed');
+        }
+        data = await loginRes.json();
       }
-      const data = await res.json();
-      setUser({ id: data.id, username, token: data.token });
+
+      setUser({ id: data.id, username, token: data.token, token: data.token });
       setUsername('');
       setPassword('');
     } catch (err) {

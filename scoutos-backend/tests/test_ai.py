@@ -26,12 +26,12 @@ def test_ai_chat_returns_mocked_text(monkeypatch):
         choices=[SimpleNamespace(message=SimpleNamespace(content="mocked reply"))]
     )
 
-    async def fake_acreate(*_: str, **__: str):
+    async def fake_create(*_: str, **__: str):
         return fake_resp
 
     fake_client = SimpleNamespace(
         chat=SimpleNamespace(
-            completions=SimpleNamespace(acreate=fake_acreate)
+            completions=SimpleNamespace(create=fake_create)
         )
     )
 
