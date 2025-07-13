@@ -24,7 +24,11 @@ def test_ai_chat_returns_mocked_text(monkeypatch):
     fake_resp = SimpleNamespace(
         choices=[SimpleNamespace(message={"content": "mocked reply"})]
     )
-    monkeypatch.setattr(openai.ChatCompletion, "create", lambda **_: fake_resp)
+
+    async def fake_acreate(**_: str):
+        return fake_resp
+
+    monkeypatch.setattr(openai.ChatCompletion, "acreate", fake_acreate)
 
     resp = client.post("/ai/chat", json={"prompt": "hi"})
     assert resp.status_code == 200
