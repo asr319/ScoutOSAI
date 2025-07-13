@@ -20,8 +20,9 @@ uvicorn app.main:app --reload
 The service reads the `DATABASE_URL` environment variable to connect to
 PostgreSQL. The backend uses SQLAlchemy's **sync** engine so the URL must
 use the standard `postgresql://` scheme (not the `postgresql+asyncpg://`
-variant). Allowed CORS origins can be set with the `ALLOWED_ORIGINS`
-environment variable (comma separated).  Set `OPENAI_API_KEY` for the AI
+variant). Allowed CORS origins are configured with the `ALLOWED_ORIGINS`
+environment variable. Provide a comma–separated list of origins; by default `*`
+is used to allow all origins during development.  Set `OPENAI_API_KEY` for the AI
 demo endpoints.
 
 ## API Endpoints

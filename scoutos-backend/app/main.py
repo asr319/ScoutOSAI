@@ -3,6 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import memory, user, agent, ai
 import os
 
+
+def _get_allowed_origins() -> list[str]:
+    """Return allowed CORS origins from environment."""
+    origins = os.getenv("ALLOWED_ORIGINS", "*")
+    return [origin.strip() for origin in origins.split(",")]
+
 app = FastAPI(title="ScoutOSAI Backend")
 
 # Configure CORS
@@ -18,7 +24,7 @@ else:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=_get_allowed_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
