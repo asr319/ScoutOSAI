@@ -9,3 +9,4 @@ httpx>=0.25,<0.29
 openai==1.95.0
 argon2-cffi==25.1.0
 starlette==0.46.0
+cryptography==45.0.5

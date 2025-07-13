@@ -3,6 +3,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # Override the database URL so tests use a local SQLite file
 os.environ["DATABASE_URL"] = "sqlite:///./test.db"
+os.environ["FERNET_KEY"] = "1OGaT5SwPuHVrxTp1lT7ZnkSeBAkiqdSqsgTbDuSwIs="
 
 # Import engine after setting DATABASE_URL so it picks up the test URI
 from app.db import engine
