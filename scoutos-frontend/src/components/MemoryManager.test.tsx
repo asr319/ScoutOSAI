@@ -29,11 +29,11 @@ describe('MemoryManager API calls', () => {
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ memory: { id: 1, user_id: 1, content: 'c', topic: 't', tags: [] } }) }) // add
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ tags: ['x'] }) }) // tags
 
-    const { getByPlaceholderText, getByText } = renderWithUser(fetchMock)
+    const { getAllByPlaceholderText, getByText } = renderWithUser(fetchMock)
 
-    fireEvent.change(getByPlaceholderText('Content'), { target: { value: 'c' } })
-    fireEvent.change(getByPlaceholderText('Topic'), { target: { value: 't' } })
-    fireEvent.change(getByPlaceholderText('Tags comma separated'), { target: { value: '' } })
+    fireEvent.change(getAllByPlaceholderText('Content')[0], { target: { value: 'c' } })
+    fireEvent.change(getAllByPlaceholderText('Topic')[0], { target: { value: 't' } })
+    fireEvent.change(getAllByPlaceholderText('Tags comma separated')[0], { target: { value: '' } })
     fireEvent.click(getByText('Add Memory'))
 
     await waitFor(() => {
@@ -47,16 +47,23 @@ describe('MemoryManager API calls', () => {
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve([]) }) // list
       .mockResolvedValue({ ok: true, json: () => Promise.resolve({}) })
 
-    const { getAllByText } = renderWithUser(fetchMock)
+    const { getAllByText, getAllByPlaceholderText } = renderWithUser(fetchMock)
 
+    fireEvent.change(getAllByPlaceholderText('Content')[0], { target: { value: 'foo' } })
     fireEvent.click(getAllByText('Get Summary')[0])
     await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/ai/summary'), expect.any(Object))
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining('/ai/summary'),
+        expect.objectContaining({ body: JSON.stringify({ content: 'foo' }) })
+      )
     })
 
     fireEvent.click(getAllByText('Merge Advice')[0])
     await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/ai/merge'), expect.any(Object))
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining('/ai/merge'),
+        expect.objectContaining({ body: JSON.stringify({ memory_a: 'c', memory_b: '' }) })
+      )
     })
   })
 })

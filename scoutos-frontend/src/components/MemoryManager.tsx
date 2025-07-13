@@ -111,7 +111,7 @@ export default function MemoryManager() {
         'Content-Type': 'application/json',
         ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
       },
-      body: JSON.stringify({ user_id: user.id }),
+      body: JSON.stringify({ content }),
     });
     if (res.ok) {
       const data = await res.json();
@@ -128,8 +128,8 @@ export default function MemoryManager() {
         ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
       },
       body: JSON.stringify({
-        user_id: user.id,
-        memory_ids: memories.map(m => m.id),
+        memory_a: memories[0]?.content || '',
+        memory_b: memories[1]?.content || '',
       }),
     });
     if (res.ok) {
