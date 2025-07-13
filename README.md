@@ -1,81 +1,60 @@
-<!-- @format -->
-
 # ScoutOSAI
 
-ScoutOSAI is a small demo project that pairs a FastAPI backend with a React
-frontend. This document explains how to get a local development environment up
-and running and outlines a few security best practices.
+ScoutOSAI is a demo full-stack project that pairs a FastAPI backend with a React + Vite frontend. The application exposes a small API for managing user information and storing short text "memories". The web client provides a minimal chat interface for experimenting with the API.
 
-## Installation
+## Backend Setup
 
-### Prerequisites
-
-- **Python 3.8+** for the backend
-- **Node.js 18+** and [pnpm](https://pnpm.io) for the frontend
-
-Running `./setup.sh` from the repository root will install both Python and
-Node.js dependencies using `pip` and `pnpm`.
-
-```bash
-./setup.sh
-```
-
-### Manual Backend Setup
+The backend lives in [`scoutos-backend`](scoutos-backend/). Install dependencies and start the server with:
 
 ```bash
 cd scoutos-backend
-pip install -r requirements.txt -r requirements-dev.txt
+pip install -r requirements.txt
+uvicorn app.main:app --reload
 ```
 
-### Manual Frontend Setup
+The service reads `DATABASE_URL` to connect to PostgreSQL (tests override this with SQLite). See [`scoutos-backend/README.md`](scoutos-backend/README.md) for more details on environment variables and endpoints.
+
+Run the backend unit tests from the same directory:
+
+```bash
+pip install -r requirements.txt -r requirements-dev.txt
+pytest
+```
+
+## Frontend Setup
+
+The React frontend is found in [`scoutos-frontend`](scoutos-frontend/). Use `pnpm` for dependency management:
 
 ```bash
 cd scoutos-frontend
 pnpm install
 ```
 
-## Configuration
+Create a `.env` file with the backend URL:
 
-### Backend
-
-The API reads configuration from environment variables:
-
-- `DATABASE_URL` &ndash; PostgreSQL connection string
-- `ALLOWED_ORIGINS` &ndash; comma separated list of hosts allowed by CORS
-
-For local development you can start the server with:
-
-```bash
-cd scoutos-backend
-uvicorn app.main:app --reload
 ```
-
-### Frontend
-
-Create a `.env` file inside `scoutos-frontend` with the backend URL:
-
-```bash
 VITE_API_URL=http://localhost:8000
 ```
 
-Start the development server using:
+Start the development server with:
 
 ```bash
 pnpm run dev
 ```
 
-## Security Guidance
+Lint and run tests with:
 
-- **Never commit secrets** to the repository. Keep environment variables such as
-  database credentials in local `.env` files or the hosting platform's secret
-  store.
-- Change the default credentials used in `docker-compose.yml` if you expose the
-  database outside of local development.
-- When deploying, make sure HTTPS is enabled and restrict CORS origins via
-  `ALLOWED_ORIGINS`.
-- Regularly run `pytest` in `scoutos-backend` and `pnpm test` in
-  `scoutos-frontend` to catch regressions.
+```bash
+npm run lint
+pnpm test
+```
 
-With these steps you should be able to run both services locally and have a
-basic understanding of the security considerations involved.
+## Security Notes
 
+This repository is a learning project. When adapting it for workloads that touch HIPAA or banking data:
+
+- Serve all traffic over **HTTPS** to protect sensitive information in transit.
+- Use **strong, unique passwords** and store secrets in environment variables or a secret manager, never in version control.
+- Limit CORS origins and employ authentication before exposing the API publicly.
+
+Review [`SECURITY.md`](SECURITY.md) and your organization’s compliance requirements before deploying in production.
