@@ -16,6 +16,14 @@ export OPENAI_API_KEY=sk-...
 docker-compose up
 ```
 
+Sample environment files are provided for development, staging, and production.
+Copy the appropriate file to `.env` and pass it to docker-compose:
+
+```bash
+cp .env.staging.example .env  # or .env.prod.example
+docker-compose --env-file .env up
+```
+
 The backend service uses these values when constructing `DATABASE_URL` and when
 calling the OpenAI API for the demo AI endpoints.
 
@@ -77,3 +85,8 @@ This repository is a learning project. When adapting it for workloads that touch
 - Limit CORS origins and employ authentication before exposing the API publicly.
 
 Review [`SECURITY.md`](SECURITY.md) and your organization’s compliance requirements before deploying in production.
+
+## API Reference
+
+Full details of the REST endpoints, including example requests, can be found in
+[`scoutos-backend/README.md`](scoutos-backend/README.md).

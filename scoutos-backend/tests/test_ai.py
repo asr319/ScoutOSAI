@@ -1,7 +1,8 @@
 from fastapi.testclient import TestClient
 import os
 import sys
-from app.routes import ai as ai_module
+
+from app.services import agent_service
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from app.main import app  # noqa: E402
@@ -35,7 +36,7 @@ def test_ai_chat_returns_mocked_text(monkeypatch):
         )
     )
 
-    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+    monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
 
     resp = client.post("/ai/chat", json={"prompt": "hi"})
     assert resp.status_code == 200
@@ -44,7 +45,7 @@ def test_ai_chat_returns_mocked_text(monkeypatch):
 
 def test_ai_tags_missing_api_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    resp = client.post("/ai/tags", json={"content": "memo"})
+    resp = client.post("/ai/tags", json={"text": "memo"})
     assert resp.status_code == 500
     assert "OPENAI_API_KEY" in resp.json()["detail"]
 
@@ -67,16 +68,26 @@ def test_ai_tags_returns_mocked_tags(monkeypatch):
         )
     )
 
-    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+    monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
 
-    resp = client.post("/ai/tags", json={"content": "text"})
+    resp = client.post("/ai/tags", json={"text": "text"})
     assert resp.status_code == 200
     assert resp.json() == {"tags": ["x", "y"]}
 
 
 def test_ai_merge_missing_api_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    resp = client.post("/ai/merge", json={"memory_a": "a", "memory_b": "b"})
+    from types import SimpleNamespace
+    class FakeService:
+        def __init__(self, _db):
+            pass
+
+        def get_memory(self, mid):
+            return SimpleNamespace(content=f"m{mid}")
+
+    monkeypatch.setattr(ai_module, "MemoryService", FakeService)
+
+    resp = client.post("/ai/merge", json={"memory_ids": [1, 2]})
     assert resp.status_code == 500
     assert "OPENAI_API_KEY" in resp.json()["detail"]
 
@@ -99,14 +110,20 @@ def test_ai_merge_returns_mocked_text(monkeypatch):
         )
     )
 
+    class FakeService:
+        def __init__(self, _db):
+            pass
+
+        def get_memory(self, mid):
+            return SimpleNamespace(content=f"mem{mid}")
+
+    monkeypatch.setattr(ai_module, "MemoryService", FakeService)
+
     monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
 
-    resp = client.post(
-        "/ai/merge",
-        json={"memory_a": "one", "memory_b": "two"},
-    )
+    resp = client.post("/ai/merge", json={"memory_ids": [1, 2]})
     assert resp.status_code == 200
-    assert resp.json() == {"response": "merge"}
+    assert resp.json() == {"verdict": "merge"}
 
 
 def test_ai_summary_missing_api_key(monkeypatch):
@@ -134,7 +151,7 @@ def test_ai_summary_returns_mocked_text(monkeypatch):
         )
     )
 
-    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+    monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
 
     resp = client.post("/ai/summary", json={"content": "the text"})
     assert resp.status_code == 200
@@ -160,7 +177,7 @@ def test_ai_chat_async_returns_mocked_text(monkeypatch):
         )
     )
 
-    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+    monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
 
     resp = client.post("/ai/chat", json={"prompt": "hello"})
     assert resp.status_code == 200
@@ -182,7 +199,7 @@ def test_ai_chat_handles_openai_error(monkeypatch):
         )
     )
 
-    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+    monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
 
     resp = client.post("/ai/chat", json={"prompt": "boom"})
     assert resp.status_code == 503

@@ -44,17 +44,110 @@ Docker Compose reads this file automatically when launching the services.
 
 ## API Endpoints
 
-| Method | Path          | Description               |
-| ------ | ------------- | ------------------------- |
-| `GET`  | `/`           | Health check              |
-| `POST` | `/memory/add` | Store a memory (demo)     |
-| `POST` | `/user/register`| Register a user (demo)    |
-| `POST` | `/user/login` | Obtain auth token         |
-| `GET`  | `/agent/status`| Agent status placeholder |
+The service exposes a small REST API. The table below lists each route and its
+purpose.
 
-Authenticate via `/user/login` to receive a `token`. Pass this value in the
-`Authorization` header as `Bearer <token>` when calling protected endpoints
-like `/memory/update`, `/memory/list`, `/memory/search` or any agent routes.
+| Method | Path | Description |
+| ------ | ---- | ----------- |
+| `GET` | `/` | Health check |
+| `POST` | `/user/register` | Register a user |
+| `POST` | `/user/login` | Obtain auth token |
+| `GET` | `/agent/status` | Agent status placeholder |
+| `POST` | `/agent/merge` | Merge multiple memories |
+| `POST` | `/memory/add` | Store a memory |
+| `PUT` | `/memory/update/{id}` | Update a memory |
+| `GET` | `/memory/list` | List memories for a user |
+| `GET` | `/memory/search` | Filter by topic/tag |
+| `DELETE` | `/memory/delete/{id}` | Delete a memory |
+| `POST` | `/ai/chat` | Chat with OpenAI |
+| `POST` | `/ai/tags` | Suggest tags for text |
+| `POST` | `/ai/merge` | LLM merge advice |
+| `POST` | `/ai/summary` | Summarize text |
+
+Authenticate via `/user/login` to obtain a JWT `token`. Pass this token in the
+`Authorization` header as `Bearer <token>` when calling any `/memory` or `/agent`
+route.
+
+### Example Requests
+
+**Add a memory**
+
+```http
+POST /memory/add HTTP/1.1
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "content": "Buy milk",
+  "topic": "todo",
+  "tags": ["grocery"]
+}
+```
+
+Response
+
+```json
+{
+  "message": "Memory added",
+  "memory": {
+    "id": 42,
+    "user_id": 1,
+    "content": "Buy milk",
+    "topic": "todo",
+    "tags": ["grocery"]
+  }
+}
+```
+
+**List memories**
+
+```http
+GET /memory/list?user_id=1 HTTP/1.1
+Authorization: Bearer <token>
+```
+
+Response
+
+```json
+[
+  {
+    "id": 42,
+    "user_id": 1,
+    "content": "Buy milk",
+    "topic": "todo",
+    "tags": ["grocery"]
+  }
+]
+```
+
+**Delete a memory**
+
+```http
+DELETE /memory/delete/42?user_id=1 HTTP/1.1
+Authorization: Bearer <token>
+```
+
+Response
+
+```json
+{"message": "Memory deleted"}
+```
+
+**AI chat**
+
+```http
+POST /ai/chat HTTP/1.1
+Content-Type: application/json
+
+{"prompt": "Hello"}
+```
+
+Response
+
+```json
+{"response": "Hi there!"}
+```
 
 ## Deployment
 
