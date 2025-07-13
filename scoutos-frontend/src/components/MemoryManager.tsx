@@ -22,7 +22,10 @@ export default function MemoryManager() {
   const [suggestedTags, setSuggestedTags] = useState<string[]>([]);
   const [searchTopic, setSearchTopic] = useState("");
   const [searchTag, setSearchTag] = useState("");
-  const [loading, setLoading] = useState(false)
+  const [editing, setEditing] = useState<Memory | null>(null);
+  const [editContent, setEditContent] = useState("");
+  const [editTopic, setEditTopic] = useState("");
+  const [editTags, setEditTags] = useState("");
   const { user } = useUser();
 
   const loadMemories = useCallback(async () => {
@@ -116,21 +119,39 @@ export default function MemoryManager() {
   }
 
   async function deleteMemory(id: number) {
-    setLoading(true)
-    try {
-      const res = await fetch(`${API_URL}/memory/delete/${id}?user_id=${user.id}`, {
-        method: 'DELETE',
-        headers: user?.token ? { Authorization: `Bearer ${user.token}` } : {},
-      })
-      if (res.ok) {
-        setMemories(memories.filter(m => m.id !== id))
-        toast.success('Memory deleted')
-      } else {
-        const body = await res.json().catch(() => ({}))
-        toast.error(body.detail || 'Delete failed')
-      }
-    } finally {
-      setLoading(false)
+    await fetch(`${API_URL}/memory/delete/${id}?user_id=${user.id}`, {
+      method: 'DELETE',
+      headers: user?.token ? { Authorization: `Bearer ${user.token}` } : {},
+    });
+    setMemories(memories.filter(m => m.id !== id));
+  }
+
+  function startEdit(mem: Memory) {
+    setEditing(mem);
+    setEditContent(mem.content);
+    setEditTopic(mem.topic);
+    setEditTags(mem.tags.join(', '));
+  }
+
+  async function saveEdit() {
+    if (!editing || !user) return;
+    const res = await fetch(`${API_URL}/memory/update/${editing.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
+      },
+      body: JSON.stringify({
+        user_id: user.id,
+        content: editContent,
+        topic: editTopic,
+        tags: editTags.split(',').map(t => t.trim()).filter(t => t),
+      }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setMemories(memories.map(m => (m.id === editing.id ? data.memory : m)));
+      setEditing(null);
     }
   }
 
@@ -240,13 +261,49 @@ export default function MemoryManager() {
 
       <ul className="space-y-2">
         {memories.map(m => (
-          <li key={m.id} className="border p-2 rounded flex justify-between">
-            <div>
-              <div className="font-semibold">{m.topic}</div>
-              <div>{m.content}</div>
-              <div className="text-sm text-gray-500">{m.tags.join(', ')}</div>
-            </div>
-            <button
+          <li key={m.id} className="border p-2 rounded">
+            {editing?.id === m.id ? (
+              <div className="flex flex-col gap-2">
+                <input
+                  className="border p-2 rounded"
+                  value={editContent}
+                  onChange={e => setEditContent(e.target.value)}
+                />
+                <input
+                  className="border p-2 rounded"
+                  value={editTopic}
+                  onChange={e => setEditTopic(e.target.value)}
+                />
+                <input
+                  className="border p-2 rounded"
+                  value={editTags}
+                  onChange={e => setEditTags(e.target.value)}
+                />
+                <div className="flex gap-2">
+                  <button
+                    className="bg-blue-600 text-white rounded p-2"
+                    onClick={saveEdit}
+                  >
+                    Save
+                  </button>
+                  <button
+                    className="rounded p-2 border"
+                    onClick={() => setEditing(null)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-between">
+                <div>
+                  <div className="font-semibold">{m.topic}</div>
+                  <div>{m.content}</div>
+                  <div className="text-sm text-gray-500">{m.tags.join(', ')}</div>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                  <button className="text-blue-600" onClick={() => startEdit(m)}>Edit</button>
+                  <button
               className="text-red-600 flex items-center gap-2"
               onClick={() => deleteMemory(m.id)}
               disabled={loading}
@@ -254,6 +311,9 @@ export default function MemoryManager() {
               {loading && <LoadingSpinner />}
               Delete
             </button>
+                </div>
+              </div>
+            )}
           </li>
         ))}
       </ul>
