@@ -51,7 +51,7 @@ export default function AuthForm() {
         data = await loginRes.json();
       }
 
-      setUser({ id: data.id, username, token: data.token });
+      setUser({ id: data.id, username, token: data.token, token: data.token });
       setUsername('');
       setPassword('');
     } catch (err) {

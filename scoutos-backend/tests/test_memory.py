@@ -29,6 +29,17 @@ def test_add_memory():
     assert resp.json()["memory"]["content"] == "test"
 
 
+def test_add_memory_unauthorized():
+    user_id, token = _auth()
+    data = {"user_id": user_id + 1, "content": "bad", "topic": "t", "tags": []}
+    resp = client.post(
+        "/memory/add",
+        json=data,
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert resp.status_code == 403
+
+
 def test_update_memory():
     user_id, token = _auth()
     data = {"user_id": user_id, "content": "init", "topic": "t", "tags": []}
@@ -50,12 +61,26 @@ def test_update_memory():
 
 
 def test_update_memory_unauthorized():
-    data = {"user_id": 1, "content": "init", "topic": "t", "tags": []}
-    resp = client.post("/memory/add", json=data)
+    user_id, token = _auth()
+    data = {"user_id": user_id, "content": "init", "topic": "t", "tags": []}
+    resp = client.post(
+        "/memory/add",
+        json=data,
+        headers={"Authorization": f"Bearer {token}"},
+    )
     memory_id = resp.json()["memory"]["id"]
 
-    updated = {"user_id": 2, "content": "nope", "topic": "t", "tags": []}
-    resp = client.put(f"/memory/update/{memory_id}", json=updated)
+    updated = {
+        "user_id": user_id + 1,
+        "content": "nope",
+        "topic": "t",
+        "tags": [],
+    }
+    resp = client.put(
+        f"/memory/update/{memory_id}",
+        json=updated,
+        headers={"Authorization": f"Bearer {token}"},
+    )
     assert resp.status_code == 403
 
 
@@ -153,18 +178,37 @@ def test_search_memory_returns_all_without_filters():
 
 
 def test_delete_memory():
-    data = {"user_id": 3, "content": "d", "topic": "t", "tags": []}
-    resp = client.post("/memory/add", json=data)
+    user_id, token = _auth()
+    data = {"user_id": user_id, "content": "d", "topic": "t", "tags": []}
+    resp = client.post(
+        "/memory/add",
+        json=data,
+        headers={"Authorization": f"Bearer {token}"},
+    )
     memory_id = resp.json()["memory"]["id"]
 
-    resp = client.delete(f"/memory/delete/{memory_id}", params={"user_id": 3})
+    resp = client.delete(
+        f"/memory/delete/{memory_id}",
+        params={"user_id": user_id},
+        headers={"Authorization": f"Bearer {token}"},
+    )
     assert resp.status_code == 200
 
 
 def test_delete_memory_unauthorized():
-    data = {"user_id": 4, "content": "e", "topic": "t", "tags": []}
-    resp = client.post("/memory/add", json=data)
+    user_id, token = _auth()
+    data = {"user_id": user_id, "content": "e", "topic": "t", "tags": []}
+    resp = client.post(
+        "/memory/add",
+        json=data,
+        headers={"Authorization": f"Bearer {token}"},
+    )
     memory_id = resp.json()["memory"]["id"]
 
-    resp = client.delete(f"/memory/delete/{memory_id}", params={"user_id": 5})
+    other_id, other_token = _auth()
+    resp = client.delete(
+        f"/memory/delete/{memory_id}",
+        params={"user_id": user_id},
+        headers={"Authorization": f"Bearer {other_token}"},
+    )
     assert resp.status_code == 403
