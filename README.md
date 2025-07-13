@@ -2,15 +2,17 @@
 
 ## Setup
 
-`docker-compose.yml` expects the database password in the `POSTGRES_PASSWORD`
-environment variable. Set the variable before starting the stack:
+`docker-compose.yml` expects the database password in `POSTGRES_PASSWORD` and
+an OpenAI API key in `OPENAI_API_KEY`. Set these variables before starting the stack:
 
 ```bash
 export POSTGRES_PASSWORD=yourpassword
+export OPENAI_API_KEY=sk-...
 docker-compose up
 ```
 
-The backend service uses this value when constructing `DATABASE_URL`.
+The backend service uses these values when constructing `DATABASE_URL` and when
+calling the OpenAI API for the demo AI endpoints.
 
 ScoutOSAI is a demo full-stack project that pairs a FastAPI backend with a React + Vite frontend. The application exposes a small API for managing user information and storing short text "memories". The web client provides a minimal chat interface for experimenting with the API.
 
