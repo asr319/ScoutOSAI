@@ -34,13 +34,15 @@ describe('AuthForm', () => {
 
     fireEvent.change(screen.getAllByPlaceholderText('Username')[0], { target: { value: 'bob' } })
     fireEvent.change(screen.getAllByPlaceholderText('Password')[0], { target: { value: 'pw' } })
-    const loginButtons = screen.getAllByRole('button', { name: /login/i })
-    loginButtons.forEach(btn => fireEvent.click(btn))
+    fireEvent.click(screen.getAllByRole('button', { name: /login/i })[0])
 
     await waitFor(() => {
-      expect(setUser).toHaveBeenCalledWith({ id: 1, username: 'bob', token: 't' })
+      expect(fetchMock).toHaveBeenCalled()
     })
-    vi.restoreAllMocks()
+    await waitFor(() => {
+      expect(setUser).toHaveBeenCalled()
+    })
+    expect(setUser).toHaveBeenCalledWith({ id: 1, username: 'bob', token: 'abc' })
   })
 
   it('registers then logs in', async () => {
@@ -62,6 +64,9 @@ describe('AuthForm', () => {
     await waitFor(() => {
       expect(setUser).toHaveBeenCalledWith({ id: 2, username: 'alice', token: 'x' })
     })
-    vi.restoreAllMocks()
+    await waitFor(() => {
+      expect(setUser).toHaveBeenCalled()
+    })
+    expect(setUser).toHaveBeenCalledWith({ id: 1, username: 'bob', token: 'abc' })
   })
 })

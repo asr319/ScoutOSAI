@@ -22,12 +22,12 @@ PostgreSQL. The backend uses SQLAlchemy's **sync** engine so the URL must
 use the standard `postgresql://` scheme (not the `postgresql+asyncpg://`
 variant). Allowed CORS origins are configured with the `ALLOWED_ORIGINS`
 environment variable. Provide a comma–separated list of origins; by default `*`
-is used to allow all origins during development.  Set `OPENAI_API_KEY` for the AI
-demo endpoints.
+is used to allow all origins during development.  Set `OPENAI_API_KEY` so the AI
+demo endpoints can call the OpenAI API.
 
 ### Environment variables
 
-Database credentials are provided via a `.env` file. From the repository root,
+Database credentials and your OpenAI key are provided via a `.env` file. From the repository root,
 copy `.env.example` to `.env` and adjust the values as needed:
 
 ```bash
@@ -42,8 +42,13 @@ Docker Compose reads this file automatically when launching the services.
 | ------ | ------------- | ------------------------- |
 | `GET`  | `/`           | Health check              |
 | `POST` | `/memory/add` | Store a memory (demo)     |
-| `POST` | `/user/create`| Create a user (demo)      |
+| `POST` | `/user/register`| Register a user (demo)    |
+| `POST` | `/user/login` | Obtain auth token         |
 | `GET`  | `/agent/status`| Agent status placeholder |
+
+Authenticate via `/user/login` to receive a `token`. Pass this value in the
+`Authorization` header as `Bearer <token>` when calling protected endpoints
+like `/memory/update`, `/memory/list`, `/memory/search` or any agent routes.
 
 ## Deployment
 

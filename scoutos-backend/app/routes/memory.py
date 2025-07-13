@@ -46,20 +46,32 @@ def _serialize(mem) -> Dict[str, Any]:
 
 
 @router.post("/add")
-def add_memory(mem: MemoryIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
+def add_memory(
+    mem: MemoryIn,
+    current_user: Dict[str, Any] = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> Dict[str, Any]:
+    if mem.user_id != int(current_user["sub"]):
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
     service = MemoryService(db)
     new_mem = service.add_memory(mem.model_dump())
     return {"message": "Memory added", "memory": _serialize(new_mem)}
 
 
-@router.put("/update/{memory_id}", dependencies=[Depends(get_current_user)])
+@router.put("/update/{memory_id}")
 def update_memory(
-    memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)
+    memory_id: int,
+    mem: MemoryIn,
+    current_user: Dict[str, Any] = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ) -> Dict[str, Any]:
     service = MemoryService(db)
     existing = service.get_memory(memory_id)
     if not existing:
         raise HTTPException(status_code=404, detail="Memory not found")
+    if mem.user_id != int(current_user["sub"]):
+        raise HTTPException(status_code=403, detail="Unauthorized")
     if existing.user_id != mem.user_id:
         raise HTTPException(status_code=403, detail="Unauthorized")
 
@@ -67,22 +79,31 @@ def update_memory(
     return {"message": "Memory updated", "memory": _serialize(updated)}
 
 
-@router.get("/list", dependencies=[Depends(get_current_user)])
+@router.get("/list")
 def list_memories(
-    user_id: int, db: Session = Depends(get_db)
+    user_id: int,
+    current_user: Dict[str, Any] = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ) -> List[Dict[str, Any]]:
+    if user_id != int(current_user["sub"]):
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
     service = MemoryService(db)
     mems = service.list_memories(user_id)
     return [_serialize(m) for m in mems]
 
 
-@router.get("/search", dependencies=[Depends(get_current_user)])
+@router.get("/search")
 def search_memories(
     user_id: int,
     topic: Optional[str] = None,
     tag: Optional[str] = None,
+    current_user: Dict[str, Any] = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> List[Dict[str, Any]]:
+    if user_id != int(current_user["sub"]):
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
     service = MemoryService(db)
     mems = service.search_memories(user_id, topic=topic, tag=tag)
     return [_serialize(m) for m in mems]
@@ -90,8 +111,14 @@ def search_memories(
 
 @router.delete("/delete/{memory_id}")
 def delete_memory(
-    memory_id: int, user_id: int, db: Session = Depends(get_db)
+    memory_id: int,
+    user_id: int,
+    current_user: Dict[str, Any] = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ) -> Dict[str, str]:
+    if user_id != int(current_user["sub"]):
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
     service = MemoryService(db)
     existing = service.get_memory(memory_id)
     if not existing:
