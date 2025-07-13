@@ -77,3 +77,8 @@ This repository is a learning project. When adapting it for workloads that touch
 - Limit CORS origins and employ authentication before exposing the API publicly.
 
 Review [`SECURITY.md`](SECURITY.md) and your organization’s compliance requirements before deploying in production.
+
+## API Reference
+
+Full details of the REST endpoints, including example requests, can be found in
+[`scoutos-backend/README.md`](scoutos-backend/README.md).
