@@ -43,8 +43,11 @@ class MemoryService:
 
     def list_memories(self, user_id: int) -> List[Memory]:
         """Return all ``Memory`` rows for a given user."""
-
-        return self.db.query(Memory).filter(Memory.user_id == user_id).all()
+        mems = self.db.query(Memory).filter(Memory.user_id == user_id).all()
+        for mem in mems:
+            mem.content = decrypt_text(mem.content)
+            self.db.expunge(mem)
+        return mems
 
     def search_memories(
         self, user_id: int, topic: str | None = None, tag: str | None = None
@@ -56,7 +59,11 @@ class MemoryService:
             query = query.filter(Memory.topic == topic)
         if tag:
             query = query.filter(Memory.tags.contains(tag))
-        return query.all()
+        mems = query.all()
+        for mem in mems:
+            mem.content = decrypt_text(mem.content)
+            self.db.expunge(mem)
+        return mems
 
     def update_memory(self, memory_id: int, updates: dict) -> Memory | None:
         """Update an existing ``Memory`` with provided values."""
