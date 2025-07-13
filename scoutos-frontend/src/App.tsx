@@ -1,6 +1,7 @@
 import ChatInterface from './components/ChatInterface';
 import AuthForm from './components/AuthForm';
 import { useUser } from './hooks/useUser';
+import { Toaster } from 'react-hot-toast';
 import './index.css';
 
 function AppContent() {
@@ -13,5 +14,10 @@ function AppContent() {
 }
 
 export default function App() {
-  return <AppContent />;
+  return (
+    <UserProvider>
+      <AppContent />
+      <Toaster position="top-right" />
+    </UserProvider>
+  );
 }
