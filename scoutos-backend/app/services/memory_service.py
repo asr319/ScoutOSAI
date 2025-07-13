@@ -4,7 +4,6 @@
 
 from __future__ import annotations
 
-import base64
 import datetime
 import os
 from typing import List
@@ -94,9 +93,7 @@ class MemoryService:
         if not memory_ids:
             return None
 
-        mems = (
-            self.db.query(Memory).filter(Memory.id.in_(memory_ids)).all()
-        )
+        mems = self.db.query(Memory).filter(Memory.id.in_(memory_ids)).all()
         if len(mems) != len(memory_ids):
             return None
 
