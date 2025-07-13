@@ -38,7 +38,7 @@ def _serialize(mem: Memory) -> Dict[str, Any]:
 
 
 @router.post("/merge")
-def merge_memories(req: MergeRequest, db=Depends(get_db)) -> Dict[str, Any]:
+def merge_memories(req: MergeRequest, db: Session = Depends(get_db)) -> Dict[str, Any]:
     service = MemoryService(db)
     merged = service.merge_memories(req.memory_ids, req.user_id)
     if not merged:

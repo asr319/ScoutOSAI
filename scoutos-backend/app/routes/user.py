@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from argon2 import PasswordHasher
-from typing import Dict, Generator
+from typing import Any, Dict, Generator
 from app.db import SessionLocal
 from app.services.user_service import UserService
 
@@ -20,7 +20,7 @@ class UserIn(BaseModel):
     password: str
 
 @router.post("/register")
-def register(user: UserIn, db: Session = Depends(get_db)) -> Dict[str, object]:
+def register(user: UserIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
     service = UserService(db)
     if service.get_by_username(user.username):
         raise HTTPException(status_code=400, detail="Username taken")
@@ -28,7 +28,7 @@ def register(user: UserIn, db: Session = Depends(get_db)) -> Dict[str, object]:
     return {"message": "User registered", "id": new_user.id}
 
 @router.post("/login")
-def login(user: UserIn, db: Session = Depends(get_db)) -> Dict[str, object]:
+def login(user: UserIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
     service = UserService(db)
     db_user = service.get_by_username(user.username)
     if not db_user:

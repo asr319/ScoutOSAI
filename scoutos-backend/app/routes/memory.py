@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional, Dict, Generator
+from typing import Any, List, Optional, Dict, Generator
 from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
@@ -24,7 +24,7 @@ class MemoryIn(BaseModel):
     tags: List[str] = []
 
 
-def _serialize(mem) -> Dict[str, object]:
+def _serialize(mem) -> Dict[str, Any]:
     return {
         "id": mem.id,
         "user_id": mem.user_id,
@@ -35,14 +35,14 @@ def _serialize(mem) -> Dict[str, object]:
 
 
 @router.post("/add")
-def add_memory(mem: MemoryIn, db: Session = Depends(get_db)) -> Dict[str, object]:
+def add_memory(mem: MemoryIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
     service = MemoryService(db)
     new_mem = service.add_memory(mem.dict())
     return {"message": "Memory added", "memory": _serialize(new_mem)}
 
 
 @router.put("/update/{memory_id}")
-def update_memory(memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)) -> Dict[str, object]:
+def update_memory(memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
     service = MemoryService(db)
     updated = service.update_memory(memory_id, mem.dict())
     if not updated:
@@ -51,7 +51,7 @@ def update_memory(memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)) 
 
 
 @router.get("/list")
-def list_memories(user_id: int, db: Session = Depends(get_db)) -> List[Dict[str, object]]:
+def list_memories(user_id: int, db: Session = Depends(get_db)) -> List[Dict[str, Any]]:
     service = MemoryService(db)
     mems = service.list_memories(user_id)
     return [_serialize(m) for m in mems]
@@ -63,7 +63,7 @@ def search_memories(
     topic: Optional[str] = None,
     tag: Optional[str] = None,
     db: Session = Depends(get_db),
-) -> List[Dict[str, object]]:
+) -> List[Dict[str, Any]]:
     service = MemoryService(db)
     mems = service.list_memories(user_id)
     if topic:
