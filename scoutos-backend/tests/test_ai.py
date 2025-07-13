@@ -1,7 +1,6 @@
 from fastapi.testclient import TestClient
 import os
 import sys
-import openai
 from app.routes import ai as ai_module
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
