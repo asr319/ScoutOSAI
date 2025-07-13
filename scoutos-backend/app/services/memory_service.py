@@ -44,14 +44,19 @@ class MemoryService:
     def list_memories(self, user_id: int) -> List[Memory]:
         """Return all ``Memory`` rows for a given user."""
 
-        mems = self.db.query(Memory).filter(Memory.user_id == user_id).all()
-        result: List[Memory] = []
-        for m in mems:
-            decrypted = decrypt_text(m.content)
-            self.db.expunge(m)
-            m.content = decrypted
-            result.append(m)
-        return result
+        return self.db.query(Memory).filter(Memory.user_id == user_id).all()
+
+    def search_memories(
+        self, user_id: int, topic: str | None = None, tag: str | None = None
+    ) -> List[Memory]:
+        """Return ``Memory`` rows filtered by optional topic and tag."""
+
+        query = self.db.query(Memory).filter(Memory.user_id == user_id)
+        if topic:
+            query = query.filter(Memory.topic == topic)
+        if tag:
+            query = query.filter(Memory.tags.contains(tag))
+        return query.all()
 
     def update_memory(self, memory_id: int, updates: dict) -> Memory | None:
         """Update an existing ``Memory`` with provided values."""
@@ -92,6 +97,9 @@ class MemoryService:
             self.db.query(Memory).filter(Memory.id.in_(memory_ids)).all()
         )
         if len(mems) != len(memory_ids):
+            return None
+
+        if any(m.user_id != user_id for m in mems):
             return None
 
         content = "\n".join(decrypt_text(m.content) for m in mems)
