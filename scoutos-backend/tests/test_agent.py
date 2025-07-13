@@ -1,7 +1,7 @@
-from fastapi.testclient import TestClient
 import os
 import sys
 import uuid
+from fastapi.testclient import TestClient
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from app.main import app  # noqa: E402
 
