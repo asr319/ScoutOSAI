@@ -9,6 +9,8 @@ node_modules/
 dist/
 .env.*
 !.env.example
+!.env.staging.example
+!.env.prod.example
 .DS_Store
 # Ignore SQLite test database
 scoutos-backend/test.db
