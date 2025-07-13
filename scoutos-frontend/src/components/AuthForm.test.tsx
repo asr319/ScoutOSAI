@@ -27,7 +27,7 @@ describe('AuthForm', () => {
 
   it('submits login data', async () => {
     const setUser = vi.fn()
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ id: 1, token: 't' }) })
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ id: 1, token: 'abc' }) })
     vi.stubGlobal('fetch', fetchMock)
 
     renderWithProvider(setUser)
@@ -50,7 +50,7 @@ describe('AuthForm', () => {
     const fetchMock = vi
       .fn()
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ id: 2 }) })
-      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ id: 2, token: 'x' }) })
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ id: 2, token: 'abc' }) })
     vi.stubGlobal('fetch', fetchMock)
 
     renderWithProvider(setUser)
@@ -62,7 +62,8 @@ describe('AuthForm', () => {
     regButtons.forEach(btn => fireEvent.click(btn))
 
     await waitFor(() => {
-      expect(setUser).toHaveBeenCalledWith({ id: 2, username: 'alice', token: 'x' })
+      expect(setUser).toHaveBeenCalledWith({ id: 2, username: 'alice', token: 'abc' })
     })
+    expect(setUser).toHaveBeenCalledWith({ id: 2, username: 'alice', token: 'abc' })
   })
 })

@@ -96,7 +96,7 @@ export default function MemoryManager() {
   }
 
   async function deleteMemory(id: number) {
-    await fetch(`${API_URL}/memory/delete/${id}`, {
+    await fetch(`${API_URL}/memory/delete/${id}?user_id=${user.id}`, {
       method: 'DELETE',
       headers: user?.token ? { Authorization: `Bearer ${user.token}` } : {},
     });
