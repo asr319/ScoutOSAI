@@ -7,6 +7,7 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - UVICORN_RELOAD=--reload
     depends_on:
       - db
   frontend:
