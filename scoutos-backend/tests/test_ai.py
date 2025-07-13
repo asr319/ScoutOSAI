@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 import os
 import sys
 from app.routes import ai as ai_module
-import openai
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from app.main import app  # noqa: E402
@@ -27,10 +26,16 @@ def test_ai_chat_returns_mocked_text(monkeypatch):
         choices=[SimpleNamespace(message=SimpleNamespace(content="mocked reply"))]
     )
 
-    async def fake_acreate(**_: str):
+    async def fake_acreate(*_: str, **__: str):
         return fake_resp
 
-    monkeypatch.setattr(openai.ChatCompletion, "acreate", fake_acreate)
+    fake_client = SimpleNamespace(
+        chat=SimpleNamespace(
+            completions=SimpleNamespace(acreate=fake_acreate)
+        )
+    )
+
+    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
 
     resp = client.post("/ai/chat", json={"prompt": "hi"})
     assert resp.status_code == 200
