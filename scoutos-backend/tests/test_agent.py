@@ -44,10 +44,25 @@ def test_merge_endpoint():
 
 
 def test_merge_endpoint_unauthorized():
-    d1 = {"user_id": 10, "content": "a", "topic": "t", "tags": []}
-    d2 = {"user_id": 10, "content": "b", "topic": "t", "tags": []}
-    r1 = client.post("/memory/add", json=d1)
-    r2 = client.post("/memory/add", json=d2)
+    user_id, token = _auth()
+    d1 = {"user_id": user_id, "content": "a", "topic": "t", "tags": []}
+    d2 = {"user_id": user_id, "content": "b", "topic": "t", "tags": []}
+    r1 = client.post(
+        "/memory/add",
+        json=d1,
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    r2 = client.post(
+        "/memory/add",
+        json=d2,
+        headers={"Authorization": f"Bearer {token}"},
+    )
     ids = [r1.json()["memory"]["id"], r2.json()["memory"]["id"]]
-    resp = client.post("/agent/merge", json={"user_id": 11, "memory_ids": ids})
+
+    other_id, other_token = _auth()
+    resp = client.post(
+        "/agent/merge",
+        json={"user_id": user_id, "memory_ids": ids},
+        headers={"Authorization": f"Bearer {other_token}"},
+    )
     assert resp.status_code == 403

@@ -17,7 +17,7 @@ def get_current_user(
     return verify_token(credentials.credentials)
 
 
-router = APIRouter(dependencies=[Depends(get_current_user)])
+router = APIRouter()
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -29,7 +29,7 @@ def get_db() -> Generator[Session, None, None]:
 
 
 @router.get("/status")
-def agent_status() -> Dict[str, str]:
+def agent_status(current_user: dict = Depends(get_current_user)) -> Dict[str, str]:
     return {"status": "Agent module placeholder"}
 
 
@@ -50,8 +50,13 @@ def _serialize(mem: Memory) -> Dict[str, Any]:
 
 @router.post("/merge")
 def merge_memories(
-    req: MergeRequest, db: Session = Depends(get_db)
+    req: MergeRequest,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ) -> Dict[str, Any]:
+    if req.user_id != int(current_user["sub"]):
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
     service = MemoryService(db)
     merged = service.merge_memories(req.memory_ids, req.user_id)
     if not merged:
