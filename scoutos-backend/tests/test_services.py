@@ -1,5 +1,6 @@
 import os
 import sys
+from app.models.memory import Memory
 import uuid
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
@@ -44,12 +45,20 @@ def test_memory_service_crud():
     )
 
     assert mem.id is not None
+    raw = SessionLocal()
+    stored = raw.get(Memory, mem.id)
+    assert stored.content != "c"
+    raw.close()
     fetched = mem_service.get_memory(mem.id)
     assert fetched.content == "c"
 
     mem_service.update_memory(mem.id, {"content": "new"})
     updated = mem_service.get_memory(mem.id)
     assert updated.content == "new"
+    raw = SessionLocal()
+    stored = raw.get(Memory, mem.id)
+    assert stored.content != "new"
+    raw.close()
 
     listed = mem_service.list_memories(user.id)
     assert any(m.id == mem.id for m in listed)
@@ -76,6 +85,10 @@ def test_memory_service_merge():
     merged = mem_service.merge_memories([m1.id, m2.id], user.id)
     assert merged.content == "a\nb"
     assert set(merged.tags) == {"x", "y"}
+    raw = SessionLocal()
+    stored = raw.get(Memory, merged.id)
+    assert stored.content != "a\nb"
+    raw.close()
     assert mem_service.get_memory(m1.id) is None
     assert mem_service.get_memory(m2.id) is None
     db.close()
