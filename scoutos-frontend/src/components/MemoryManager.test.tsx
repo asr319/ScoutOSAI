@@ -23,10 +23,15 @@ describe('MemoryManager API calls', () => {
   })
 
   it('requests tags and merge advice', async () => {
+    const memories = [
+      { id: 1, user_id: 1, content: 'a', topic: 't', tags: [], timestamp: '' },
+      { id: 2, user_id: 1, content: 'b', topic: 't', tags: [], timestamp: '' },
+    ]
     const fetchMock = vi
       .fn()
-      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve([]) }) // list
-      .mockResolvedValue({ ok: true, json: () => Promise.resolve({ response: 'merge!' }) })
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(memories) }) // list
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ tags: [] }) })
+      .mockResolvedValue({ ok: true, json: () => Promise.resolve({ verdict: 'merge!' }) })
 
     const { getAllByText, getAllByPlaceholderText, getByText, findByText } = renderWithUser(fetchMock)
 
@@ -47,7 +52,9 @@ describe('MemoryManager API calls', () => {
     await waitFor(() => {
       expect(
         fetchMock.mock.calls.some(
-          c => (c[0] as string).includes('/ai/merge')
+          c =>
+            (c[0] as string).includes('/ai/merge') &&
+            JSON.parse((c[1] as RequestInit).body as string).memory_ids[0] === 1
         )
       ).toBe(true)
     })
