@@ -1,5 +1,5 @@
-import { describe, it, vi, expect, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest'
+import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
 import AuthForm from './AuthForm'
 import { UserContext, type User } from '../context/UserContext'
 
@@ -15,6 +15,10 @@ describe('AuthForm', () => {
   beforeEach(() => {
     vi.resetAllMocks()
   })
+  afterEach(() => {
+    vi.restoreAllMocks()
+    cleanup()
+  })
 
   it('renders inputs', () => {
     const { container } = renderWithProvider(() => {})
@@ -23,7 +27,7 @@ describe('AuthForm', () => {
 
   it('submits login data', async () => {
     const setUser = vi.fn()
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ id: 1 }) })
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ id: 1, token: 'abc' }) })
     vi.stubGlobal('fetch', fetchMock)
 
     renderWithProvider(setUser)
@@ -35,6 +39,9 @@ describe('AuthForm', () => {
     await waitFor(() => {
       expect(fetchMock).toHaveBeenCalled()
     })
-    vi.restoreAllMocks()
+    await waitFor(() => {
+      expect(setUser).toHaveBeenCalled()
+    })
+    expect(setUser).toHaveBeenCalledWith({ id: 1, username: 'bob', token: 'abc' })
   })
 })
