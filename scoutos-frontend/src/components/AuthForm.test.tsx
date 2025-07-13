@@ -1,0 +1,40 @@
+import { describe, it, vi, expect, beforeEach } from 'vitest'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import AuthForm from './AuthForm'
+import { UserContext, type User } from '../context/UserContext'
+
+function renderWithProvider(setUser: (u: User | null) => void) {
+  return render(
+    <UserContext.Provider value={{ user: null, setUser }}>
+      <AuthForm />
+    </UserContext.Provider>
+  )
+}
+
+describe('AuthForm', () => {
+  beforeEach(() => {
+    vi.resetAllMocks()
+  })
+
+  it('renders inputs', () => {
+    const { container } = renderWithProvider(() => {})
+    expect(container.querySelector('input')).toBeTruthy()
+  })
+
+  it('submits login data', async () => {
+    const setUser = vi.fn()
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ id: 1 }) })
+    vi.stubGlobal('fetch', fetchMock)
+
+    renderWithProvider(setUser)
+
+    fireEvent.change(screen.getAllByPlaceholderText('Username')[0], { target: { value: 'bob' } })
+    fireEvent.change(screen.getAllByPlaceholderText('Password')[0], { target: { value: 'pw' } })
+    fireEvent.click(screen.getAllByRole('button', { name: /login/i })[0])
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalled()
+    })
+    vi.restoreAllMocks()
+  })
+})
