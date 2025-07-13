@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import openai
+from openai import AsyncOpenAI
 import os
 from typing import Dict
 
@@ -22,16 +22,18 @@ async def ai_chat(req: AIRequest) -> Dict[str, str]:
             detail="OPENAI_API_KEY environment variable is not set",
         )
 
-    openai.api_key = api_key
-
     try:
-        resp = await openai.ChatCompletion.acreate(
+        client = AsyncOpenAI(api_key=api_key)
+        resp = await client.chat.completions.acreate(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": req.prompt}],
             max_tokens=200,
         )
     except Exception as exc:
-        raise HTTPException(status_code=503, detail=f"OpenAI request failed: {exc}")
+        raise HTTPException(
+            status_code=503,
+            detail=f"OpenAI request failed: {exc}",
+        )
 
     answer = resp.choices[0].message.content
     return {"response": answer}
