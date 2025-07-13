@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { useUser } from "../hooks/useUser";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function ChatInterface() {
+  const { user } = useUser();
   const [messages, setMessages] = useState<{sender: string, text: string}[]>([]);
   const [input, setInput] = useState('');
 
   async function sendMessage() {
-    if (!input.trim()) return;
+    if (!input.trim() || !user) return;
 
     // Show the user's message immediately
     setMessages([...messages, { sender: 'user', text: input }]);
@@ -20,7 +22,7 @@ export default function ChatInterface() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          user_id: 1, // Replace with real user/session info
+          user_id: user.id,
           content: userText,
           topic: 'General',
           tags: [],
