@@ -30,5 +30,5 @@ def merge_memories(req: MergeRequest, db=Depends(get_db)):
     service = MemoryService(db)
     merged = service.merge_memories(req.memory_ids, req.user_id)
     if not merged:
-        raise HTTPException(status_code=404, detail="Memories not found")
+        raise HTTPException(status_code=403, detail="Unauthorized or memories not found")
     return {"memory": merged}

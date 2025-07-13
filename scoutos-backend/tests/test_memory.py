@@ -23,6 +23,16 @@ def test_update_memory():
     assert resp.json()["memory"]["content"] == "updated"
 
 
+def test_update_memory_unauthorized():
+    data = {"user_id": 1, "content": "init", "topic": "t", "tags": []}
+    resp = client.post("/memory/add", json=data)
+    memory_id = resp.json()["memory"]["id"]
+
+    updated = {"user_id": 2, "content": "nope", "topic": "t", "tags": []}
+    resp = client.put(f"/memory/update/{memory_id}", json=updated)
+    assert resp.status_code == 403
+
+
 def test_list_memories_returns_for_user():
     user_id = 1000 + int(uuid.uuid4().hex[:6], 16)
 
@@ -65,3 +75,21 @@ def test_search_memory_filters_by_topic_and_tag():
         params={"user_id": user_id, "topic": "alpha", "tag": "later"},
     )
     assert [m["content"] for m in both.json()] == ["b"]
+
+
+def test_delete_memory():
+    data = {"user_id": 3, "content": "d", "topic": "t", "tags": []}
+    resp = client.post("/memory/add", json=data)
+    memory_id = resp.json()["memory"]["id"]
+
+    resp = client.delete(f"/memory/delete/{memory_id}", params={"user_id": 3})
+    assert resp.status_code == 200
+
+
+def test_delete_memory_unauthorized():
+    data = {"user_id": 4, "content": "e", "topic": "t", "tags": []}
+    resp = client.post("/memory/add", json=data)
+    memory_id = resp.json()["memory"]["id"]
+
+    resp = client.delete(f"/memory/delete/{memory_id}", params={"user_id": 5})
+    assert resp.status_code == 403

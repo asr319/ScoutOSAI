@@ -44,9 +44,13 @@ def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
 @router.put("/update/{memory_id}")
 def update_memory(memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)):
     service = MemoryService(db)
-    updated = service.update_memory(memory_id, mem.dict())
-    if not updated:
+    existing = service.get_memory(memory_id)
+    if not existing:
         raise HTTPException(status_code=404, detail="Memory not found")
+    if existing.user_id != mem.user_id:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    updated = service.update_memory(memory_id, mem.user_id, mem.dict())
     return {"message": "Memory updated", "memory": _serialize(updated)}
 
 
@@ -74,8 +78,14 @@ def search_memories(
 
 
 @router.delete("/delete/{memory_id}")
-def delete_memory(memory_id: int, db: Session = Depends(get_db)):
+def delete_memory(memory_id: int, user_id: int, db: Session = Depends(get_db)):
     service = MemoryService(db)
-    if not service.delete_memory(memory_id):
+    existing = service.get_memory(memory_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail="Memory not found")
+    if existing.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    if not service.delete_memory(memory_id, user_id):
         raise HTTPException(status_code=404, detail="Memory not found")
     return {"message": "Memory deleted"}
