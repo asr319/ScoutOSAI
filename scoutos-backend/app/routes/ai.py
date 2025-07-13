@@ -7,10 +7,8 @@ router = APIRouter()
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-
 class AIRequest(BaseModel):
     prompt: str
-
 
 @router.post("/chat")
 async def ai_chat(req: AIRequest):

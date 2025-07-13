@@ -1,8 +1,10 @@
 import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from cryptography.fernet import Fernet
 
 # Override the database URL so tests use a local SQLite file
 os.environ["DATABASE_URL"] = "sqlite:///./test.db"
+os.environ["APP_ENCRYPTION_KEY"] = Fernet.generate_key().decode()
 
 # Import engine after setting DATABASE_URL so it picks up the test URI
 from app.db import engine
