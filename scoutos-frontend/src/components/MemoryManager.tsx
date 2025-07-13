@@ -185,31 +185,29 @@ export default function MemoryManager() {
 
   async function requestMergeAdvice() {
     if (!user) return;
-    setLoading(true)
+    setLoading(true);
     try {
+      const ids = memories.slice(0, 2).map(m => m.id);
       const res = await fetch(`${API_URL}/ai/merge`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
         },
-        body: JSON.stringify({
-          memory_a: memories[0]?.content || '',
-          memory_b: memories[1]?.content || '',
-        }),
-      })
+        body: JSON.stringify({ memory_ids: ids }),
+      });
       if (res.ok) {
-        const data = await res.json()
-        if (data.response) {
-        setMergeSuggestion(data.response);
-      }
-      toast.success('Merge advice received')
+        const data = await res.json();
+        if (data.verdict) {
+          setMergeSuggestion(data.verdict);
+        }
+        toast.success('Merge advice received');
       } else {
-        const body = await res.json().catch(() => ({}))
-        toast.error(body.detail || 'Request failed')
+        const body = await res.json().catch(() => ({}));
+        toast.error(body.detail || 'Request failed');
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
