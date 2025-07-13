@@ -48,7 +48,8 @@ class MemoryService:
         """Return a memory with decrypted ``content`` field."""
         if mem and isinstance(mem.content, str):
             try:
-                mem.content = self.fernet.decrypt(mem.content.encode()).decode()
+                inner = decrypt_text(mem.content)
+                mem.content = self.fernet.decrypt(inner.encode()).decode()
             except Exception:
                 pass
         return mem
@@ -61,7 +62,24 @@ class MemoryService:
     def list_memories(self, user_id: int) -> List[Memory]:
         """Return all ``Memory`` rows for a given user."""
 
-        return self.db.query(Memory).filter(Memory.user_id == user_id).all()
+        mems = self.db.query(Memory).filter(Memory.user_id == user_id).all()
+        return [self._decrypt_mem(m) for m in mems]
+
+    def search_memories(
+        self,
+        user_id: int,
+        topic: str | None = None,
+        tag: str | None = None,
+    ) -> List[Memory]:
+        """Search ``Memory`` rows for ``user_id`` optionally filtered by topic or tag."""
+
+        query = self.db.query(Memory).filter(Memory.user_id == user_id)
+        if topic:
+            query = query.filter(Memory.topic == topic)
+        if tag:
+            query = query.filter(Memory.tags.contains([tag]))
+        mems = query.all()
+        return [self._decrypt_mem(m) for m in mems]
 
     def update_memory(self, memory_id: int, user_id: int, updates: dict) -> Memory | None:
         """Update an existing ``Memory`` with provided values if owned by ``user_id``."""
@@ -79,9 +97,7 @@ class MemoryService:
                     setattr(mem, key, value)
         self.db.commit()
         self.db.refresh(mem)
-        decrypted = decrypt_text(mem.content)
         self.db.expunge(mem)
-        mem.content = decrypted
         return self._decrypt_mem(mem)
 
     def delete_memory(self, memory_id: int, user_id: int) -> bool:
@@ -105,10 +121,12 @@ class MemoryService:
         mems = self.db.query(Memory).filter(Memory.id.in_(memory_ids)).all()
         if len(mems) != len(memory_ids):
             return None
+        if any(m.user_id != user_id for m in mems):
+            return None
 
-        content = "\n".join(m.content for m in mems)
+        content = "\n".join(self._decrypt_mem(m).content for m in mems)
         tags = set()
-        for m in decrypted:
+        for m in mems:
             tags.update(m.tags or [])
 
         topic = mems[0].topic if mems else ""
@@ -126,7 +144,5 @@ class MemoryService:
             self.db.delete(m)
         self.db.commit()
         self.db.refresh(merged)
-        decrypted = decrypt_text(merged.content)
         self.db.expunge(merged)
-        merged.content = decrypted
         return self._decrypt_mem(merged)

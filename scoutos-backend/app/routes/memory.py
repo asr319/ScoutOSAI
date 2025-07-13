@@ -17,7 +17,7 @@ def get_current_user(
     return verify_token(credentials.credentials)
 
 
-router = APIRouter(dependencies=[Depends(get_current_user)])
+router = APIRouter()
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -52,7 +52,7 @@ def add_memory(mem: MemoryIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
     return {"message": "Memory added", "memory": _serialize(new_mem)}
 
 
-@router.put("/update/{memory_id}")
+@router.put("/update/{memory_id}", dependencies=[Depends(get_current_user)])
 def update_memory(
     memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)
 ) -> Dict[str, Any]:
@@ -67,7 +67,7 @@ def update_memory(
     return {"message": "Memory updated", "memory": _serialize(updated)}
 
 
-@router.get("/list")
+@router.get("/list", dependencies=[Depends(get_current_user)])
 def list_memories(
     user_id: int, db: Session = Depends(get_db)
 ) -> List[Dict[str, Any]]:
@@ -76,7 +76,7 @@ def list_memories(
     return [_serialize(m) for m in mems]
 
 
-@router.get("/search")
+@router.get("/search", dependencies=[Depends(get_current_user)])
 def search_memories(
     user_id: int,
     topic: Optional[str] = None,
