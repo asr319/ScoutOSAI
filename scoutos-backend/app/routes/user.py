@@ -1,9 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from typing import Any, Dict
-from typing import Any, Dict
-
 from typing import Any, Dict, Generator
 from app.db import SessionLocal
 from app.services.user_service import UserService
