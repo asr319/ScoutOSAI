@@ -5,7 +5,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/scoutos
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/scoutos
     depends_on:
       - db
   db:
@@ -13,7 +13,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: scoutos
     ports:
       - "5432:5432"
