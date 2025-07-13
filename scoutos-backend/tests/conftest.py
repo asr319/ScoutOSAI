@@ -3,7 +3,6 @@ import sys
 from cryptography.fernet import Fernet
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from cryptography.fernet import Fernet
 
 # Override the database URL so tests use a local SQLite file
 os.environ["DATABASE_URL"] = "sqlite:///./test.db"
