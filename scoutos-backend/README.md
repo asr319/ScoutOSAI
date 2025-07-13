@@ -18,8 +18,9 @@ uvicorn app.main:app --reload
 ```
 
 The service reads the `DATABASE_URL` environment variable to connect to
-PostgreSQL. Allowed CORS origins can be set with the `ALLOWED_ORIGINS`
-environment variable (comma separated).
+PostgreSQL. Allowed CORS origins are configured with the `ALLOWED_ORIGINS`
+environment variable. Provide a comma–separated list of origins; by default `*`
+is used to allow all origins during development.
 
 ## API Endpoints
 
