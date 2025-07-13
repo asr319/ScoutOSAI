@@ -1,13 +1,25 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 from typing import Any, List, Dict, Generator
 from app.models.memory import Memory
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
 from app.services.memory_service import MemoryService
+from app.routes.memory import _serialize
+from app.services.auth_service import verify_token
 
-router = APIRouter()
+security = HTTPBearer()
 
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+) -> dict:
+    return verify_token(credentials.credentials)
+
+from app.routes.memory import _serialize
+
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -16,6 +28,7 @@ def get_db() -> Generator[Session, None, None]:
         yield db
     finally:
         db.close()
+
 
 @router.get("/status")
 def agent_status() -> Dict[str, str]:
@@ -38,7 +51,9 @@ def _serialize(mem: Memory) -> Dict[str, Any]:
 
 
 @router.post("/merge")
-def merge_memories(req: MergeRequest, db: Session = Depends(get_db)) -> Dict[str, Any]:
+def merge_memories(
+    req: MergeRequest, db: Session = Depends(get_db)
+) -> Dict[str, Any]:
     service = MemoryService(db)
     merged = service.merge_memories(req.memory_ids, req.user_id)
     if not merged:
