@@ -11,7 +11,17 @@ def _get_allowed_origins() -> list[str]:
 
 app = FastAPI(title="ScoutOSAI Backend")
 
-# Configure CORS from environment variable
+# Configure CORS
+origins_env = os.getenv("ALLOWED_ORIGINS")
+allowed_origins: list[str]
+
+if origins_env:
+    allowed_origins = [
+        origin.strip() for origin in origins_env.split(",") if origin.strip()
+    ]
+else:
+    allowed_origins = ["http://localhost:5173", "http://localhost:3000"]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_get_allowed_origins(),
