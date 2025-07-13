@@ -128,9 +128,12 @@ class MemoryService:
         if any(m.user_id != user_id for m in mems):
             return None
 
-        decrypted = [self._decrypt_mem(m) for m in mems]
-        content = "\n".join(m.content for m in decrypted)
-        tags = set()
+        for m in mems:
+            self._decrypt_mem(m)
+
+        content = "\n".join(m.content for m in mems)
+
+        tags: set[str] = set()
         for m in mems:
             tags.update(m.tags or [])
 
