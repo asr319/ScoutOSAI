@@ -40,7 +40,27 @@ export default function ChatInterface() {
         { sender: 'assistant', text: 'Error saving memory!' },
       ]);
     }
-    // TODO: Connect to backend for AI assistant reply
+    // Fetch AI assistant reply
+    try {
+      const res = await fetch(`${API_URL}/ai/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: userText }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMessages((msgs) => [
+          ...msgs,
+          { sender: 'assistant', text: data.response },
+        ]);
+      }
+    } catch (err) {
+      console.error(err);
+      setMessages((msgs) => [
+        ...msgs,
+        { sender: 'assistant', text: 'Error fetching AI response!' },
+      ]);
+    }
   }
 
   return (
