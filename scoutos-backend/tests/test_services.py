@@ -126,3 +126,23 @@ def test_merge_memories_user_mismatch():
     assert mem_service.get_memory(m2.id) is not None
     db.close()
 
+
+def test_merge_memories_tag_union():
+    db = SessionLocal()
+    user_service = UserService(db)
+    username = f"union_{uuid.uuid4().hex[:8]}"
+    user = user_service.create_user({"username": username, "password": "pw"})
+
+    mem_service = MemoryService(db)
+    m1 = mem_service.add_memory(
+        {"user_id": user.id, "content": "foo", "topic": "t", "tags": ["a", "b"]}
+    )
+    m2 = mem_service.add_memory(
+        {"user_id": user.id, "content": "bar", "topic": "t", "tags": ["b", "c"]}
+    )
+
+    merged = mem_service.merge_memories([m1.id, m2.id], user.id)
+    assert merged.content == "foo\nbar"
+    assert set(merged.tags) == {"a", "b", "c"}
+    db.close()
+
