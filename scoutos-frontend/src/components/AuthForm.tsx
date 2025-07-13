@@ -26,7 +26,7 @@ export default function AuthForm() {
         throw new Error(data.detail || 'Request failed');
       }
       const data = await res.json();
-      setUser({ id: data.id, username });
+      setUser({ id: data.id, username, token: data.token });
       setUsername('');
       setPassword('');
     } catch (err) {

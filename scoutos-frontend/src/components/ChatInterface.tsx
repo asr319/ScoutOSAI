@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useUser } from "../hooks/useUser";
+import LogoutButton from "./LogoutButton";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -74,6 +75,9 @@ export default function ChatInterface() {
 
   return (
     <div className="w-full max-w-xl mx-auto my-8 bg-white rounded-2xl shadow-lg p-4">
+      <div className="flex justify-end mb-2">
+        <LogoutButton />
+      </div>
       <div className="mb-4 h-80 overflow-y-auto">
         {messages.map((msg, i) => (
           <div key={i} className={msg.sender === 'user' ? 'text-right' : 'text-left'}>
