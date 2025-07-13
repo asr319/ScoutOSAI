@@ -2,9 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from typing import Any, Dict
+from typing import Any, Dict
 
 from app.db import SessionLocal
 from app.services.user_service import UserService
+from app.services.auth_service import create_access_token
 
 router = APIRouter()
 
@@ -43,4 +45,5 @@ def login(user: UserIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
         service.pw_hasher.verify(db_user.password_hash, user.password)
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    return {"message": "Login successful", "id": db_user.id}
+    token = create_access_token({"sub": str(db_user.id)})
+    return {"message": "Login successful", "id": db_user.id, "token": token}

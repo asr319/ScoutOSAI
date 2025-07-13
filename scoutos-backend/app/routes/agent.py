@@ -1,12 +1,24 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 from typing import Any, Dict, List
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
 from app.services.memory_service import MemoryService
 from app.routes.memory import _serialize
+from app.services.auth_service import verify_token
 
-router = APIRouter()
+security = HTTPBearer()
+
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+) -> dict:
+    return verify_token(credentials.credentials)
+
+from app.routes.memory import _serialize
+
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 def get_db():
