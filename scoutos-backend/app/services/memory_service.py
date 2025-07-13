@@ -70,15 +70,22 @@ class MemoryService:
         user_id: int,
         topic: str | None = None,
         tag: str | None = None,
+        content: str | None = None,
     ) -> List[Memory]:
-        """Return memories for ``user_id`` optionally filtered by ``topic`` and ``tag``."""
+        """Return memories for ``user_id`` filtered by ``topic``, ``tag`` or ``content``."""
 
         query = self.db.query(Memory).filter(Memory.user_id == user_id)
         if topic is not None:
             query = query.filter(Memory.topic == topic)
         if tag is not None:
             query = query.filter(Memory.tags.contains([tag]))
-        return [self._decrypt_mem(m) for m in query.all()]
+
+        mems = [self._decrypt_mem(m) for m in query.all()]
+
+        if content is not None:
+            lowered = content.lower()
+            mems = [m for m in mems if lowered in m.content.lower()]
+        return mems
 
     def update_memory(self, memory_id: int, user_id: int, updates: dict) -> Memory | None:
         """Update an existing ``Memory`` with provided values if owned by ``user_id``."""

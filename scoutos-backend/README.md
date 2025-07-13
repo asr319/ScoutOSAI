@@ -57,7 +57,7 @@ purpose.
 | `POST` | `/memory/add` | Store a memory |
 | `PUT` | `/memory/update/{id}` | Update a memory |
 | `GET` | `/memory/list` | List memories for a user |
-| `GET` | `/memory/search` | Filter by topic/tag |
+| `GET` | `/memory/search` | Filter by topic, tag, or content |
 | `DELETE` | `/memory/delete/{id}` | Delete a memory |
 | `POST` | `/ai/chat` | Chat with OpenAI |
 | `POST` | `/ai/tags` | Suggest tags for text |
