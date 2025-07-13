@@ -6,6 +6,7 @@ from app.services import agent_service
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from app.main import app  # noqa: E402
+from app.routes import ai as ai_module
 
 client = TestClient(app)
 

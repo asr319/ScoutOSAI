@@ -27,6 +27,7 @@ export default function MemoryManager() {
   const [editContent, setEditContent] = useState("");
   const [editTopic, setEditTopic] = useState("");
   const [editTags, setEditTags] = useState("");
+  const [loading, setLoading] = useState(false);
   const { user } = useUser();
 
   const loadMemories = useCallback(async () => {
