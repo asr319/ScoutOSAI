@@ -140,3 +140,51 @@ def test_ai_summary_returns_mocked_text(monkeypatch):
     assert resp.status_code == 200
     assert resp.json() == {"summary": "summary"}
 
+
+def test_ai_chat_async_returns_mocked_text(monkeypatch):
+    """POST /ai/chat should support AsyncOpenAI.acreate."""
+    from types import SimpleNamespace
+
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+
+    fake_resp = SimpleNamespace(
+        choices=[SimpleNamespace(message=SimpleNamespace(content="async reply"))]
+    )
+
+    async def fake_acreate(*_: str, **__: str):
+        return fake_resp
+
+    fake_client = SimpleNamespace(
+        chat=SimpleNamespace(
+            completions=SimpleNamespace(acreate=fake_acreate)
+        )
+    )
+
+    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+
+    resp = client.post("/ai/chat", json={"prompt": "hello"})
+    assert resp.status_code == 200
+    assert resp.json() == {"response": "async reply"}
+
+
+def test_ai_chat_handles_openai_error(monkeypatch):
+    """POST /ai/chat should return 503 if OpenAI raises an exception."""
+    from types import SimpleNamespace
+
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+
+    async def fake_create(*_: str, **__: str):
+        raise Exception("boom")
+
+    fake_client = SimpleNamespace(
+        chat=SimpleNamespace(
+            completions=SimpleNamespace(create=fake_create)
+        )
+    )
+
+    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+
+    resp = client.post("/ai/chat", json={"prompt": "boom"})
+    assert resp.status_code == 503
+    assert "OpenAI request failed" in resp.json()["detail"]
+
