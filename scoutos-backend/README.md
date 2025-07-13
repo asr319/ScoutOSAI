@@ -27,11 +27,17 @@ demo endpoints can call the OpenAI API.
 
 ### Environment variables
 
-Database credentials and your OpenAI key are provided via a `.env` file. From the repository root,
+Database credentials, API keys and encryption keys are provided via a `.env` file. From the repository root,
 copy `.env.example` to `.env` and adjust the values as needed:
 
 ```bash
 cp .env.example .env
+```
+
+Generate random base64 values for `FERNET_KEY` and `APP_ENCRYPTION_KEY` with:
+
+```bash
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
 ```
 
 Docker Compose reads this file automatically when launching the services.
