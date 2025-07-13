@@ -65,5 +65,9 @@ describe('AuthForm', () => {
       expect(setUser).toHaveBeenCalledWith({ id: 2, username: 'alice', token: 'x' })
     })
     expect(setUser).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(setUser).toHaveBeenCalled()
+    })
+    expect(setUser).toHaveBeenCalledWith({ id: 2, username: 'alice', token: 'x' })
   })
 })

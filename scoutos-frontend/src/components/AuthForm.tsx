@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import { useUser } from '../hooks/useUser';
+import { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { useUser } from '../hooks/useUser'
+import LoadingSpinner from './LoadingSpinner'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -10,10 +12,12 @@ export default function AuthForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false)
   const { setUser } = useUser();
 
   async function handleSubmit() {
-    setError('');
+    setError('')
+    setLoading(true)
     try {
       let data: { id: number; token: string } | null = null;
 
@@ -51,12 +55,20 @@ export default function AuthForm() {
         data = await loginRes.json();
       }
 
-      setUser({ id: data.id, username, token: data.token });
-      setUsername('');
-      setPassword('');
+      setUser({ id: data.id, username, token: data.token })
+      setUsername('')
+      setPassword('')
+      toast.success(mode === 'login' ? 'Logged in' : 'Registered and logged in')
     } catch (err) {
-      if (err instanceof Error) setError(err.message);
-      else setError('Unknown error');
+      if (err instanceof Error) {
+        setError(err.message)
+        toast.error(err.message)
+      } else {
+        setError('Unknown error')
+        toast.error('Unknown error')
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -79,9 +91,13 @@ export default function AuthForm() {
         />
         {error && <div className="text-red-600 text-sm">{error}</div>}
         <button
-          className="bg-blue-600 text-white rounded p-2"
+          className="bg-blue-600 text-white rounded p-2 flex items-center justify-center gap-2"
           onClick={handleSubmit}
-        >{mode === 'login' ? 'Login' : 'Register'}</button>
+          disabled={loading}
+        >
+          {loading && <LoadingSpinner />}
+          {mode === 'login' ? 'Login' : 'Register'}
+        </button>
         <button
           className="text-sm text-blue-700 underline"
           onClick={() => setMode(mode === 'login' ? 'register' : 'login')}

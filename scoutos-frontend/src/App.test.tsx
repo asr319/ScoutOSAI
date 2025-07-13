@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest'
-import { render } from '@testing-library/react'
-import { UserProvider } from './context/UserContext'
+import { describe, it, expect, vi } from 'vitest'
+import { render, fireEvent } from '@testing-library/react'
+import { UserProvider, UserContext, type User } from './context/UserContext'
 import App from './App'
 
 describe('App', () => {
@@ -11,5 +11,19 @@ describe('App', () => {
       </UserProvider>
     )
     expect(container).toBeTruthy()
+  })
+
+  it('navigates to memory manager when authenticated', () => {
+    const user: User = { id: 1, username: 'bob', token: 't' }
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve([]) })
+    vi.stubGlobal('fetch', fetchMock)
+    const { getByText } = render(
+      <UserContext.Provider value={{ user, setUser: vi.fn() }}>
+        <App />
+      </UserContext.Provider>
+    )
+    fireEvent.click(getByText('Memories'))
+    expect(getByText('Add Memory')).toBeTruthy()
+    vi.restoreAllMocks()
   })
 })

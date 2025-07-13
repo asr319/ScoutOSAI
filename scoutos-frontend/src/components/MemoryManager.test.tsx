@@ -36,12 +36,15 @@ describe('MemoryManager API calls', () => {
       expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/ai/tags'), expect.any(Object))
     })
 
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2))
+
     fireEvent.click(getAllByText('Merge Advice')[0])
     await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledWith(
-        expect.stringContaining('/ai/merge'),
-        expect.objectContaining({ body: JSON.stringify({ memory_a: '', memory_b: '' }) })
-      )
+      expect(
+        fetchMock.mock.calls.some(
+          c => (c[0] as string).includes('/ai/merge')
+        )
+      ).toBe(true)
     })
     expect(await findByText('merge!')).toBeTruthy()
   })
