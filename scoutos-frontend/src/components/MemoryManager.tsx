@@ -19,6 +19,7 @@ export default function MemoryManager() {
   const [topic, setTopic] = useState("");
   const [tags, setTags] = useState("");
   const [suggestedTags, setSuggestedTags] = useState<string[]>([]);
+  const [mergeSuggestion, setMergeSuggestion] = useState("");
   const [searchTopic, setSearchTopic] = useState("");
   const [searchTag, setSearchTag] = useState("");
   const { user } = useUser();
@@ -134,7 +135,10 @@ export default function MemoryManager() {
     });
     if (res.ok) {
       const data = await res.json();
-      toast.success(data.message || 'Merge advice requested');
+      if (data.response) {
+        setMergeSuggestion(data.response);
+      }
+      toast.success('Merge advice received');
     }
   }
 
@@ -146,6 +150,7 @@ export default function MemoryManager() {
         <input className="border p-2 rounded" placeholder="Topic" value={topic} onChange={e => setTopic(e.target.value)} />
         <input className="border p-2 rounded" placeholder="Tags comma separated" value={tags} onChange={e => setTags(e.target.value)} />
         <button className="bg-blue-600 text-white rounded p-2" onClick={addMemory}>Add Memory</button>
+        <button className="bg-purple-600 text-white rounded p-2" onClick={() => fetchTagsFor(content)}>Suggest Tags</button>
         {suggestedTags.length > 0 && (
           <div className="text-sm text-gray-600">Suggested tags: {suggestedTags.join(', ')}</div>
         )}
@@ -161,6 +166,9 @@ export default function MemoryManager() {
         <button className="bg-purple-600 text-white rounded p-2" onClick={requestSummary}>Get Summary</button>
         <button className="bg-purple-600 text-white rounded p-2" onClick={requestMergeAdvice}>Merge Advice</button>
       </div>
+      {mergeSuggestion && (
+        <div className="text-sm text-gray-600 mb-4">{mergeSuggestion}</div>
+      )}
 
       <ul className="space-y-2">
         {memories.map(m => (
