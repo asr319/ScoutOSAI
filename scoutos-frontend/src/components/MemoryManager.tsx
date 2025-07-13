@@ -23,7 +23,9 @@ export default function MemoryManager() {
 
   const loadMemories = useCallback(async () => {
     if (!user) return;
-    const res = await fetch(`${API_URL}/memory/list?user_id=${user.id}`);
+    const res = await fetch(`${API_URL}/memory/list?user_id=${user.id}`, {
+      headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
+    });
     if (res.ok) {
       const data = await res.json();
       setMemories(data);
@@ -36,7 +38,10 @@ export default function MemoryManager() {
     if (!user) return;
     const res = await fetch(`${API_URL}/memory/add`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
+      },
       body: JSON.stringify({
         user_id: user.id,
         content,
@@ -59,7 +64,9 @@ export default function MemoryManager() {
     params.append("user_id", String(user.id));
     if (searchTopic) params.append("topic", searchTopic);
     if (searchTag) params.append("tag", searchTag);
-    const res = await fetch(`${API_URL}/memory/search?${params.toString()}`);
+    const res = await fetch(`${API_URL}/memory/search?${params.toString()}`, {
+      headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
+    });
     if (res.ok) {
       const data = await res.json();
       setMemories(data);
@@ -67,7 +74,10 @@ export default function MemoryManager() {
   }
 
   async function deleteMemory(id: number) {
-    await fetch(`${API_URL}/memory/delete/${id}`, { method: 'DELETE' });
+    await fetch(`${API_URL}/memory/delete/${id}`, {
+      method: 'DELETE',
+      headers: user?.token ? { Authorization: `Bearer ${user.token}` } : {},
+    });
     setMemories(memories.filter(m => m.id !== id));
   }
 

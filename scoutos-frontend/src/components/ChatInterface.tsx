@@ -1,13 +1,19 @@
 import { useState } from "react";
+import { useUser } from "../hooks/useUser";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState<{sender: string, text: string}[]>([]);
   const [input, setInput] = useState('');
+  const { user } = useUser();
 
   async function sendMessage() {
     if (!input.trim()) return;
+    if (!user) {
+      setMessages([...messages, { sender: 'assistant', text: 'You must be logged in to send messages.' }]);
+      return;
+    }
 
     // Show the user's message immediately
     setMessages([...messages, { sender: 'user', text: input }]);
@@ -18,9 +24,12 @@ export default function ChatInterface() {
     try {
       const response = await fetch(`${API_URL}/memory/add`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(user?.token ? { Authorization: `Bearer ${user.token}` } : {}),
+        },
         body: JSON.stringify({
-          user_id: 1, // Replace with real user/session info
+          user_id: user?.id ?? 0,
           content: userText,
           topic: 'General',
           tags: [],
@@ -40,7 +49,27 @@ export default function ChatInterface() {
         { sender: 'assistant', text: 'Error saving memory!' },
       ]);
     }
-    // TODO: Connect to backend for AI assistant reply
+    // Fetch AI assistant reply
+    try {
+      const res = await fetch(`${API_URL}/ai/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: userText }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMessages((msgs) => [
+          ...msgs,
+          { sender: 'assistant', text: data.response },
+        ]);
+      }
+    } catch (err) {
+      console.error(err);
+      setMessages((msgs) => [
+        ...msgs,
+        { sender: 'assistant', text: 'Error fetching AI response!' },
+      ]);
+    }
   }
 
   return (
