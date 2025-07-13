@@ -52,7 +52,7 @@ def test_memory_service_crud():
     fetched = mem_service.get_memory(mem.id)
     assert fetched.content == "c"
 
-    mem_service.update_memory(mem.id, {"content": "new"})
+    mem_service.update_memory(mem.id, user.id, {"content": "new"})
     updated = mem_service.get_memory(mem.id)
     assert updated.content == "new"
     raw = SessionLocal()
@@ -63,8 +63,24 @@ def test_memory_service_crud():
     listed = mem_service.list_memories(user.id)
     assert any(m.id == mem.id for m in listed)
 
-    assert mem_service.delete_memory(mem.id) is True
+    assert mem_service.delete_memory(mem.id, user.id) is True
     assert mem_service.get_memory(mem.id) is None
+    db.close()
+
+
+def test_memory_service_unauthorized_operations():
+    db = SessionLocal()
+    user_service = UserService(db)
+    user_a = user_service.create_user({"username": "ua", "password": "pw"})
+    user_b = user_service.create_user({"username": "ub", "password": "pw"})
+
+    mem_service = MemoryService(db)
+    mem = mem_service.add_memory({"user_id": user_a.id, "content": "c", "topic": "t", "tags": []})
+
+    assert mem_service.update_memory(mem.id, user_b.id, {"content": "bad"}) is None
+    assert mem_service.delete_memory(mem.id, user_b.id) is False
+    # cleanup
+    mem_service.delete_memory(mem.id, user_a.id)
     db.close()
 
 

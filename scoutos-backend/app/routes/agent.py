@@ -57,5 +57,5 @@ def merge_memories(
     service = MemoryService(db)
     merged = service.merge_memories(req.memory_ids, req.user_id)
     if not merged:
-        raise HTTPException(status_code=404, detail="Memories not found")
+        raise HTTPException(status_code=403, detail="Unauthorized or memories not found")
     return {"memory": _serialize(merged)}

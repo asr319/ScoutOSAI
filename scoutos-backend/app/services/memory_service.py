@@ -60,35 +60,14 @@ class MemoryService:
 
     def list_memories(self, user_id: int) -> List[Memory]:
         """Return all ``Memory`` rows for a given user."""
-        mems = self.db.query(Memory).filter(Memory.user_id == user_id).all()
-        for mem in mems:
-            decrypted = decrypt_text(mem.content)
-            self.db.expunge(mem)
-            mem.content = decrypted
-        return mems
 
-    def search_memories(
-        self, user_id: int, topic: str | None = None, tag: str | None = None
-    ) -> List[Memory]:
-        """Return ``Memory`` rows filtered by optional topic and tag."""
+        return self.db.query(Memory).filter(Memory.user_id == user_id).all()
 
-        query = self.db.query(Memory).filter(Memory.user_id == user_id)
-        if topic:
-            query = query.filter(Memory.topic == topic)
-        if tag:
-            query = query.filter(Memory.tags.contains(tag))
-        mems = query.all()
-        for mem in mems:
-            decrypted = decrypt_text(mem.content)
-            self.db.expunge(mem)
-            mem.content = decrypted
-        return mems
-
-    def update_memory(self, memory_id: int, updates: dict) -> Memory | None:
-        """Update an existing ``Memory`` with provided values."""
+    def update_memory(self, memory_id: int, user_id: int, updates: dict) -> Memory | None:
+        """Update an existing ``Memory`` with provided values if owned by ``user_id``."""
 
         mem = self.db.get(Memory, memory_id)
-        if not mem:
+        if not mem or mem.user_id != user_id:
             return None
         for key, value in updates.items():
             if key == "content":
@@ -105,11 +84,11 @@ class MemoryService:
         mem.content = decrypted
         return self._decrypt_mem(mem)
 
-    def delete_memory(self, memory_id: int) -> bool:
-        """Delete a ``Memory`` by id."""
+    def delete_memory(self, memory_id: int, user_id: int) -> bool:
+        """Delete a ``Memory`` by id if owned by ``user_id``."""
 
         mem = self.db.get(Memory, memory_id)
-        if not mem:
+        if not mem or mem.user_id != user_id:
             return False
         self.db.delete(mem)
         self.db.commit()
@@ -118,7 +97,7 @@ class MemoryService:
     def merge_memories(
         self, memory_ids: List[int], user_id: int
     ) -> Memory | None:
-        """Merge multiple ``Memory`` entries into a single one."""
+        """Merge multiple ``Memory`` entries into a single one if all belong to ``user_id``."""
 
         if not memory_ids:
             return None
@@ -127,11 +106,7 @@ class MemoryService:
         if len(mems) != len(memory_ids):
             return None
 
-        if any(m.user_id != user_id for m in mems):
-            return None
-
-        decrypted = [self._decrypt_mem(m) for m in mems]
-        content = "\n".join(decrypt_text(m.content) for m in decrypted)
+        content = "\n".join(m.content for m in mems)
         tags = set()
         for m in decrypted:
             tags.update(m.tags or [])
