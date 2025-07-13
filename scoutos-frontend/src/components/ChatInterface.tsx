@@ -10,7 +10,7 @@ export default function ChatInterface() {
   const { user } = useUser();
 
   async function sendMessage() {
-    if (!input.trim() || !user) return;
+    if (!input.trim() || !user || !user) return;
     if (!user) {
       setMessages([...messages, { sender: 'assistant', text: 'You must be logged in to send messages.' }]);
       return;
