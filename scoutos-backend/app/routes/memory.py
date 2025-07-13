@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
@@ -35,14 +35,16 @@ def _serialize(mem):
 
 
 @router.post("/add")
-def add_memory(mem: MemoryIn, db: Session = Depends(get_db)):
+def add_memory(mem: MemoryIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
     service = MemoryService(db)
     new_mem = service.add_memory(mem.model_dump())
     return {"message": "Memory added", "memory": _serialize(new_mem)}
 
 
 @router.put("/update/{memory_id}")
-def update_memory(memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)):
+def update_memory(
+    memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)
+) -> Dict[str, Any]:
     service = MemoryService(db)
     updated = service.update_memory(memory_id, mem.model_dump())
     if not updated:
@@ -51,7 +53,7 @@ def update_memory(memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)):
 
 
 @router.get("/list")
-def list_memories(user_id: int, db: Session = Depends(get_db)):
+def list_memories(user_id: int, db: Session = Depends(get_db)) -> List[Dict[str, Any]]:
     service = MemoryService(db)
     mems = service.list_memories(user_id)
     return [_serialize(m) for m in mems]
@@ -63,14 +65,14 @@ def search_memories(
     topic: Optional[str] = None,
     tag: Optional[str] = None,
     db: Session = Depends(get_db),
-):
+) -> List[Dict[str, Any]]:
     service = MemoryService(db)
     mems = service.search_memories(user_id, topic=topic, tag=tag)
     return [_serialize(m) for m in mems]
 
 
 @router.delete("/delete/{memory_id}")
-def delete_memory(memory_id: int, db: Session = Depends(get_db)):
+def delete_memory(memory_id: int, db: Session = Depends(get_db)) -> Dict[str, str]:
     service = MemoryService(db)
     if not service.delete_memory(memory_id):
         raise HTTPException(status_code=404, detail="Memory not found")
