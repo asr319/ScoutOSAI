@@ -26,7 +26,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-The service reads `DATABASE_URL` to connect to PostgreSQL (tests override this with SQLite). See [`scoutos-backend/README.md`](scoutos-backend/README.md) for more details on environment variables and endpoints.
+The service reads `DATABASE_URL` to connect to PostgreSQL (tests override this with SQLite). Set `APP_ENCRYPTION_KEY` to a random string so `Memory.content` can be encrypted. See [`scoutos-backend/README.md`](scoutos-backend/README.md) for more details on environment variables and endpoints.
 
 Run the backend unit tests from the same directory:
 
