@@ -21,6 +21,17 @@ The service reads the `DATABASE_URL` environment variable to connect to
 PostgreSQL. Allowed CORS origins can be set with the `ALLOWED_ORIGINS`
 environment variable (comma separated).
 
+### Environment variables
+
+Database credentials are provided via a `.env` file. From the repository root,
+copy `.env.example` to `.env` and adjust the values as needed:
+
+```bash
+cp .env.example .env
+```
+
+Docker Compose reads this file automatically when launching the services.
+
 ## API Endpoints
 
 | Method | Path          | Description               |
