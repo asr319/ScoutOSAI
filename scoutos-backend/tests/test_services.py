@@ -1,7 +1,5 @@
-import os
-import sys
+import os, sys, uuid
 from app.models.memory import Memory
-import uuid
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
