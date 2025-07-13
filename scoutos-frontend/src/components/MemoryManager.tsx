@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from 'react-hot-toast'
-import { useUser } from "../hooks/useUser";
+import { useUser } from "../hooks/useUser"
+import LoadingSpinner from './LoadingSpinner'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -21,6 +22,7 @@ export default function MemoryManager() {
   const [suggestedTags, setSuggestedTags] = useState<string[]>([]);
   const [searchTopic, setSearchTopic] = useState("");
   const [searchTag, setSearchTag] = useState("");
+  const [loading, setLoading] = useState(false)
   const { user } = useUser();
 
   const loadMemories = useCallback(async () => {
@@ -57,95 +59,148 @@ export default function MemoryManager() {
 
   async function addMemory() {
     if (!user) return;
-    const res = await fetch(`${API_URL}/memory/add`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
-      },
-      body: JSON.stringify({
-        user_id: user.id,
-        content,
-        topic,
-        tags: tags.split(',').map(t => t.trim()).filter(t => t)
+    setLoading(true)
+    try {
+      const res = await fetch(`${API_URL}/memory/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
+        },
+        body: JSON.stringify({
+          user_id: user.id,
+          content,
+          topic,
+          tags: tags.split(',').map(t => t.trim()).filter(t => t)
+        })
       })
-    });
-    if (res.ok) {
-      const mem = await res.json();
-      setMemories([...memories, mem.memory]);
-      setContent("");
-      setTopic("");
-      setTags("");
-      fetchTagsFor(content);
+      if (res.ok) {
+        const mem = await res.json()
+        setMemories([...memories, mem.memory])
+        setContent("")
+        setTopic("")
+        setTags("")
+        toast.success('Memory added')
+        fetchTagsFor(content)
+      } else {
+        const body = await res.json().catch(() => ({}))
+        toast.error(body.detail || 'Failed to add memory')
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
   async function search() {
     if (!user) return;
+    setLoading(true)
     const params = new URLSearchParams();
     params.append("user_id", String(user.id));
     if (searchTopic) params.append("topic", searchTopic);
     if (searchTag) params.append("tag", searchTag);
-    const res = await fetch(`${API_URL}/memory/search?${params.toString()}`, {
-      headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setMemories(data);
+    try {
+      const res = await fetch(`${API_URL}/memory/search?${params.toString()}`, {
+        headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setMemories(data)
+        toast.success('Search complete')
+      } else {
+        const body = await res.json().catch(() => ({}))
+        toast.error(body.detail || 'Search failed')
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
   async function deleteMemory(id: number) {
-    await fetch(`${API_URL}/memory/delete/${id}?user_id=${user.id}`, {
-      method: 'DELETE',
-      headers: user?.token ? { Authorization: `Bearer ${user.token}` } : {},
-    });
-    setMemories(memories.filter(m => m.id !== id));
+    setLoading(true)
+    try {
+      const res = await fetch(`${API_URL}/memory/delete/${id}?user_id=${user.id}`, {
+        method: 'DELETE',
+        headers: user?.token ? { Authorization: `Bearer ${user.token}` } : {},
+      })
+      if (res.ok) {
+        setMemories(memories.filter(m => m.id !== id))
+        toast.success('Memory deleted')
+      } else {
+        const body = await res.json().catch(() => ({}))
+        toast.error(body.detail || 'Delete failed')
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function requestSummary() {
     if (!user) return;
-    const res = await fetch(`${API_URL}/ai/summary`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
-      },
-      body: JSON.stringify({ content }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      toast.success(data.summary || 'Summary requested');
+    setLoading(true)
+    try {
+      const res = await fetch(`${API_URL}/ai/summary`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
+        },
+        body: JSON.stringify({ content }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        toast.success(data.summary || 'Summary requested')
+      } else {
+        const body = await res.json().catch(() => ({}))
+        toast.error(body.detail || 'Request failed')
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
   async function requestMergeAdvice() {
     if (!user) return;
-    const res = await fetch(`${API_URL}/ai/merge`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
-      },
-      body: JSON.stringify({
-        memory_a: memories[0]?.content || '',
-        memory_b: memories[1]?.content || '',
-      }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      toast.success(data.message || 'Merge advice requested');
+    setLoading(true)
+    try {
+      const res = await fetch(`${API_URL}/ai/merge`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
+        },
+        body: JSON.stringify({
+          memory_a: memories[0]?.content || '',
+          memory_b: memories[1]?.content || '',
+        }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        toast.success(data.message || 'Merge advice requested')
+      } else {
+        const body = await res.json().catch(() => ({}))
+        toast.error(body.detail || 'Request failed')
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
     <div className="bg-white rounded-xl shadow p-4">
       <h2 className="text-xl font-semibold mb-2">Memories</h2>
+      {loading && <LoadingSpinner />}
       <div className="flex flex-col gap-2 mb-4">
         <input className="border p-2 rounded" placeholder="Content" value={content} onChange={e => setContent(e.target.value)} />
         <input className="border p-2 rounded" placeholder="Topic" value={topic} onChange={e => setTopic(e.target.value)} />
         <input className="border p-2 rounded" placeholder="Tags comma separated" value={tags} onChange={e => setTags(e.target.value)} />
-        <button className="bg-blue-600 text-white rounded p-2" onClick={addMemory}>Add Memory</button>
+        <button
+          className="bg-blue-600 text-white rounded p-2 flex items-center justify-center gap-2"
+          onClick={addMemory}
+          disabled={loading}
+        >
+          {loading && <LoadingSpinner />}
+          Add Memory
+        </button>
         {suggestedTags.length > 0 && (
           <div className="text-sm text-gray-600">Suggested tags: {suggestedTags.join(', ')}</div>
         )}
@@ -154,12 +209,33 @@ export default function MemoryManager() {
       <div className="flex gap-2 mb-4">
         <input className="border p-2 rounded" placeholder="Search topic" value={searchTopic} onChange={e => setSearchTopic(e.target.value)} />
         <input className="border p-2 rounded" placeholder="Search tag" value={searchTag} onChange={e => setSearchTag(e.target.value)} />
-        <button className="bg-green-600 text-white rounded p-2" onClick={search}>Search</button>
+        <button
+          className="bg-green-600 text-white rounded p-2 flex items-center justify-center gap-2"
+          onClick={search}
+          disabled={loading}
+        >
+          {loading && <LoadingSpinner />}
+          Search
+        </button>
       </div>
 
       <div className="flex gap-2 mb-4">
-        <button className="bg-purple-600 text-white rounded p-2" onClick={requestSummary}>Get Summary</button>
-        <button className="bg-purple-600 text-white rounded p-2" onClick={requestMergeAdvice}>Merge Advice</button>
+        <button
+          className="bg-purple-600 text-white rounded p-2 flex items-center justify-center gap-2"
+          onClick={requestSummary}
+          disabled={loading}
+        >
+          {loading && <LoadingSpinner />}
+          Get Summary
+        </button>
+        <button
+          className="bg-purple-600 text-white rounded p-2 flex items-center justify-center gap-2"
+          onClick={requestMergeAdvice}
+          disabled={loading}
+        >
+          {loading && <LoadingSpinner />}
+          Merge Advice
+        </button>
       </div>
 
       <ul className="space-y-2">
@@ -170,7 +246,14 @@ export default function MemoryManager() {
               <div>{m.content}</div>
               <div className="text-sm text-gray-500">{m.tags.join(', ')}</div>
             </div>
-            <button className="text-red-600" onClick={() => deleteMemory(m.id)}>Delete</button>
+            <button
+              className="text-red-600 flex items-center gap-2"
+              onClick={() => deleteMemory(m.id)}
+              disabled={loading}
+            >
+              {loading && <LoadingSpinner />}
+              Delete
+            </button>
           </li>
         ))}
       </ul>
