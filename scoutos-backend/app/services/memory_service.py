@@ -37,7 +37,7 @@ class MemoryService:
             content=encrypt_text(encrypted),
             topic=memory_data.get("topic", ""),
             tags=memory_data.get("tags", []),
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=datetime.datetime.now(tz=datetime.timezone.utc),
         )
         self.db.add(db_mem)
         self.db.commit()
@@ -144,7 +144,7 @@ class MemoryService:
             content=encrypt_text(encrypted),
             topic=topic,
             tags=list(tags),
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=datetime.datetime.now(tz=datetime.timezone.utc),
         )
         self.db.add(merged)
         for m in mems:
