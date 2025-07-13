@@ -4,6 +4,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from app.models.memory import Memory
 import datetime
+from app.utils.encryption import encrypt_text, decrypt_text
 
 
 class MemoryService:
@@ -17,7 +18,7 @@ class MemoryService:
 
         db_mem = Memory(
             user_id=memory_data["user_id"],
-            content=memory_data["content"],
+            content=encrypt_text(memory_data["content"]),
             topic=memory_data.get("topic", ""),
             tags=memory_data.get("tags", []),
             timestamp=datetime.datetime.utcnow(),
@@ -25,12 +26,20 @@ class MemoryService:
         self.db.add(db_mem)
         self.db.commit()
         self.db.refresh(db_mem)
+        decrypted = decrypt_text(db_mem.content)
+        self.db.expunge(db_mem)
+        db_mem.content = decrypted
         return db_mem
 
     def get_memory(self, memory_id: int) -> Memory | None:
         """Retrieve a ``Memory`` by primary key."""
 
-        return self.db.get(Memory, memory_id)
+        mem = self.db.get(Memory, memory_id)
+        if mem:
+            decrypted = decrypt_text(mem.content)
+            self.db.expunge(mem)
+            mem.content = decrypted
+        return mem
 
     def list_memories(self, user_id: int) -> List[Memory]:
         """Return all ``Memory`` rows for a given user."""
@@ -57,9 +66,15 @@ class MemoryService:
             return None
         for key, value in updates.items():
             if hasattr(mem, key):
-                setattr(mem, key, value)
+                if key == "content":
+                    setattr(mem, key, encrypt_text(value))
+                else:
+                    setattr(mem, key, value)
         self.db.commit()
         self.db.refresh(mem)
+        decrypted = decrypt_text(mem.content)
+        self.db.expunge(mem)
+        mem.content = decrypted
         return mem
 
     def delete_memory(self, memory_id: int) -> bool:
@@ -87,7 +102,7 @@ class MemoryService:
         if any(m.user_id != user_id for m in mems):
             return None
 
-        content = "\n".join(m.content for m in mems)
+        content = "\n".join(decrypt_text(m.content) for m in mems)
         tags = set()
         for m in mems:
             tags.update(m.tags or [])
@@ -96,7 +111,7 @@ class MemoryService:
 
         merged = Memory(
             user_id=user_id,
-            content=content,
+            content=encrypt_text(content),
             topic=topic,
             tags=list(tags),
             timestamp=datetime.datetime.utcnow(),
@@ -106,4 +121,7 @@ class MemoryService:
             self.db.delete(m)
         self.db.commit()
         self.db.refresh(merged)
+        decrypted = decrypt_text(merged.content)
+        self.db.expunge(merged)
+        merged.content = decrypted
         return merged
