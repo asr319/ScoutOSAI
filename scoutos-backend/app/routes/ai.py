@@ -24,7 +24,7 @@ async def ai_chat(req: AIRequest) -> Dict[str, str]:
 
     try:
         client = AsyncOpenAI(api_key=api_key)
-        resp = await client.chat.completions.acreate(
+        resp = await client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": req.prompt}],
             max_tokens=200,
