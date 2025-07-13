@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
-from typing import List
+from typing import Any, Dict, List
+from sqlalchemy.orm import Session
 from app.db import SessionLocal
 from app.services.memory_service import MemoryService
+from app.routes.memory import _serialize
 
 router = APIRouter()
-
 
 
 def get_db():
@@ -15,8 +16,9 @@ def get_db():
     finally:
         db.close()
 
+
 @router.get("/status")
-def agent_status():
+def agent_status() -> Dict[str, str]:
     return {"status": "Agent module placeholder"}
 
 
@@ -26,9 +28,11 @@ class MergeRequest(BaseModel):
 
 
 @router.post("/merge")
-def merge_memories(req: MergeRequest, db=Depends(get_db)):
+def merge_memories(
+    req: MergeRequest, db: Session = Depends(get_db)
+) -> Dict[str, Any]:
     service = MemoryService(db)
     merged = service.merge_memories(req.memory_ids, req.user_id)
     if not merged:
         raise HTTPException(status_code=404, detail="Memories not found")
-    return {"memory": merged}
+    return {"memory": _serialize(merged)}

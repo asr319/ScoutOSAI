@@ -1,9 +1,13 @@
 from fastapi.testclient import TestClient
-import sys, os, uuid
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from app.main import app
+import os
+import sys
+import uuid
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from app.main import app  # noqa: E402
 
 client = TestClient(app)
+
 
 def test_add_memory():
     data = {"user_id": 1, "content": "test", "topic": "t", "tags": []}
@@ -54,10 +58,14 @@ def test_search_memory_filters_by_topic_and_tag():
     for m in mems:
         client.post("/memory/add", json={"user_id": user_id, **m})
 
-    by_topic = client.get("/memory/search", params={"user_id": user_id, "topic": "alpha"})
+    by_topic = client.get(
+        "/memory/search", params={"user_id": user_id, "topic": "alpha"}
+    )
     assert {m["content"] for m in by_topic.json()} == {"a", "b"}
 
-    by_tag = client.get("/memory/search", params={"user_id": user_id, "tag": "urgent"})
+    by_tag = client.get(
+        "/memory/search", params={"user_id": user_id, "tag": "urgent"}
+    )
     assert {m["content"] for m in by_tag.json()} == {"a", "c"}
 
     both = client.get(

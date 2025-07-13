@@ -1,10 +1,12 @@
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
-from app.db import SessionLocal
-from app.services.user_service import UserService
-from app.services.memory_service import MemoryService
+import os
+import sys
 import uuid
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+from app.db import SessionLocal  # noqa: E402
+from app.services.user_service import UserService  # noqa: E402
+from app.services.memory_service import MemoryService  # noqa: E402
 
 
 def test_user_service_create_and_get():
@@ -37,7 +39,9 @@ def test_memory_service_crud():
     user = user_service.create_user({"username": username, "password": "pw"})
 
     mem_service = MemoryService(db)
-    mem = mem_service.add_memory({"user_id": user.id, "content": "c", "topic": "t", "tags": []})
+    mem = mem_service.add_memory(
+        {"user_id": user.id, "content": "c", "topic": "t", "tags": []}
+    )
 
     assert mem.id is not None
     fetched = mem_service.get_memory(mem.id)
@@ -62,12 +66,41 @@ def test_memory_service_merge():
     user = user_service.create_user({"username": username, "password": "pw"})
 
     mem_service = MemoryService(db)
-    m1 = mem_service.add_memory({"user_id": user.id, "content": "a", "topic": "t", "tags": ["x"]})
-    m2 = mem_service.add_memory({"user_id": user.id, "content": "b", "topic": "t", "tags": ["y"]})
+    m1 = mem_service.add_memory(
+        {"user_id": user.id, "content": "a", "topic": "t", "tags": ["x"]}
+    )
+    m2 = mem_service.add_memory(
+        {"user_id": user.id, "content": "b", "topic": "t", "tags": ["y"]}
+    )
 
     merged = mem_service.merge_memories([m1.id, m2.id], user.id)
     assert merged.content == "a\nb"
     assert set(merged.tags) == {"x", "y"}
     assert mem_service.get_memory(m1.id) is None
     assert mem_service.get_memory(m2.id) is None
+    db.close()
+
+
+def test_merge_memories_user_mismatch():
+    db = SessionLocal()
+    user_service = UserService(db)
+    u1 = user_service.create_user(
+        {"username": f"u1_{uuid.uuid4().hex[:8]}", "password": "pw"}
+    )
+    u2 = user_service.create_user(
+        {"username": f"u2_{uuid.uuid4().hex[:8]}", "password": "pw"}
+    )
+
+    mem_service = MemoryService(db)
+    m1 = mem_service.add_memory(
+        {"user_id": u1.id, "content": "a", "topic": "t", "tags": []}
+    )
+    m2 = mem_service.add_memory(
+        {"user_id": u2.id, "content": "b", "topic": "t", "tags": []}
+    )
+
+    merged = mem_service.merge_memories([m1.id, m2.id], u1.id)
+    assert merged is None
+    assert mem_service.get_memory(m1.id) is not None
+    assert mem_service.get_memory(m2.id) is not None
     db.close()
