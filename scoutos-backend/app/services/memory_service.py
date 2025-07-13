@@ -15,6 +15,7 @@ from app.models.memory import Memory
 
 # Deterministic fallback key so tests work without configuration
 DEFAULT_KEY = b"1OGaT5SwPuHVrxTp1lT7ZnkSeBAkiqdSqsgTbDuSwIs="
+from app.utils.encryption import encrypt_text, decrypt_text
 
 
 class MemoryService:
@@ -33,7 +34,7 @@ class MemoryService:
 
         db_mem = Memory(
             user_id=memory_data["user_id"],
-            content=encrypted,
+            content=encrypt_text(encrypted),
             topic=memory_data.get("topic", ""),
             tags=memory_data.get("tags", []),
             timestamp=datetime.datetime.utcnow(),
@@ -60,7 +61,28 @@ class MemoryService:
     def list_memories(self, user_id: int) -> List[Memory]:
         """Return all ``Memory`` rows for a given user."""
         mems = self.db.query(Memory).filter(Memory.user_id == user_id).all()
-        return [self._decrypt_mem(m) for m in mems]
+        for mem in mems:
+            decrypted = decrypt_text(mem.content)
+            self.db.expunge(mem)
+            mem.content = decrypted
+        return mems
+
+    def search_memories(
+        self, user_id: int, topic: str | None = None, tag: str | None = None
+    ) -> List[Memory]:
+        """Return ``Memory`` rows filtered by optional topic and tag."""
+
+        query = self.db.query(Memory).filter(Memory.user_id == user_id)
+        if topic:
+            query = query.filter(Memory.topic == topic)
+        if tag:
+            query = query.filter(Memory.tags.contains(tag))
+        mems = query.all()
+        for mem in mems:
+            decrypted = decrypt_text(mem.content)
+            self.db.expunge(mem)
+            mem.content = decrypted
+        return mems
 
     def update_memory(self, memory_id: int, updates: dict) -> Memory | None:
         """Update an existing ``Memory`` with provided values."""
@@ -72,9 +94,15 @@ class MemoryService:
             if key == "content":
                 value = self.fernet.encrypt(value.encode()).decode()
             if hasattr(mem, key):
-                setattr(mem, key, value)
+                if key == "content":
+                    setattr(mem, key, encrypt_text(value))
+                else:
+                    setattr(mem, key, value)
         self.db.commit()
         self.db.refresh(mem)
+        decrypted = decrypt_text(mem.content)
+        self.db.expunge(mem)
+        mem.content = decrypted
         return self._decrypt_mem(mem)
 
     def delete_memory(self, memory_id: int) -> bool:
@@ -87,7 +115,9 @@ class MemoryService:
         self.db.commit()
         return True
 
-    def merge_memories(self, memory_ids: List[int], user_id: int) -> Memory | None:
+    def merge_memories(
+        self, memory_ids: List[int], user_id: int
+    ) -> Memory | None:
         """Merge multiple ``Memory`` entries into a single one."""
 
         if not memory_ids:
@@ -97,8 +127,11 @@ class MemoryService:
         if len(mems) != len(memory_ids):
             return None
 
+        if any(m.user_id != user_id for m in mems):
+            return None
+
         decrypted = [self._decrypt_mem(m) for m in mems]
-        content = "\n".join(m.content for m in decrypted)
+        content = "\n".join(decrypt_text(m.content) for m in decrypted)
         tags = set()
         for m in decrypted:
             tags.update(m.tags or [])
@@ -108,7 +141,7 @@ class MemoryService:
         encrypted = self.fernet.encrypt(content.encode()).decode()
         merged = Memory(
             user_id=user_id,
-            content=encrypted,
+            content=encrypt_text(encrypted),
             topic=topic,
             tags=list(tags),
             timestamp=datetime.datetime.utcnow(),
@@ -118,4 +151,7 @@ class MemoryService:
             self.db.delete(m)
         self.db.commit()
         self.db.refresh(merged)
+        decrypted = decrypt_text(merged.content)
+        self.db.expunge(merged)
+        merged.content = decrypted
         return self._decrypt_mem(merged)
