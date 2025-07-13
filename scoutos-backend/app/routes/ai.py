@@ -23,11 +23,19 @@ async def _ask_openai(prompt: str, max_tokens: int = 200) -> str:
 
     try:
         client = AsyncOpenAI(api_key=api_key)
-        resp = await client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=max_tokens,
-        )
+        completions = client.chat.completions
+        if hasattr(completions, "create"):
+            resp = await completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=max_tokens,
+            )
+        else:
+            resp = await completions.acreate(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=max_tokens,
+            )
         answer = resp.choices[0].message.content
     except Exception as exc:
         raise HTTPException(
@@ -35,15 +43,12 @@ async def _ask_openai(prompt: str, max_tokens: int = 200) -> str:
             detail=f"OpenAI request failed: {exc}",
         )
 
-<<<<<<< HEAD
-    return resp.choices[0].message.content
+    return answer
 
 
 @router.post("/chat")
 async def ai_chat(req: AIRequest) -> Dict[str, str]:
     answer = await _ask_openai(req.prompt)
-=======
->>>>>>> origin/Next-Phase
     return {"response": answer}
 
 
