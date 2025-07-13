@@ -1,7 +1,8 @@
 from fastapi.testclient import TestClient
 import os
 import sys
-from app.routes import ai as ai_module
+
+from app.services import agent_service
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from app.main import app  # noqa: E402
@@ -35,7 +36,7 @@ def test_ai_chat_returns_mocked_text(monkeypatch):
         )
     )
 
-    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+    monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
 
     resp = client.post("/ai/chat", json={"prompt": "hi"})
     assert resp.status_code == 200
@@ -67,7 +68,7 @@ def test_ai_tags_returns_mocked_tags(monkeypatch):
         )
     )
 
-    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+    monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
 
     resp = client.post("/ai/tags", json={"text": "text"})
     assert resp.status_code == 200
@@ -150,7 +151,7 @@ def test_ai_summary_returns_mocked_text(monkeypatch):
         )
     )
 
-    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+    monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
 
     resp = client.post("/ai/summary", json={"content": "the text"})
     assert resp.status_code == 200
@@ -176,7 +177,7 @@ def test_ai_chat_async_returns_mocked_text(monkeypatch):
         )
     )
 
-    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+    monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
 
     resp = client.post("/ai/chat", json={"prompt": "hello"})
     assert resp.status_code == 200
@@ -198,7 +199,7 @@ def test_ai_chat_handles_openai_error(monkeypatch):
         )
     )
 
-    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+    monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
 
     resp = client.post("/ai/chat", json={"prompt": "boom"})
     assert resp.status_code == 503
