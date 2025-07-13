@@ -42,7 +42,7 @@ describe('AuthForm', () => {
     await waitFor(() => {
       expect(setUser).toHaveBeenCalled()
     })
-    expect(setUser).toHaveBeenCalledWith({ id: 1, username: 'bob', token: 't' })
+    expect(setUser).toHaveBeenCalledWith({ id: 1, username: 'bob', token: 'abc' })
   })
 
   it('registers then logs in', async () => {
