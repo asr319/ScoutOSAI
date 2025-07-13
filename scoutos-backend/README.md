@@ -25,6 +25,17 @@ environment variable. Provide a comma–separated list of origins; by default `*
 is used to allow all origins during development.  Set `OPENAI_API_KEY` for the AI
 demo endpoints.
 
+### Environment variables
+
+Database credentials are provided via a `.env` file. From the repository root,
+copy `.env.example` to `.env` and adjust the values as needed:
+
+```bash
+cp .env.example .env
+```
+
+Docker Compose reads this file automatically when launching the services.
+
 ## API Endpoints
 
 | Method | Path          | Description               |

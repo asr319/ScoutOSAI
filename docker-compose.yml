@@ -5,15 +5,15 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/scoutos
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       - db
   db:
     image: postgres:15
     restart: always
     environment:
-      POSTGRES_USER: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: scoutos
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
