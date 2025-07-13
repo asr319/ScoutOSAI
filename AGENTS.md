@@ -6,6 +6,11 @@ This document provides guidance for any agent (bot, AI model, plugin, or service
 Agents can be LLMs, traditional bots, integrations, or external tools.
 All agents must follow these principles to maintain reliability, extensibility, and user trust.
 
+## Other Guides
+
+Additional `AGENTS.md` files are available in `scoutos-backend/` and `scoutos-frontend/`.
+Refer to those documents for backend- and frontend-specific instructions.
+
 ---
 
 ## 1. What Is an Agent?
@@ -111,6 +116,12 @@ If an agent can’t complete a task:
 - Encourage all contributors (human or bot) to suggest improvements.
 - ScoutOSAI’s success relies on reliable, transparent, and extensible agent collaboration.
 - Agents: Always be helpful, clear, and secure.
+
+## Pull Request Checklist
+
+- Fetch the latest changes from the repository before creating a branch or pull request.
+- Check for merge conflicts and resolve them locally.
+- Ensure all conflicts are addressed before submitting the pull request.
 
 ---
 
