@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from pydantic import BaseModel, Field
 from typing import Any, List, Optional, Dict, Generator
 from sqlalchemy.orm import Session
 
@@ -54,7 +55,7 @@ def add_memory(mem: MemoryIn, db: Session = Depends(get_db)) -> Dict[str, Any]:
 @router.put("/update/{memory_id}")
 def update_memory(
     memory_id: int, mem: MemoryIn, db: Session = Depends(get_db)
-) -> Dict[str, Any] -> Dict[str, Any]:
+) -> Dict[str, Any]:
     service = MemoryService(db)
     existing = service.get_memory(memory_id)
     if not existing:
@@ -69,7 +70,7 @@ def update_memory(
 @router.get("/list")
 def list_memories(
     user_id: int, db: Session = Depends(get_db)
-) -> List[Dict[str, Any]] -> List[Dict[str, Any]] -> List[Dict[str, Any]]:
+) -> List[Dict[str, Any]]:
     service = MemoryService(db)
     mems = service.list_memories(user_id)
     return [_serialize(m) for m in mems]
@@ -90,7 +91,7 @@ def search_memories(
 @router.delete("/delete/{memory_id}")
 def delete_memory(
     memory_id: int, user_id: int, db: Session = Depends(get_db)
-) -> Dict[str, str] -> Dict[str, str] -> Dict[str, str]:
+) -> Dict[str, str]:
     service = MemoryService(db)
     existing = service.get_memory(memory_id)
     if not existing:
