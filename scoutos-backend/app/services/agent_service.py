@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Protocol, List
+from typing import Protocol, List, Any
 
 from fastapi import HTTPException
 from openai import AsyncOpenAI
@@ -115,4 +115,23 @@ class AgentService:
 
     def get_status(self) -> dict[str, str]:
         return {"backend": self.backend.__class__.__name__}
+
+    async def run_pipeline(self, actions: List[dict]) -> List[Any]:
+        """Execute a sequence of agent actions."""
+        results: List[Any] = []
+        for step in actions:
+            kind = step.get("type")
+            if kind == "chat":
+                prompt = step.get("prompt", "")
+                results.append(await self.chat(prompt))
+            elif kind == "tags":
+                content = step.get("content", "")
+                results.append(await self.generate_tags(content))
+            elif kind == "merge_advice":
+                memory_a = step.get("memory_a", "")
+                memory_b = step.get("memory_b", "")
+                results.append(await self.merge_advice(memory_a, memory_b))
+            else:
+                raise HTTPException(status_code=400, detail=f"Unknown action: {kind}")
+        return results
 

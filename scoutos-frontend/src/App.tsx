@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import ChatInterface from './components/ChatInterface';
 import MemoryManager from './components/MemoryManager';
+import AnalyticsChart from './components/AnalyticsChart';
+import ChainAdmin from './components/ChainAdmin';
 import ProfileEditor from './components/ProfileEditor';
 import LogoutButton from './components/LogoutButton';
 import AuthForm from './components/AuthForm';
@@ -10,7 +12,7 @@ import './index.css';
 
 function AppContent() {
   const { user } = useUser();
-  const [page, setPage] = useState<'chat' | 'memory' | 'profile'>('chat');
+  const [page, setPage] = useState<'chat' | 'memory' | 'analytics' | 'admin' | 'profile'>('chat');
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -54,12 +56,31 @@ function AppContent() {
           Memories
         </button>
         <button
+          className={`px-3 py-1 rounded ${page === 'analytics' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          onClick={() => setPage('analytics')}
+        >
+          Analytics
+        </button>
+        <button
+          className={`px-3 py-1 rounded ${page === 'admin' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          onClick={() => setPage('admin')}
+        >
+          Admin
+        </button>
+        <button
           className={`px-3 py-1 rounded ${page === 'profile' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
           onClick={() => setPage('profile')}
         >
           Profile
         </button>
       </nav>
+      {page === 'chat' ? (
+        <ChatInterface />
+      ) : page === 'memory' ? page === 'memory' ? (
+        <MemoryManager /> : <ChainAdmin />
+      ) : (
+        <AnalyticsChart />
+      )}
       {page === 'chat' ? <ChatInterface /> : page === 'memory' ? <MemoryManager /> : <ProfileEditor />}
     </div>
   );

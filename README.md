@@ -52,6 +52,12 @@ pip install -r requirements.txt -r requirements-dev.txt
 pytest
 ```
 
+### Enabling Two-Factor Authentication
+
+User registration now returns a `totp_secret` value. Scan this key in any TOTP
+app (Google Authenticator, Authy, etc.) and provide the generated code when
+logging in via `/user/login` using the `totp_code` field.
+
 ## Frontend Setup
 
 The React frontend is found in [`scoutos-frontend`](scoutos-frontend/). Use `pnpm` for dependency management:
@@ -99,3 +105,13 @@ Full details of the REST endpoints, including example requests, can be found in
 [`scoutos-backend/README.md`](scoutos-backend/README.md).
 
 Additional agent documentation and plugin examples are in [AGENTS.md](AGENTS.md).
+
+## Analytics
+
+Usage events like memory creation and agent calls are stored in an
+`analytics_events` table. Two endpoints expose this data:
+
+- `GET /analytics/summary` – return a count of events grouped by type for the
+  authenticated user.
+- `GET /analytics/events` – return recent events. Pass `?format=csv` to export
+  a CSV file instead of JSON.

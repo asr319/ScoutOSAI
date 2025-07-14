@@ -88,6 +88,13 @@ Add new agent to registry/config (example pseudocode):
 }
 ```
 
+### Registering New Agent Types
+
+Agent metadata is stored in the `agent_configs` table. Create or update a record
+by posting the `name`, `enabled` flag and optional `settings` JSON to
+`/agent/config`. Toggle an agent on or off with `/agent/enable` and retrieve all
+entries using `GET /agent/config`.
+
 ## 7. Checklist for New Agent
 
 - Exposes clear endpoint or hook
