@@ -40,3 +40,7 @@ npm test
 ```
 
 Contributions are welcome!
+
+## Mobile Installation
+
+The frontend can be installed as a Progressive Web App. After running `pnpm run build` and serving the `dist` folder, visit the site on a mobile browser and choose **Add to Home Screen**. The layout is responsive and adapts to small screens through Tailwind CSS.
