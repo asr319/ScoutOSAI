@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useEffect } from 'react';
 import ChatInterface from './components/ChatInterface';
 import MemoryManager from './components/MemoryManager';
 import AnalyticsChart from './components/AnalyticsChart';
@@ -22,6 +22,15 @@ function AppContent() {
       document.documentElement.classList.remove('dark');
     }
   }, [dark]);
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    if (dark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [dark]);
 
   if (!user) {
     return (
@@ -32,8 +41,14 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-gray-100 flex flex-col items-center p-4">
-      <div className="self-end mb-2 flex gap-2">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-gray-100 dark:bg-gray-900 dark:text-gray-100 flex flex-col items-center p-4">
+      <div className="self-end mb-2 flex gap-2 flex gap-2">
+        <button
+          className="border rounded px-2 py-1"
+          onClick={() => setDark(d => !d)}
+        >
+          {dark ? 'Light' : 'Dark'} Mode
+        </button>
         <button
           className="border rounded px-2 py-1"
           onClick={() => setDark(d => !d)}

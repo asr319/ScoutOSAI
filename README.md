@@ -12,7 +12,6 @@ export POSTGRES_PASSWORD=yourpassword
 export OPENAI_API_KEY=sk-...
 export FERNET_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
 export APP_ENCRYPTION_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
-export OPENAI_API_KEY=sk-...
 docker-compose up
 ```
 
@@ -26,6 +25,9 @@ docker-compose --env-file .env up
 
 The backend service uses these values when constructing `DATABASE_URL` and when
 calling the OpenAI API for the demo AI endpoints.
+
+The compose file also builds the React frontend so the full stack runs with a
+single command. Visit `http://localhost:3000` after running `docker-compose up`.
 
 The compose file also builds the React frontend so the full stack runs with a
 single command. Visit `http://localhost:3000` after running `docker-compose up`.
@@ -82,7 +84,7 @@ pnpm run dev
 The UI includes a dark mode toggle in the navigation bar. Use it to switch
 between light and dark themes.
 
-Lint and run tests with (`pnpm test` starts watch mode):
+Lint and run tests with:
 
 ```bash
 npm run lint
