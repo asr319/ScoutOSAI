@@ -126,6 +126,10 @@ This repository is a learning project. When adapting it for workloads that touch
 
 Review [`SECURITY.md`](SECURITY.md) and your organization’s compliance requirements before deploying in production.
 
+### Secret Scanning
+
+All pushes and pull requests to `main` or `develop` run [Gitleaks](https://github.com/zricethezav/gitleaks) to detect hardcoded secrets. Run `python scripts/scan_for_secrets.py` locally to scan your working tree. Add additional patterns in the `SECRET_PATTERNS` list if needed.
+
 ## API Reference
 
 Full details of the REST endpoints, including example requests, can be found in
