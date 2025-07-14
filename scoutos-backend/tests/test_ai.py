@@ -78,6 +78,7 @@ def test_ai_tags_returns_mocked_tags(monkeypatch):
 
 def test_ai_merge_missing_api_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("AGENT_BACKEND", "openai")
     from types import SimpleNamespace
     class FakeService:
         def __init__(self, _db):
@@ -97,6 +98,7 @@ def test_ai_merge_returns_mocked_text(monkeypatch):
     from types import SimpleNamespace
 
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+    monkeypatch.setenv("AGENT_BACKEND", "openai")
 
     fake_resp = SimpleNamespace(
         choices=[SimpleNamespace(message=SimpleNamespace(content="merge"))]
@@ -120,11 +122,32 @@ def test_ai_merge_returns_mocked_text(monkeypatch):
 
     monkeypatch.setattr(ai_module, "MemoryService", FakeService)
 
-    monkeypatch.setattr(ai_module, "AsyncOpenAI", lambda **_: fake_client)
+    monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
 
     resp = client.post("/ai/merge", json={"memory_ids": [1, 2]})
     assert resp.status_code == 200
     assert resp.json() == {"verdict": "merge"}
+
+
+def test_ai_merge_local_backend(monkeypatch):
+    """/ai/merge should use the LocalBackend when AGENT_BACKEND=local."""
+    from types import SimpleNamespace
+
+    monkeypatch.setenv("AGENT_BACKEND", "local")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+    class FakeService:
+        def __init__(self, _db):
+            pass
+
+        def get_memory(self, mid):
+            return SimpleNamespace(content=f"m{mid}")
+
+    monkeypatch.setattr(ai_module, "MemoryService", FakeService)
+
+    resp = client.post("/ai/merge", json={"memory_ids": [1, 2]})
+    assert resp.status_code == 200
+    assert resp.json() == {"verdict": "Local merge advice"}
 
 
 def test_ai_summary_missing_api_key(monkeypatch):

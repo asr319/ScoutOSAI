@@ -49,6 +49,10 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 
 Docker Compose reads this file automatically when launching the services.
 
+Set `AGENT_BACKEND=local` to disable OpenAI calls during development. The
+`LocalBackend` returns stubbed responses so you can run the API without network
+access or API keys.
+
 ## API Endpoints
 
 The service exposes a small REST API. The table below lists each route and its

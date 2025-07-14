@@ -99,14 +99,11 @@ async def ai_merge(
             raise HTTPException(status_code=404, detail="Memory not found")
         memories.append(mem.content)
 
-    joined = "\n".join(
-        f"Memory {i + 1}:\n{content}" for i, content in enumerate(memories)
-    )
-    prompt = (
-        "Should these memories be merged? Reply 'Yes' or 'No' and include a brief "
-        "reason.\n" + joined
-    )
-    answer = await _ask_openai(prompt)
+    if len(memories) < 2:
+        raise HTTPException(status_code=400, detail="At least two memories required")
+
+    agent = AgentService()
+    answer = await agent.merge_advice(memories[0], "\n".join(memories[1:]))
     _notify("merge", {"verdict": answer})
     AnalyticsService(db).record_event(None, "ai_merge", {"ids": req.memory_ids})
     return {"verdict": answer}

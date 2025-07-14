@@ -34,6 +34,12 @@ single command. Visit `http://localhost:3000` after running `docker-compose up`.
 
 ScoutOSAI is a demo full-stack project that pairs a FastAPI backend with a React + Vite frontend. The application exposes a small API for managing user information and storing short text "memories". The web client provides a minimal chat interface for experimenting with the API.
 
+### Offline / Mock Mode
+
+To develop completely offline set `AGENT_BACKEND=local` for the backend and
+`VITE_USE_MOCK=true` in `scoutos-frontend/.env`. Mock mode returns canned
+responses so you can explore the UI without network access or API keys.
+
 ## Backend Setup
 
 The backend lives in [`scoutos-backend`](scoutos-backend/). Install dependencies and start the server with:
@@ -73,6 +79,7 @@ Create a `.env` file with the backend URL:
 
 ```
 VITE_API_URL=http://localhost:8000
+VITE_USE_MOCK=true
 ```
 
 Start the development server with:
