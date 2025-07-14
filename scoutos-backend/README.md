@@ -59,6 +59,8 @@ purpose.
 | `GET` | `/` | Health check |
 | `POST` | `/user/register` | Register a user |
 | `POST` | `/user/login` | Obtain auth token |
+| `GET` | `/user/profile` | Get user profile |
+| `PUT` | `/user/profile` | Update user profile |
 | `GET` | `/agent/status` | Agent status placeholder |
 | `POST` | `/agent/merge` | Merge multiple memories |
 | `POST` | `/memory/add` | Store a memory |

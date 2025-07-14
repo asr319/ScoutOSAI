@@ -17,6 +17,7 @@ from app.models.base import Base  # noqa: E402
 # Import models so their metadata is registered with Base
 from app.models import user as user_model  # noqa: F401,E402
 from app.models import memory as memory_model  # noqa: F401,E402
+from app.models import user_profile as user_profile_model  # noqa: F401,E402
 
 # Create all tables for the test database
 Base.metadata.create_all(bind=engine)
