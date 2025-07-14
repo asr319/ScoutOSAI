@@ -84,7 +84,7 @@ async def update_memory(
     if existing.user_id != mem.user_id:
         raise HTTPException(status_code=403, detail="Unauthorized")
 
-    updated = service.update_memory(memory_id, mem.user_id, mem.dict())
+    updated = service.update_memory(memory_id, mem.user_id, mem.model_dump())
     await manager.send_personal_message(
         {"type": "memory", "action": "updated", "memory": _serialize(updated)},
         mem.user_id,

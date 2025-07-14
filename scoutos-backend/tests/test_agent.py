@@ -5,12 +5,22 @@ from app.main import app  # noqa: E402
 
 client = TestClient(app)
 
+import pyotp
 
-def _auth():
+
+def _auth(role: str = "user"):
     username = f"u_{uuid.uuid4().hex[:8]}"
-    r = client.post("/user/register", json={"username": username, "password": "pw"})
-    user_id = r.json()["id"]
-    r = client.post("/user/login", json={"username": username, "password": "pw"})
+    r = client.post(
+        "/user/register",
+        json={"username": username, "password": "pw", "role": role},
+    )
+    body = r.json()
+    user_id = body["id"]
+    totp = pyotp.TOTP(body["totp_secret"]).now()
+    r = client.post(
+        "/user/login",
+        json={"username": username, "password": "pw", "totp_code": totp},
+    )
     token = r.json()["token"]
     return user_id, token
 
