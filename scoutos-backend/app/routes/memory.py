@@ -49,8 +49,6 @@ def _serialize(mem) -> Dict[str, Any]:
     }
 
 
-
-
 @router.post("/add")
 async def add_memory(
     mem: MemoryIn,

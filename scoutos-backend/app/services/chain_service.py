@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.models.chain import Chain
 
+
 class ChainService:
     """Service layer for Chain CRUD operations."""
 

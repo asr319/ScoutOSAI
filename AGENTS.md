@@ -11,17 +11,21 @@ All agents must follow these principles to maintain reliability, extensibility, 
 Additional `AGENTS.md` files are available in `scoutos-backend/` and `scoutos-frontend/`.
 Refer to those documents for backend- and frontend-specific instructions.
 
----
+All agents must install project dependencies before starting any tasks. Use `pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt` and run `pnpm install` inside `scoutos-frontend`.
+
+## All logs should be stored in the `logs/` directory (e.g., `logs/agents.log`). Do not record logs inside source files.
 
 ## 1. What Is an Agent?
 
 An **agent** is an autonomous or semi-autonomous process that:
+
 - Receives structured input (e.g., user queries, memory data, tags)
 - Processes it using logic, LLMs, external APIs, or plugins
 - Returns structured output (e.g., chat reply, suggested tags, merge/summarize results)
 - May initiate further actions (e.g., save, search, escalate, notify)
 
 Agents include:
+
 - LLM endpoints (OpenAI, local Llama, Claude, etc.)
 - Search bots (web, docs, plugin directories)
 - Memory and merge suggestion engines
@@ -33,16 +37,19 @@ Agents include:
 ## 2. How Should Agents Interact?
 
 ### **API Contracts**
+
 - Expose all agent actions as REST endpoints or plugin hooks (`/ai/chat`, `/ai/tags`, `/ai/merge`, `/search`, etc.)
 - Accept JSON input, return JSON output.
 - Support `input`, `options`, and `meta` fields in payloads for extensibility.
 
 ### **Frontend/UI**
+
 - Agents may be invoked automatically (on memory creation, merge detection, etc.) or by user request.
 - Always return clear, actionable responses (with reason/explanation when possible).
 - Provide suggestions, never force changes without user approval (unless specifically configured).
 
 ### **Agent Chaining**
+
 - Agents can call other agents in sequence (e.g., tag → summarize → suggest merge).
 - Maintain modularity—agents should be swappable and composable.
 
@@ -54,6 +61,12 @@ Agents include:
 - Document their input/output schemas and options in `agents.md` or a linked doc.
 - Clearly indicate any required credentials (API keys, env vars) and scope of action.
 - Support dry-run/test mode for debugging or review.
+
+### Current Agent Contracts
+
+Input and output schemas for built-in agents reside in
+`scoutos-backend/app/models` and are enforced via Pydantic models. Agents must
+conform to these schemas or extend them with backward-compatible fields.
 
 ---
 
@@ -86,8 +99,8 @@ Add new agent to registry/config (example pseudocode):
 {
   "name": "ai-tagger",
   "route": "/ai/tags",
-  "input_schema": {"content": "string"},
-  "output_schema": {"tags": ["string"]},
+  "input_schema": { "content": "string" },
+  "output_schema": { "tags": ["string"] },
   "dependencies": ["OPENAI_API_KEY"],
   "description": "Suggests tags for memory objects using LLM."
 }
@@ -119,6 +132,7 @@ If an agent can’t complete a task:
 ## 9. Updating This Document
 
 - Keep agents.md up-to-date as new agents, APIs, or workflows are added.
+- Periodically review this file to ensure automation instructions remain current. Record updates in `logs/agents.log`.
 - Link to detailed agent/plugin docs as needed.
 - Encourage all contributors (human or bot) to suggest improvements.
 - ScoutOSAI’s success relies on reliable, transparent, and extensible agent collaboration.
@@ -129,6 +143,10 @@ If an agent can’t complete a task:
 - Fetch the latest changes from the repository before creating a branch or pull request.
 - Check for merge conflicts and resolve them locally.
 - Ensure all conflicts are addressed before submitting the pull request.
+- Install backend dependencies with `pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt`.
+- Install frontend dependencies with `pnpm install` in `scoutos-frontend`.
+- Run the redundancy checker `python scripts/check_duplicates.py` from the repository root and remove or merge any duplicates.
+- Format all project files with `prettier --write .` to keep the codebase tidy. Generate `.min.js` and `.min.css` files using your preferred minifier.
 
 ### Local Test Mode
 
@@ -141,3 +159,34 @@ completely offline.
 **Would you like to add a section for agent “personalities” (e.g., formal, friendly, concise), or want a template for agent-specific markdown files?
 If you want a copy-paste agent registry file, plugin manifest, or more “how-to” for chaining, just ask!**
 
+## 10. CI/CD, Security, and Agent Policy
+
+ScoutOSAI requires that every Pull Request passes a full suite of automated
+checks defined in `.github/workflows/full-checks.yml`. These checks include:
+
+- Secret scanning (Gitleaks and custom Python script)
+- Dependency vulnerability audits for JavaScript (`pnpm audit`) and Python
+  (`pip-audit`)
+- Linting and formatting (`pnpm lint`, `flake8`, `black`, `prettier`)
+- Unit and integration tests for both frontend and backend
+- Duplicate and error scanning via a Python script
+- AGENTS file validation to ensure policies are up to date
+- Spelling checks with `codespell`
+- License compliance for all dependencies
+- Static analysis with `bandit` and JS/TS tooling
+- Dead code and unused dependency detection
+- Coverage enforcement (fail if below 85%)
+- Frontend accessibility tests
+- Container image vulnerability scans
+- Changelog and semantic version bump enforcement
+- Repository history secret scan
+
+Branch protection rules require all of these jobs to pass before merging. All
+commit and PR messages must contain the line:
+
+`All CI/CD, security, and agent checks passed.`
+
+If any check fails, the Codex Agent automatically attempts to resolve the issue
+and re-run the workflow. The agent only submits or approves the PR when all
+checks succeed. AGENTS files themselves are kept in sync and validated during
+CI.

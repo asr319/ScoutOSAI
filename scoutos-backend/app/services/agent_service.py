@@ -73,7 +73,10 @@ class OpenAIBackend:
     async def merge_advice(self, memory_a: str, memory_b: str) -> str:
         prompt = (
             "Provide guidance on how to merge the following two memory entries "
-            "and explain the reasoning:\nMemory A:\n" + memory_a + "\nMemory B:\n" + memory_b
+            "and explain the reasoning:\nMemory A:\n"
+            + memory_a
+            + "\nMemory B:\n"
+            + memory_b
         )
         return await self._ask(prompt)
 
@@ -135,4 +138,3 @@ class AgentService:
             else:
                 raise HTTPException(status_code=400, detail=f"Unknown action: {kind}")
         return results
-

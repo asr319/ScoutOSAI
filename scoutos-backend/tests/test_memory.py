@@ -7,7 +7,6 @@ from app.main import app  # noqa: E402
 client = TestClient(app)
 
 
-
 import pyotp
 
 
@@ -27,6 +26,7 @@ def _auth(role: str = "user"):
     )
     token = r.json()["token"]
     return user_id, token
+
 
 def test_add_memory():
     user_id, token = _auth()
@@ -139,20 +139,16 @@ def test_search_memory_filters_by_topic_and_tag():
         )
 
     by_topic = client.get(
-        
         "/memory/search",
         params={"user_id": user_id, "topic": "alpha"},
         headers={"Authorization": f"Bearer {token}"},
-    
     )
     assert {m["content"] for m in by_topic.json()} == {"a", "b"}
 
     by_tag = client.get(
-        
         "/memory/search",
         params={"user_id": user_id, "tag": "urgent"},
         headers={"Authorization": f"Bearer {token}"},
-    
     )
     assert {m["content"] for m in by_tag.json()} == {"a", "c"}
 

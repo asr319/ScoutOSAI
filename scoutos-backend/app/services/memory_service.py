@@ -87,7 +87,9 @@ class MemoryService:
             mems = [m for m in mems if lowered in m.content.lower()]
         return mems
 
-    def update_memory(self, memory_id: int, user_id: int, updates: dict) -> Memory | None:
+    def update_memory(
+        self, memory_id: int, user_id: int, updates: dict
+    ) -> Memory | None:
         """Update an existing ``Memory`` with provided values if owned by ``user_id``."""
 
         mem = self.db.get(Memory, memory_id)
@@ -116,9 +118,7 @@ class MemoryService:
         self.db.commit()
         return True
 
-    def merge_memories(
-        self, memory_ids: List[int], user_id: int
-    ) -> Memory | None:
+    def merge_memories(self, memory_ids: List[int], user_id: int) -> Memory | None:
         """Merge multiple ``Memory`` rows into one.
 
         The contents of all memories are concatenated and their tags are

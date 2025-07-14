@@ -1,6 +1,7 @@
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from fastapi.testclient import TestClient
 from app.main import app
 
@@ -24,6 +25,4 @@ def test_preflight_allows_configured_origin():
     }
     resp = client.options("/", headers=headers)
     assert resp.status_code == 200
-    assert resp.headers.get("access-control-allow-origin") == (
-        "http://allowed.test"
-    )
+    assert resp.headers.get("access-control-allow-origin") == ("http://allowed.test")

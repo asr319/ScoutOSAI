@@ -15,3 +15,7 @@ dist/
 .DS_Store
 # Ignore SQLite test database
 scoutos-backend/test.db
+
+# Logs
+logs/*
+!logs/.gitkeep
