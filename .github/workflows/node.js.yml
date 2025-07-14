@@ -38,5 +38,5 @@ jobs:
         cache: 'pnpm'
         cache-dependency-path: scoutos-frontend/pnpm-lock.yaml
     - run: pnpm install --frozen-lockfile
-    - run: pnpm run build --if-present
+    - run: pnpm run --if-present build
     - run: pnpm test --if-present
