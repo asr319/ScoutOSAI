@@ -55,7 +55,9 @@ export default function AuthForm() {
         data = await loginRes.json();
       }
 
-      setUser({ id: data.id, username, token: data.token })
+      if (data) {
+        setUser({ id: data.id, username, token: data.token })
+      }
       setUsername('')
       setPassword('')
       toast.success(mode === 'login' ? 'Logged in' : 'Registered and logged in')
