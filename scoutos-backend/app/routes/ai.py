@@ -1,6 +1,7 @@
 """Routes related to AI interactions using the OpenAI API."""
 
 from fastapi import APIRouter, Depends, HTTPException
+import asyncio
 from pydantic import BaseModel
 from openai import AsyncOpenAI
 import os
@@ -10,9 +11,14 @@ from sqlalchemy.orm import Session
 from app.db import SessionLocal
 from app.services.memory_service import MemoryService
 from app.services.agent_service import AgentService
+from app.websockets import manager
 from app.services.analytics_service import AnalyticsService
 
 router = APIRouter()
+
+
+def _notify(event: str, payload: Dict[str, str]) -> None:
+    asyncio.create_task(manager.broadcast({"type": "agent", "event": event, **payload}))
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -56,6 +62,7 @@ class AIRequest(BaseModel):
 async def ai_chat(req: AIRequest, db: Session = Depends(get_db)) -> Dict[str, str]:
     service = AgentService()
     answer = await service.chat(req.prompt)
+    _notify("chat", {"response": answer})
     AnalyticsService(db).record_event(None, "ai_chat", {"prompt": req.prompt})
     return {"response": answer}
 
@@ -68,6 +75,7 @@ class TagRequest(BaseModel):
 async def ai_tags(req: TagRequest, db: Session = Depends(get_db)) -> Dict[str, List[str]]:
     service = AgentService()
     tags = await service.generate_tags(req.text)
+    _notify("tags", {"detail": ",".join(tags)})
     AnalyticsService(db).record_event(None, "ai_tags", {"text": req.text})
     return {"tags": tags}
 
@@ -96,6 +104,7 @@ async def ai_merge(
         "reason.\n" + joined
     )
     answer = await _ask_openai(prompt)
+    _notify("merge", {"verdict": answer})
     AnalyticsService(db).record_event(None, "ai_merge", {"ids": req.memory_ids})
     return {"verdict": answer}
 
@@ -111,6 +120,7 @@ async def ai_summary(
     service = AgentService()
     prompt = "Summarize the following text in a short paragraph:\n" + req.content
     answer = await service.chat(prompt, max_tokens=100)
+    _notify("summary", {"summary": answer})
     AnalyticsService(db).record_event(None, "ai_summary", {})
     return {"summary": answer}
 

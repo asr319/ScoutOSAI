@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from __future__ import annotations
 
 import csv
@@ -22,6 +23,28 @@ def get_current_user(
     return verify_token(credentials.credentials)
 
 
+=======
+from typing import Dict, Generator
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy.orm import Session
+
+from app.db import SessionLocal
+from app.models.user import User
+from app.models.memory import Memory
+from app.services.auth_service import verify_token
+
+security = HTTPBearer()
+
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+    return verify_token(credentials.credentials)
+
+
+router = APIRouter()
+
+
+>>>>>>> origin/Next-Phase
 def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
     try:
@@ -30,6 +53,7 @@ def get_db() -> Generator[Session, None, None]:
         db.close()
 
 
+<<<<<<< HEAD
 @router.get("/events")
 def list_events(
     limit: int = 100,
@@ -66,3 +90,12 @@ def summary(
 ) -> Dict[str, int]:
     service = AnalyticsService(db)
     return service.summary(int(current_user["sub"]))
+=======
+@router.get("/analytics")
+def get_analytics(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)) -> Dict[str, int]:
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Admin only")
+    users = db.query(User).count()
+    memories = db.query(Memory).count()
+    return {"users": users, "memories": memories}
+>>>>>>> origin/Next-Phase

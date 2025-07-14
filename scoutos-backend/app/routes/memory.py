@@ -2,6 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
 from typing import Any, Dict, Generator, List, Optional
+import asyncio
+
+from app.websockets import manager
 from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
@@ -46,8 +49,10 @@ def _serialize(mem) -> Dict[str, Any]:
     }
 
 
+
+
 @router.post("/add")
-def add_memory(
+async def add_memory(
     mem: MemoryIn,
     current_user: Dict[str, Any] = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -57,6 +62,10 @@ def add_memory(
 
     service = MemoryService(db)
     new_mem = service.add_memory(mem.model_dump())
+    await manager.send_personal_message(
+        {"type": "memory", "action": "added", "memory": _serialize(new_mem)},
+        mem.user_id,
+    )
     AnalyticsService(db).record_event(
         mem.user_id,
         "memory_created",
@@ -66,7 +75,7 @@ def add_memory(
 
 
 @router.put("/update/{memory_id}")
-def update_memory(
+async def update_memory(
     memory_id: int,
     mem: MemoryIn,
     current_user: Dict[str, Any] = Depends(get_current_user),
@@ -81,7 +90,11 @@ def update_memory(
     if existing.user_id != mem.user_id:
         raise HTTPException(status_code=403, detail="Unauthorized")
 
-    updated = service.update_memory(memory_id, mem.user_id, mem.dict())
+    updated = service.update_memory(memory_id, mem.user_id, mem.model_dump())
+    await manager.send_personal_message(
+        {"type": "memory", "action": "updated", "memory": _serialize(updated)},
+        mem.user_id,
+    )
     AnalyticsService(db).record_event(
         mem.user_id,
         "memory_updated",
@@ -91,7 +104,7 @@ def update_memory(
 
 
 @router.get("/list")
-def list_memories(
+async def list_memories(
     user_id: int,
     current_user: Dict[str, Any] = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -105,7 +118,7 @@ def list_memories(
 
 
 @router.get("/search")
-def search_memories(
+async def search_memories(
     user_id: int,
     topic: Optional[str] = None,
     tag: Optional[str] = None,
@@ -122,7 +135,7 @@ def search_memories(
 
 
 @router.delete("/delete/{memory_id}")
-def delete_memory(
+async def delete_memory(
     memory_id: int,
     user_id: int,
     current_user: Dict[str, Any] = Depends(get_current_user),
@@ -140,6 +153,10 @@ def delete_memory(
 
     if not service.delete_memory(memory_id, user_id):
         raise HTTPException(status_code=404, detail="Memory not found")
+    await manager.send_personal_message(
+        {"type": "memory", "action": "deleted", "memory": _serialize(existing)},
+        user_id,
+    )
     AnalyticsService(db).record_event(
         user_id,
         "memory_deleted",

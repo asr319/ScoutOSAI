@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, fireEvent } from '@testing-library/react'
 import { UserProvider, UserContext, type User } from './context/UserContext'
+import { WebSocketProvider } from './context/WebSocketContext'
 import App from './App'
 
 describe('App', () => {
@@ -19,7 +20,9 @@ describe('App', () => {
     vi.stubGlobal('fetch', fetchMock)
     const { getByText } = render(
       <UserContext.Provider value={{ user, setUser: vi.fn() }}>
-        <App />
+        <WebSocketProvider>
+          <App />
+        </WebSocketProvider>
       </UserContext.Provider>
     )
     fireEvent.click(getByText('Memories'))
