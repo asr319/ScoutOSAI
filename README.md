@@ -75,11 +75,11 @@ pnpm run dev
 The UI includes a dark mode toggle in the navigation bar. Use it to switch
 between light and dark themes.
 
-Lint and run tests with:
+Lint and run tests with (`pnpm test` starts watch mode):
 
 ```bash
 npm run lint
-pnpm test
+pnpm test -- --run
 ```
 
 ## Security Notes
