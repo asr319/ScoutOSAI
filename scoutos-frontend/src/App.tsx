@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ChatInterface from './components/ChatInterface';
 import MemoryManager from './components/MemoryManager';
+import AnalyticsChart from './components/AnalyticsChart';
 import ChainAdmin from './components/ChainAdmin';
 import LogoutButton from './components/LogoutButton';
 import AuthForm from './components/AuthForm';
@@ -10,7 +11,7 @@ import './index.css';
 
 function AppContent() {
   const { user } = useUser();
-  const [page, setPage] = useState<'chat' | 'memory' | 'admin'>('chat');
+  const [page, setPage] = useState<'chat' | 'memory' | 'analytics' | 'admin'>('chat');
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -54,13 +55,25 @@ function AppContent() {
           Memories
         </button>
         <button
+          className={`px-3 py-1 rounded ${page === 'analytics' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          onClick={() => setPage('analytics')}
+        >
+          Analytics
+        </button>
+        <button
           className={`px-3 py-1 rounded ${page === 'admin' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
           onClick={() => setPage('admin')}
         >
           Admin
         </button>
       </nav>
-      {page === 'chat' ? <ChatInterface /> : page === 'memory' ? <MemoryManager /> : <ChainAdmin />}
+      {page === 'chat' ? (
+        <ChatInterface />
+      ) : page === 'memory' ? page === 'memory' ? (
+        <MemoryManager /> : <ChainAdmin />
+      ) : (
+        <AnalyticsChart />
+      )}
     </div>
   );
 }

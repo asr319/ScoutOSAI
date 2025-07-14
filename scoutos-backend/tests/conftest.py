@@ -21,6 +21,10 @@ from app.models import memory as memory_model  # noqa: F401,E402
 from app.models import chain as chain_model  # noqa: F401,E402
 =======
 from app.models import agent_config as agent_model  # noqa: F401,E402
+<<<<<<< HEAD
+>>>>>>> origin/Next-Phase
+=======
+from app.models import analytics_event as analytics_model  # noqa: F401,E402
 >>>>>>> origin/Next-Phase
 
 # Create all tables for the test database

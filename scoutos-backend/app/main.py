@@ -30,6 +30,7 @@ app.include_router(user.router, prefix="/user")
 app.include_router(agent.router, prefix="/agent")
 app.include_router(ai.router, prefix="/ai")
 app.include_router(chain.router, prefix="/chain")
+app.include_router(analytics.router, prefix="/analytics")
 app.include_router(analytics.router, prefix="")
 app.include_router(ws.router)
 

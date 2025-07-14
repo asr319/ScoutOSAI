@@ -12,6 +12,7 @@ from app.db import SessionLocal
 from app.services.memory_service import MemoryService
 from app.services.agent_service import AgentService
 from app.websockets import manager
+from app.services.analytics_service import AnalyticsService
 
 router = APIRouter()
 
@@ -58,10 +59,11 @@ class AIRequest(BaseModel):
 
 
 @router.post("/chat")
-async def ai_chat(req: AIRequest) -> Dict[str, str]:
+async def ai_chat(req: AIRequest, db: Session = Depends(get_db)) -> Dict[str, str]:
     service = AgentService()
     answer = await service.chat(req.prompt)
     _notify("chat", {"response": answer})
+    AnalyticsService(db).record_event(None, "ai_chat", {"prompt": req.prompt})
     return {"response": answer}
 
 
@@ -70,10 +72,11 @@ class TagRequest(BaseModel):
 
 
 @router.post("/tags")
-async def ai_tags(req: TagRequest) -> Dict[str, List[str]]:
+async def ai_tags(req: TagRequest, db: Session = Depends(get_db)) -> Dict[str, List[str]]:
     service = AgentService()
     tags = await service.generate_tags(req.text)
     _notify("tags", {"detail": ",".join(tags)})
+    AnalyticsService(db).record_event(None, "ai_tags", {"text": req.text})
     return {"tags": tags}
 
 
@@ -102,6 +105,7 @@ async def ai_merge(
     )
     answer = await _ask_openai(prompt)
     _notify("merge", {"verdict": answer})
+    AnalyticsService(db).record_event(None, "ai_merge", {"ids": req.memory_ids})
     return {"verdict": answer}
 
 
@@ -110,10 +114,13 @@ class SummaryRequest(BaseModel):
 
 
 @router.post("/summary")
-async def ai_summary(req: SummaryRequest) -> Dict[str, str]:
+async def ai_summary(
+    req: SummaryRequest, db: Session = Depends(get_db)
+) -> Dict[str, str]:
     service = AgentService()
     prompt = "Summarize the following text in a short paragraph:\n" + req.content
     answer = await service.chat(prompt, max_tokens=100)
     _notify("summary", {"summary": answer})
+    AnalyticsService(db).record_event(None, "ai_summary", {})
     return {"summary": answer}
 
