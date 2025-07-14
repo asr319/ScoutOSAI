@@ -1,0 +1,10 @@
+node_modules/
+tests/
+dist/
+.vite-cache/
+coverage/
+.env*
+*.log
+build/
+.vscode/
+.git
