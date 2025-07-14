@@ -58,7 +58,7 @@ purpose.
 | ------ | ---- | ----------- |
 | `GET` | `/` | Health check |
 | `POST` | `/user/register` | Register a user |
-| `POST` | `/user/login` | Obtain auth token |
+| `POST` | `/user/login` | Obtain auth token (TOTP required) |
 | `GET` | `/agent/status` | Agent status placeholder |
 | `POST` | `/agent/merge` | Merge multiple memories |
 | `POST` | `/memory/add` | Store a memory |
@@ -70,10 +70,17 @@ purpose.
 | `POST` | `/ai/tags` | Suggest tags for text |
 | `POST` | `/ai/merge` | LLM merge advice |
 | `POST` | `/ai/summary` | Summarize text |
+| `GET` | `/analytics` | Admin only usage stats |
 
 Authenticate via `/user/login` to obtain a JWT `token`. Pass this token in the
 `Authorization` header as `Bearer <token>` when calling any `/memory` or `/agent`
 route.
+
+### Two-Factor Authentication
+
+`/user/register` returns a `totp_secret` key for the newly created account.
+Add this secret to an authenticator app and pass the current TOTP code as
+`totp_code` when calling `/user/login`.
 
 ### Example Requests
 
