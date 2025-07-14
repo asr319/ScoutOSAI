@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
 from app.services.memory_service import MemoryService
+from app.services.analytics_service import AnalyticsService
 from app.services.auth_service import verify_token
 
 security = HTTPBearer()
@@ -56,6 +57,11 @@ def add_memory(
 
     service = MemoryService(db)
     new_mem = service.add_memory(mem.model_dump())
+    AnalyticsService(db).record_event(
+        mem.user_id,
+        "memory_created",
+        {"memory_id": new_mem.id},
+    )
     return {"message": "Memory added", "memory": _serialize(new_mem)}
 
 
@@ -76,6 +82,11 @@ def update_memory(
         raise HTTPException(status_code=403, detail="Unauthorized")
 
     updated = service.update_memory(memory_id, mem.user_id, mem.dict())
+    AnalyticsService(db).record_event(
+        mem.user_id,
+        "memory_updated",
+        {"memory_id": memory_id},
+    )
     return {"message": "Memory updated", "memory": _serialize(updated)}
 
 
@@ -129,4 +140,9 @@ def delete_memory(
 
     if not service.delete_memory(memory_id, user_id):
         raise HTTPException(status_code=404, detail="Memory not found")
+    AnalyticsService(db).record_event(
+        user_id,
+        "memory_deleted",
+        {"memory_id": memory_id},
+    )
     return {"message": "Memory deleted"}

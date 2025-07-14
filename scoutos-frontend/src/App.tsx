@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ChatInterface from './components/ChatInterface';
 import MemoryManager from './components/MemoryManager';
+import AnalyticsChart from './components/AnalyticsChart';
 import LogoutButton from './components/LogoutButton';
 import AuthForm from './components/AuthForm';
 import { useUser } from './hooks/useUser';
@@ -9,7 +10,7 @@ import './index.css';
 
 function AppContent() {
   const { user } = useUser();
-  const [page, setPage] = useState<'chat' | 'memory'>('chat');
+  const [page, setPage] = useState<'chat' | 'memory' | 'analytics'>('chat');
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -52,8 +53,20 @@ function AppContent() {
         >
           Memories
         </button>
+        <button
+          className={`px-3 py-1 rounded ${page === 'analytics' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          onClick={() => setPage('analytics')}
+        >
+          Analytics
+        </button>
       </nav>
-      {page === 'chat' ? <ChatInterface /> : <MemoryManager />}
+      {page === 'chat' ? (
+        <ChatInterface />
+      ) : page === 'memory' ? (
+        <MemoryManager />
+      ) : (
+        <AnalyticsChart />
+      )}
     </div>
   );
 }
