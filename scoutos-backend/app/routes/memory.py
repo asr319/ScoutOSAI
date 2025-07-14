@@ -75,7 +75,7 @@ def update_memory(
     if existing.user_id != mem.user_id:
         raise HTTPException(status_code=403, detail="Unauthorized")
 
-    updated = service.update_memory(memory_id, mem.user_id, mem.dict())
+    updated = service.update_memory(memory_id, mem.user_id, mem.model_dump())
     return {"message": "Memory updated", "memory": _serialize(updated)}
 
 
