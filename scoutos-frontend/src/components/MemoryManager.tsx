@@ -52,7 +52,7 @@ export default function MemoryManager() {
         'Content-Type': 'application/json',
         ...(user?.token ? { Authorization: `Bearer ${user.token}` } : {}),
       },
-      body: JSON.stringify({ content: contentText }),
+      body: JSON.stringify({ text: contentText }),
     });
     if (res.ok) {
       const data = await res.json();

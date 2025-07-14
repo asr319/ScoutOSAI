@@ -40,6 +40,11 @@ describe('MemoryManager API calls', () => {
     await waitFor(() => {
       expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/ai/tags'), expect.any(Object))
     })
+    const tagCall = fetchMock.mock.calls.find(c => (c[0] as string).includes('/ai/tags'))
+    expect(tagCall).toBeTruthy()
+    if (tagCall) {
+      expect(JSON.parse((tagCall[1] as RequestInit).body as string)).toEqual({ text: 'foo' })
+    }
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2))
 
