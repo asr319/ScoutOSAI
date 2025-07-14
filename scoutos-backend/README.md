@@ -1,6 +1,6 @@
 # ScoutOSAI Backend
 
-This directory contains the FastAPI service.  It exposes a small set of endpoints
+This directory contains the FastAPI service. It exposes a small set of endpoints
 for user and memory management.
 
 ## Installation
@@ -29,7 +29,7 @@ PostgreSQL. The backend uses SQLAlchemy's **sync** engine so the URL must
 use the standard `postgresql://` scheme (not the `postgresql+asyncpg://`
 variant). Allowed CORS origins are configured with the `ALLOWED_ORIGINS`
 environment variable. Provide a comma–separated list of origins; by default `*`
-is used to allow all origins during development.  Set `OPENAI_API_KEY` so the AI
+is used to allow all origins during development. Set `OPENAI_API_KEY` so the AI
 demo endpoints can call the OpenAI API.
 
 ### Environment variables
@@ -66,25 +66,25 @@ access or API keys.
 The service exposes a small REST API. The table below lists each route and its
 purpose.
 
-| Method | Path | Description |
-| ------ | ---- | ----------- |
-| `GET` | `/` | Health check |
-| `POST` | `/user/register` | Register a user |
-| `POST` | `/user/login` | Obtain auth token (TOTP required) |
-| `GET` | `/user/profile` | Get user profile |
-| `PUT` | `/user/profile` | Update user profile |
-| `GET` | `/agent/status` | Agent status placeholder |
-| `POST` | `/agent/merge` | Merge multiple memories |
-| `POST` | `/memory/add` | Store a memory |
-| `PUT` | `/memory/update/{id}` | Update a memory |
-| `GET` | `/memory/list` | List memories for a user |
-| `GET` | `/memory/search` | Filter by topic, tag, or content |
-| `DELETE` | `/memory/delete/{id}` | Delete a memory |
-| `POST` | `/ai/chat` | Chat with OpenAI |
-| `POST` | `/ai/tags` | Suggest tags for text |
-| `POST` | `/ai/merge` | LLM merge advice |
-| `POST` | `/ai/summary` | Summarize text |
-| `GET` | `/analytics` | Admin only usage stats |
+| Method   | Path                  | Description                       |
+| -------- | --------------------- | --------------------------------- |
+| `GET`    | `/`                   | Health check                      |
+| `POST`   | `/user/register`      | Register a user                   |
+| `POST`   | `/user/login`         | Obtain auth token (TOTP required) |
+| `GET`    | `/user/profile`       | Get user profile                  |
+| `PUT`    | `/user/profile`       | Update user profile               |
+| `GET`    | `/agent/status`       | Agent status placeholder          |
+| `POST`   | `/agent/merge`        | Merge multiple memories           |
+| `POST`   | `/memory/add`         | Store a memory                    |
+| `PUT`    | `/memory/update/{id}` | Update a memory                   |
+| `GET`    | `/memory/list`        | List memories for a user          |
+| `GET`    | `/memory/search`      | Filter by topic, tag, or content  |
+| `DELETE` | `/memory/delete/{id}` | Delete a memory                   |
+| `POST`   | `/ai/chat`            | Chat with OpenAI                  |
+| `POST`   | `/ai/tags`            | Suggest tags for text             |
+| `POST`   | `/ai/merge`           | LLM merge advice                  |
+| `POST`   | `/ai/summary`         | Summarize text                    |
+| `GET`    | `/analytics`          | Admin only usage stats            |
 
 Authenticate via `/user/login` to obtain a JWT `token`. Pass this token in the
 `Authorization` header as `Bearer <token>` when calling any `/memory` or `/agent`
@@ -159,7 +159,7 @@ Authorization: Bearer <token>
 Response
 
 ```json
-{"message": "Memory deleted"}
+{ "message": "Memory deleted" }
 ```
 
 **AI chat**
@@ -174,13 +174,13 @@ Content-Type: application/json
 Response
 
 ```json
-{"response": "Hi there!"}
+{ "response": "Hi there!" }
 ```
 
 ## Deployment
 
 The provided `Dockerfile` can be deployed on platforms such as Railway or
-Fly.io.  Ensure that `DATABASE_URL` and any other secrets are configured in the
+Fly.io. Ensure that `DATABASE_URL` and any other secrets are configured in the
 host environment.
 
 ## Tests
@@ -192,5 +192,5 @@ pip install -r requirements.txt -r requirements-dev.txt
 pytest
 ```
 
-Contributions are welcome!  See the repository root `README.md` for more
+Contributions are welcome! See the repository root `README.md` for more
 information.

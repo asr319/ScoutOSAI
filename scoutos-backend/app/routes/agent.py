@@ -61,7 +61,9 @@ def merge_memories(
     service = MemoryService(db)
     merged = service.merge_memories(req.memory_ids, req.user_id)
     if not merged:
-        raise HTTPException(status_code=403, detail="Unauthorized or memories not found")
+        raise HTTPException(
+            status_code=403, detail="Unauthorized or memories not found"
+        )
     return {"memory": _serialize(merged)}
 
 
@@ -75,13 +77,14 @@ class AgentConfigRequest(BaseModel):
 def list_configs(db: Session = Depends(get_db)) -> List[Dict[str, Any]]:
     configs = db.query(AgentConfig).all()
     return [
-        {"name": c.name, "enabled": c.enabled, "settings": c.settings}
-        for c in configs
+        {"name": c.name, "enabled": c.enabled, "settings": c.settings} for c in configs
     ]
 
 
 @router.post("/config")
-def upsert_config(req: AgentConfigRequest, db: Session = Depends(get_db)) -> Dict[str, str]:
+def upsert_config(
+    req: AgentConfigRequest, db: Session = Depends(get_db)
+) -> Dict[str, str]:
     config = db.query(AgentConfig).filter_by(name=req.name).first()
     if config:
         config.enabled = req.enabled

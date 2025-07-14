@@ -32,9 +32,7 @@ def test_ai_chat_returns_mocked_text(monkeypatch):
         return fake_resp
 
     fake_client = SimpleNamespace(
-        chat=SimpleNamespace(
-            completions=SimpleNamespace(create=fake_create)
-        )
+        chat=SimpleNamespace(completions=SimpleNamespace(create=fake_create))
     )
 
     monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
@@ -64,9 +62,7 @@ def test_ai_tags_returns_mocked_tags(monkeypatch):
         return fake_resp
 
     fake_client = SimpleNamespace(
-        chat=SimpleNamespace(
-            completions=SimpleNamespace(acreate=fake_acreate)
-        )
+        chat=SimpleNamespace(completions=SimpleNamespace(acreate=fake_acreate))
     )
 
     monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
@@ -80,6 +76,7 @@ def test_ai_merge_missing_api_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.setenv("AGENT_BACKEND", "openai")
     from types import SimpleNamespace
+
     class FakeService:
         def __init__(self, _db):
             pass
@@ -108,9 +105,7 @@ def test_ai_merge_returns_mocked_text(monkeypatch):
         return fake_resp
 
     fake_client = SimpleNamespace(
-        chat=SimpleNamespace(
-            completions=SimpleNamespace(acreate=fake_acreate)
-        )
+        chat=SimpleNamespace(completions=SimpleNamespace(acreate=fake_acreate))
     )
 
     class FakeService:
@@ -191,9 +186,7 @@ def test_ai_summary_returns_mocked_text(monkeypatch):
         return fake_resp
 
     fake_client = SimpleNamespace(
-        chat=SimpleNamespace(
-            completions=SimpleNamespace(acreate=fake_acreate)
-        )
+        chat=SimpleNamespace(completions=SimpleNamespace(acreate=fake_acreate))
     )
 
     monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
@@ -217,9 +210,7 @@ def test_ai_chat_async_returns_mocked_text(monkeypatch):
         return fake_resp
 
     fake_client = SimpleNamespace(
-        chat=SimpleNamespace(
-            completions=SimpleNamespace(acreate=fake_acreate)
-        )
+        chat=SimpleNamespace(completions=SimpleNamespace(acreate=fake_acreate))
     )
 
     monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
@@ -239,9 +230,7 @@ def test_ai_chat_handles_openai_error(monkeypatch):
         raise Exception("boom")
 
     fake_client = SimpleNamespace(
-        chat=SimpleNamespace(
-            completions=SimpleNamespace(create=fake_create)
-        )
+        chat=SimpleNamespace(completions=SimpleNamespace(create=fake_create))
     )
 
     monkeypatch.setattr(agent_service, "AsyncOpenAI", lambda **_: fake_client)
@@ -249,4 +238,3 @@ def test_ai_chat_handles_openai_error(monkeypatch):
     resp = client.post("/ai/chat", json={"prompt": "boom"})
     assert resp.status_code == 503
     assert "OpenAI request failed" in resp.json()["detail"]
-

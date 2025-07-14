@@ -12,6 +12,7 @@ def _get_allowed_origins() -> list[str]:
         return ["http://localhost:5173", "http://localhost:3000"]
     return [origin.strip() for origin in origins.split(",") if origin.strip()]
 
+
 app = FastAPI(title="ScoutOSAI Backend")
 
 # Configure CORS

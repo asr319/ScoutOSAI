@@ -27,7 +27,9 @@ class ChainCreate(BaseModel):
 
 
 @router.post("/create")
-async def create_chain(req: ChainCreate, db: Session = Depends(get_db)) -> Dict[str, int]:
+async def create_chain(
+    req: ChainCreate, db: Session = Depends(get_db)
+) -> Dict[str, int]:
     service = ChainService(db)
     chain = service.create_chain(req.name, req.actions)
     return {"id": chain.id}
@@ -45,7 +47,9 @@ class ChainRunRequest(BaseModel):
 
 
 @router.post("/run")
-async def run_chain(req: ChainRunRequest, db: Session = Depends(get_db)) -> Dict[str, List]:
+async def run_chain(
+    req: ChainRunRequest, db: Session = Depends(get_db)
+) -> Dict[str, List]:
     service = ChainService(db)
     chain = service.get_chain(req.chain_id)
     if not chain:
@@ -53,4 +57,3 @@ async def run_chain(req: ChainRunRequest, db: Session = Depends(get_db)) -> Dict
     agent = AgentService()
     results = await agent.run_pipeline(chain.actions)
     return {"results": results}
-
