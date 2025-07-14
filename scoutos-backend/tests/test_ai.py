@@ -150,6 +150,27 @@ def test_ai_merge_local_backend(monkeypatch):
     assert resp.json() == {"verdict": "Local merge advice"}
 
 
+def test_ai_merge_mock_ai(monkeypatch):
+    """MOCK_AI=true should force use of the LocalBackend."""
+    from types import SimpleNamespace
+
+    monkeypatch.setenv("MOCK_AI", "true")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+    class FakeService:
+        def __init__(self, _db):
+            pass
+
+        def get_memory(self, mid):
+            return SimpleNamespace(content=f"m{mid}")
+
+    monkeypatch.setattr(ai_module, "MemoryService", FakeService)
+
+    resp = client.post("/ai/merge", json={"memory_ids": [1, 2]})
+    assert resp.status_code == 200
+    assert resp.json() == {"verdict": "Local merge advice"}
+
+
 def test_ai_summary_missing_api_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     resp = client.post("/ai/summary", json={"content": "abc"})

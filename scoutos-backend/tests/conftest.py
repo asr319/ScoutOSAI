@@ -9,6 +9,8 @@ os.environ["DATABASE_URL"] = "sqlite:///./test.db"
 os.environ["FERNET_KEY"] = "1OGaT5SwPuHVrxTp1lT7ZnkSeBAkiqdSqsgTbDuSwIs="
 os.environ["APP_ENCRYPTION_KEY"] = Fernet.generate_key().decode()
 os.environ["ALLOWED_ORIGINS"] = "http://allowed.test"
+os.environ["SECRET_KEY"] = "testsecret"
+os.environ["MOCK_AI"] = "false"
 
 # Import engine after setting DATABASE_URL so it picks up the test URI
 from app.db import engine  # noqa: E402

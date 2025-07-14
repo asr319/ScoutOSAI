@@ -98,8 +98,9 @@ class AgentService:
         if backend:
             self.backend = backend
         else:
+            mock = os.getenv("MOCK_AI", "false").lower() == "true"
             kind = os.getenv("AGENT_BACKEND", "openai").lower()
-            if kind == "local":
+            if mock or kind == "local":
                 self.backend = LocalBackend()
             else:
                 self.backend = OpenAIBackend()
