@@ -5,9 +5,14 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   secret-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: gitleaks/gitleaks-action@v2
@@ -17,6 +22,8 @@ jobs:
         run: gitleaks detect --redact --no-git --source .
       - name: Custom secret scan
         run: python scripts/scan_for_secrets.py
+    permissions:
+      contents: read
 
   audit-node:
     runs-on: ubuntu-latest
@@ -31,6 +38,8 @@ jobs:
         working-directory: scoutos-frontend
       - run: pnpm audit --audit-level high
         working-directory: scoutos-frontend
+    permissions:
+      contents: read
 
   audit-python:
     runs-on: ubuntu-latest
@@ -41,6 +50,8 @@ jobs:
           python-version: '3.11'
       - run: pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt pip-audit
       - run: pip-audit
+    permissions:
+      contents: read
 
   lint-frontend:
     runs-on: ubuntu-latest
