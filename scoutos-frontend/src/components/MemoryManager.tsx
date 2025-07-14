@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from 'react-hot-toast'
 import { useUser } from "../hooks/useUser"
+import { useWebSocket } from "../hooks/useWebSocket"
 import LoadingSpinner from './LoadingSpinner'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -30,6 +31,7 @@ export default function MemoryManager() {
   const [editTags, setEditTags] = useState("");
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
+  const { events } = useWebSocket();
 
   const loadMemories = useCallback(async () => {
     if (!user) return;
@@ -43,6 +45,12 @@ export default function MemoryManager() {
   }, [user]);
 
   useEffect(() => { loadMemories(); }, [loadMemories]);
+  useEffect(() => {
+    const last = events[events.length - 1] as { type?: string } | undefined
+    if (last && last.type === 'memory') {
+      loadMemories()
+    }
+  }, [events, loadMemories])
 
   async function fetchTagsFor(contentText: string) {
     if (!contentText) return;
