@@ -43,6 +43,7 @@ uvicorn app.main:app --reload
 ```
 
 The service reads `DATABASE_URL` to connect to PostgreSQL (tests override this with SQLite). Set both `FERNET_KEY` and `APP_ENCRYPTION_KEY` to random strings so `Memory.content` can be encrypted. See [`scoutos-backend/README.md`](scoutos-backend/README.md) for more details on environment variables and endpoints.
+Additional agent documentation and plugin examples are in [AGENTS.md](AGENTS.md).
 
 Run the backend unit tests from the same directory:
 
@@ -96,3 +97,5 @@ Review [`SECURITY.md`](SECURITY.md) and your organization’s compliance require
 
 Full details of the REST endpoints, including example requests, can be found in
 [`scoutos-backend/README.md`](scoutos-backend/README.md).
+
+Additional agent documentation and plugin examples are in [AGENTS.md](AGENTS.md).
