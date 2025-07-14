@@ -124,11 +124,21 @@ export default function MemoryManager() {
 
   async function deleteMemory(id: number) {
     if (!user) return;
-    await fetch(`${API_URL}/memory/delete/${id}?user_id=${user.id}`, {
-      method: 'DELETE',
-      headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
-    });
-    setMemories(memories.filter(m => m.id !== id));
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/memory/delete/${id}?user_id=${user.id}`, {
+        method: 'DELETE',
+        headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
+      });
+      if (res.ok) {
+        setMemories(memories.filter(m => m.id !== id));
+      } else {
+        const body = await res.json().catch(() => ({}));
+        toast.error(body.detail || 'Failed to delete memory');
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   function startEdit(mem: Memory) {
