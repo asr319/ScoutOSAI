@@ -26,6 +26,7 @@ from app.models import agent_config as agent_model  # noqa: F401,E402
 =======
 from app.models import analytics_event as analytics_model  # noqa: F401,E402
 >>>>>>> origin/Next-Phase
+from app.models import user_profile as user_profile_model  # noqa: F401,E402
 
 # Create all tables for the test database
 Base.metadata.create_all(bind=engine)

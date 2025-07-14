@@ -3,6 +3,7 @@ import ChatInterface from './components/ChatInterface';
 import MemoryManager from './components/MemoryManager';
 import AnalyticsChart from './components/AnalyticsChart';
 import ChainAdmin from './components/ChainAdmin';
+import ProfileEditor from './components/ProfileEditor';
 import LogoutButton from './components/LogoutButton';
 import AuthForm from './components/AuthForm';
 import { useUser } from './hooks/useUser';
@@ -11,7 +12,7 @@ import './index.css';
 
 function AppContent() {
   const { user } = useUser();
-  const [page, setPage] = useState<'chat' | 'memory' | 'analytics' | 'admin'>('chat');
+  const [page, setPage] = useState<'chat' | 'memory' | 'analytics' | 'admin' | 'profile'>('chat');
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -66,6 +67,12 @@ function AppContent() {
         >
           Admin
         </button>
+        <button
+          className={`px-3 py-1 rounded ${page === 'profile' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          onClick={() => setPage('profile')}
+        >
+          Profile
+        </button>
       </nav>
       {page === 'chat' ? (
         <ChatInterface />
@@ -74,6 +81,7 @@ function AppContent() {
       ) : (
         <AnalyticsChart />
       )}
+      {page === 'chat' ? <ChatInterface /> : page === 'memory' ? <MemoryManager /> : <ProfileEditor />}
     </div>
   );
 }
