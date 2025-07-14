@@ -130,6 +130,11 @@ If an agent can’t complete a task:
 - Check for merge conflicts and resolve them locally.
 - Ensure all conflicts are addressed before submitting the pull request.
 
+### Local Test Mode
+
+Set `AGENT_BACKEND=local` to disable external API calls. Agents will return
+stubbed data so you can develop and test ScoutOSAI completely offline.
+
 ---
 
 **Would you like to add a section for agent “personalities” (e.g., formal, friendly, concise), or want a template for agent-specific markdown files?

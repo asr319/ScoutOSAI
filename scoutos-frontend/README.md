@@ -14,6 +14,7 @@ Create a `.env` file and set:
 
 ```
 VITE_API_URL=http://localhost:8000
+VITE_USE_MOCK=true
 ```
 
 Run the development server with
@@ -26,6 +27,9 @@ pnpm run dev
 
 The built site is static and can be deployed on Vercel, Netlify or Railway.
 Ensure the `VITE_API_URL` environment variable points to your deployed backend.
+
+Set `VITE_USE_MOCK=true` to enable the built-in mock API responses. This allows
+the UI to run without a backend during development or testing.
 
 ## Linting and Tests
 

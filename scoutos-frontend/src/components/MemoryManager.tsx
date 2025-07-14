@@ -3,8 +3,7 @@ import { toast } from 'react-hot-toast'
 import { useUser } from "../hooks/useUser"
 import { useWebSocket } from "../hooks/useWebSocket"
 import LoadingSpinner from './LoadingSpinner'
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { apiFetch } from '../utils/api'
 
 interface Memory {
   id: number;
@@ -35,7 +34,7 @@ export default function MemoryManager() {
 
   const loadMemories = useCallback(async () => {
     if (!user) return;
-    const res = await fetch(`${API_URL}/memory/list?user_id=${user.id}`, {
+    const res = await apiFetch(`/memory/list?user_id=${user.id}`, {
       headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
     });
     if (res.ok) {
@@ -54,7 +53,7 @@ export default function MemoryManager() {
 
   async function fetchTagsFor(contentText: string) {
     if (!contentText) return;
-    const res = await fetch(`${API_URL}/ai/tags`, {
+    const res = await apiFetch(`/ai/tags`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -75,7 +74,7 @@ export default function MemoryManager() {
     if (!user) return;
     setLoading(true)
     try {
-      const res = await fetch(`${API_URL}/memory/add`, {
+      const res = await apiFetch(`/memory/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -114,7 +113,7 @@ export default function MemoryManager() {
     if (searchTag) params.append("tag", searchTag);
     if (searchContent) params.append("content", searchContent);
     try {
-      const res = await fetch(`${API_URL}/memory/search?${params.toString()}`, {
+      const res = await apiFetch(`/memory/search?${params.toString()}`, {
         headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
       })
       if (res.ok) {
@@ -134,7 +133,7 @@ export default function MemoryManager() {
     if (!user) return;
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/memory/delete/${id}?user_id=${user.id}`, {
+      const res = await apiFetch(`/memory/delete/${id}?user_id=${user.id}`, {
         method: 'DELETE',
         headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
       });
@@ -158,7 +157,7 @@ export default function MemoryManager() {
 
   async function saveEdit() {
     if (!editing || !user) return;
-    const res = await fetch(`${API_URL}/memory/update/${editing.id}`, {
+    const res = await apiFetch(`/memory/update/${editing.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -182,7 +181,7 @@ export default function MemoryManager() {
     if (!user) return;
     setLoading(true)
     try {
-      const res = await fetch(`${API_URL}/ai/summary`, {
+      const res = await apiFetch(`/ai/summary`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -207,7 +206,7 @@ export default function MemoryManager() {
     setLoading(true);
     try {
       const ids = memories.slice(0, 2).map(m => m.id);
-      const res = await fetch(`${API_URL}/ai/merge`, {
+      const res = await apiFetch(`/ai/merge`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

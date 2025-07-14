@@ -2,8 +2,7 @@ import { useState } from "react"
 import { toast } from 'react-hot-toast'
 import { useUser } from "../hooks/useUser"
 import LoadingSpinner from './LoadingSpinner'
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+import { apiFetch } from '../utils/api'
 
 export default function ChatInterface() {
   const { user } = useUser();
@@ -23,7 +22,7 @@ export default function ChatInterface() {
 
     // Call the backend to store the memory
     try {
-      const response = await fetch(`${API_URL}/memory/add`, {
+      const response = await apiFetch(`/memory/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +53,7 @@ export default function ChatInterface() {
     }
     // Fetch AI assistant reply
     try {
-      const res = await fetch(`${API_URL}/ai/chat`, {
+      const res = await apiFetch(`/ai/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: userText }),
