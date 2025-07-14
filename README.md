@@ -3,13 +3,15 @@
 ## Setup
 
 `docker-compose.yml` expects the database password in `POSTGRES_PASSWORD`, an
-OpenAI API key in `OPENAI_API_KEY`, and two encryption keys: `FERNET_KEY` and
-`APP_ENCRYPTION_KEY`. Generate each key with `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`
+OpenAI API key in `OPENAI_API_KEY`, a JWT `SECRET_KEY`, and two encryption keys:
+`FERNET_KEY` and `APP_ENCRYPTION_KEY`. Generate each key with
+`python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`
 and set the variables before starting the stack:
 
 ```bash
 export POSTGRES_PASSWORD=yourpassword
 export OPENAI_API_KEY=sk-...
+export SECRET_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
 export FERNET_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
 export APP_ENCRYPTION_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
 docker-compose up
@@ -22,6 +24,21 @@ Copy the appropriate file to `.env` and pass it to docker-compose:
 cp .env.staging.example .env  # or .env.prod.example
 docker-compose --env-file .env up
 ```
+
+### Environment Variables
+
+ScoutOSAI relies on several environment variables for configuration:
+
+- `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` – PostgreSQL credentials.
+- `DATABASE_URL` – connection string used by the backend.
+- `OPENAI_API_KEY` – key for the OpenAI API.
+- `FERNET_KEY` and `APP_ENCRYPTION_KEY` – encryption keys for stored data.
+- `SECRET_KEY` – signing key for JWT tokens.
+- `ALLOWED_ORIGINS` – comma-separated CORS origins.
+- `AGENT_BACKEND` – set to `local` to disable OpenAI calls.
+- `VITE_API_URL` and `VITE_USE_MOCK` – frontend configuration.
+
+Sample `.env` files include these variables with placeholder values.
 
 The backend service uses these values when constructing `DATABASE_URL` and when
 calling the OpenAI API for the demo AI endpoints.
@@ -36,9 +53,10 @@ ScoutOSAI is a demo full-stack project that pairs a FastAPI backend with a React
 
 ### Offline / Mock Mode
 
-To develop completely offline set `AGENT_BACKEND=local` for the backend and
-`VITE_USE_MOCK=true` in `scoutos-frontend/.env`. Mock mode returns canned
-responses so you can explore the UI without network access or API keys.
+To develop completely offline set `AGENT_BACKEND=local` (or `MOCK_AI=true`) for
+the backend and `VITE_USE_MOCK=true` in `scoutos-frontend/.env`. Mock mode
+returns canned responses so you can explore the UI without network access or API
+keys.
 
 ## Backend Setup
 

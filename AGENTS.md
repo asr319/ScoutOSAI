@@ -132,8 +132,9 @@ If an agent can’t complete a task:
 
 ### Local Test Mode
 
-Set `AGENT_BACKEND=local` to disable external API calls. Agents will return
-stubbed data so you can develop and test ScoutOSAI completely offline.
+Set `AGENT_BACKEND=local` (or `MOCK_AI=true`) to disable external API calls.
+Agents will return stubbed data so you can develop and test ScoutOSAI
+completely offline.
 
 ---
 
