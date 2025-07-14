@@ -6,6 +6,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from app.db import SessionLocal  # noqa: E402
 from app.services.user_service import UserService  # noqa: E402
 from app.services.memory_service import MemoryService  # noqa: E402
+from app.services.chain_service import ChainService  # noqa: E402
 
 
 def test_user_service_create_and_get():
@@ -142,5 +143,16 @@ def test_merge_memories_tag_union():
     merged = mem_service.merge_memories([m1.id, m2.id], user.id)
     assert merged.content == "foo\nbar"
     assert set(merged.tags) == {"a", "b", "c"}
+    db.close()
+
+
+def test_chain_service_create_and_list():
+    db = SessionLocal()
+    service = ChainService(db)
+    actions = [{"type": "chat", "prompt": "hi"}]
+    chain = service.create_chain("test", actions)
+    assert chain.id is not None
+    listed = service.list_chains()
+    assert any(c.id == chain.id for c in listed)
     db.close()
 

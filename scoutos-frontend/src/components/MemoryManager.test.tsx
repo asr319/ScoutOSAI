@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import MemoryManager from './MemoryManager'
 import { UserContext, type User } from '../context/UserContext'
+import { WebSocketProvider } from '../context/WebSocketContext'
 import type { Mock } from 'vitest'
 
 function renderWithUser(fetchMock: Mock) {
@@ -9,7 +10,9 @@ function renderWithUser(fetchMock: Mock) {
   vi.stubGlobal('fetch', fetchMock)
   return render(
     <UserContext.Provider value={{ user, setUser: vi.fn() }}>
-      <MemoryManager />
+      <WebSocketProvider>
+        <MemoryManager />
+      </WebSocketProvider>
     </UserContext.Provider>
   )
 }

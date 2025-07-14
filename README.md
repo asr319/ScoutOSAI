@@ -29,6 +29,9 @@ calling the OpenAI API for the demo AI endpoints.
 The compose file also builds the React frontend so the full stack runs with a
 single command. Visit `http://localhost:3000` after running `docker-compose up`.
 
+The compose file also builds the React frontend so the full stack runs with a
+single command. Visit `http://localhost:3000` after running `docker-compose up`.
+
 ScoutOSAI is a demo full-stack project that pairs a FastAPI backend with a React + Vite frontend. The application exposes a small API for managing user information and storing short text "memories". The web client provides a minimal chat interface for experimenting with the API.
 
 ## Backend Setup
@@ -42,6 +45,7 @@ uvicorn app.main:app --reload
 ```
 
 The service reads `DATABASE_URL` to connect to PostgreSQL (tests override this with SQLite). Set both `FERNET_KEY` and `APP_ENCRYPTION_KEY` to random strings so `Memory.content` can be encrypted. See [`scoutos-backend/README.md`](scoutos-backend/README.md) for more details on environment variables and endpoints.
+Additional agent documentation and plugin examples are in [AGENTS.md](AGENTS.md).
 
 Run the backend unit tests from the same directory:
 
@@ -49,6 +53,12 @@ Run the backend unit tests from the same directory:
 pip install -r requirements.txt -r requirements-dev.txt
 pytest
 ```
+
+### Enabling Two-Factor Authentication
+
+User registration now returns a `totp_secret` value. Scan this key in any TOTP
+app (Google Authenticator, Authy, etc.) and provide the generated code when
+logging in via `/user/login` using the `totp_code` field.
 
 ## Frontend Setup
 
@@ -78,7 +88,7 @@ Lint and run tests with:
 
 ```bash
 npm run lint
-pnpm test
+pnpm test -- --run
 ```
 
 ## Security Notes
@@ -95,3 +105,15 @@ Review [`SECURITY.md`](SECURITY.md) and your organization’s compliance require
 
 Full details of the REST endpoints, including example requests, can be found in
 [`scoutos-backend/README.md`](scoutos-backend/README.md).
+
+Additional agent documentation and plugin examples are in [AGENTS.md](AGENTS.md).
+
+## Analytics
+
+Usage events like memory creation and agent calls are stored in an
+`analytics_events` table. Two endpoints expose this data:
+
+- `GET /analytics/summary` – return a count of events grouped by type for the
+  authenticated user.
+- `GET /analytics/events` – return recent events. Pass `?format=csv` to export
+  a CSV file instead of JSON.
