@@ -40,9 +40,7 @@ def test_analytics_admin_access():
 def _auth_simple():
     username = f"u_{uuid.uuid4().hex[:8]}"
     password = "pw"
-    r = client.post(
-        "/user/register", json={"username": username, "password": password}
-    )
+    r = client.post("/user/register", json={"username": username, "password": password})
     body = r.json()
     totp = pyotp.TOTP(body["totp_secret"]).now()
     r = client.post(
@@ -73,7 +71,9 @@ def test_summary_endpoint_counts_events():
             json={"user_id": user_id, "content": "x", "topic": "t", "tags": []},
             headers={"Authorization": f"Bearer {token}"},
         )
-    resp = client.get("/analytics/summary", headers={"Authorization": f"Bearer {token}"})
+    resp = client.get(
+        "/analytics/summary", headers={"Authorization": f"Bearer {token}"}
+    )
     assert resp.status_code == 200
     data = resp.json()
     assert data.get("memory_created") >= 2

@@ -13,7 +13,6 @@ from app.services.memory_service import MemoryService
 from app.services.agent_service import AgentService
 from app.websockets import manager
 from app.services.analytics_service import AnalyticsService
-from app.services.agent_service import AgentService
 
 router = APIRouter()
 
@@ -88,9 +87,7 @@ class MergeRequest(BaseModel):
 
 
 @router.post("/merge")
-async def ai_merge(
-    req: MergeRequest, db: Session = Depends(get_db)
-) -> Dict[str, str]:
+async def ai_merge(req: MergeRequest, db: Session = Depends(get_db)) -> Dict[str, str]:
     service = MemoryService(db)
     memories: List[str] = []
     for mem_id in req.memory_ids:
@@ -123,4 +120,3 @@ async def ai_summary(
     _notify("summary", {"summary": answer})
     AnalyticsService(db).record_event(None, "ai_summary", {})
     return {"summary": answer}
-

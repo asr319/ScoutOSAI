@@ -53,8 +53,13 @@ def list_events(
     ]
     if format == "csv":
         output = io.StringIO()
-        writer = csv.DictWriter(output, fieldnames=data[0].keys()) if data else csv.DictWriter(
-            output, fieldnames=["id", "user_id", "event_type", "timestamp", "payload"]
+        writer = (
+            csv.DictWriter(output, fieldnames=data[0].keys())
+            if data
+            else csv.DictWriter(
+                output,
+                fieldnames=["id", "user_id", "event_type", "timestamp", "payload"],
+            )
         )
         writer.writeheader()
         if data:
@@ -73,7 +78,9 @@ def summary(
 
 
 @router.get("/analytics")
-def get_analytics(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)) -> Dict[str, int]:
+def get_analytics(
+    current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)
+) -> Dict[str, int]:
     if current_user.get("role") != "admin":
         raise HTTPException(status_code=403, detail="Admin only")
     users = db.query(User).count()

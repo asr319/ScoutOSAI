@@ -31,3 +31,19 @@ Rotate the key periodically and store it securely outside of source control
 ## Secret Scanning
 
 A Gitleaks workflow scans all pushes and pull requests for hardcoded secrets. Configure branch protection to require this check. Developers can run `python scripts/scan_for_secrets.py` locally before committing.
+
+## Automated Security and Quality Checks
+
+ScoutOSAI uses a GitHub Actions workflow (`full-checks.yml`) that performs
+comprehensive security and quality scans on every push and Pull Request:
+
+- Gitleaks and repository history secret scanning
+- Dependency vulnerability audits (`pnpm audit`, `pip-audit`)
+- Static analysis (`bandit` and `npm audit`/SonarCloud)
+- Dead code and duplicate detection
+- Linting, formatting, and unit/integration tests
+- Container image vulnerability scanning
+- License compliance and changelog/version bump verification
+
+All jobs must pass before code can be merged. The Codex Agent automatically
+tries to fix any failing check and re-runs the workflow.
