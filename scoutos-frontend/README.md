@@ -9,12 +9,16 @@ the backend API and provides a simple chat interface.
 pnpm install
 ```
 
-During development the app expects the backend URL in `VITE_API_URL`.
-Create a `.env` file and set:
+During development the app expects several environment variables. Copy
+`.env.example` to `.env` and adjust as needed:
 
 ```
 VITE_API_URL=http://localhost:8000
+VITE_ENV=development
+VITE_USE_MOCK_AI=true
 VITE_USE_MOCK=true
+SCOUTOS_CUSTOM_DOMAIN=dev.scoutos.local
+SCOUTOS_ALLOWED_DOMAINS=localhost,127.0.0.1,scoutos.local,asr319.github.io,dev.scoutos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org
 ```
 
 Run the development server with
@@ -28,8 +32,9 @@ pnpm run dev
 The built site is static and can be deployed on Vercel, Netlify or Railway.
 Ensure the `VITE_API_URL` environment variable points to your deployed backend.
 
-Set `VITE_USE_MOCK=true` to enable the built-in mock API responses. This allows
-the UI to run without a backend during development or testing.
+Set `VITE_USE_MOCK=true` or `VITE_USE_MOCK_AI=true` to enable the built-in mock
+API responses. This allows the UI to run without a backend during development or
+testing.
 
 ## Linting and Tests
 
