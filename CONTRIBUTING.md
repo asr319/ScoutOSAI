@@ -9,5 +9,5 @@ Thank you for contributing! ScoutOSAI enforces automated CI/CD and security work
 5. Document any new agents or endpoints in the relevant `AGENTS.md` file.
 6. Commit messages and PR descriptions must include:
    `All CI/CD, security, and agent checks passed.`
-7. The GitHub Actions workflow `full-checks.yml` must succeed before merge. This workflow performs secret scanning, vulnerability audits, linting, formatting, tests, static analysis, license checks, coverage enforcement, accessibility scans, and more.
-8. If a job fails, fix the issue and push updates; the Codex Agent will automatically retry the workflow.
+7. The GitHub Actions workflow `full-checks.yml` must succeed before merge. This workflow performs secret scanning, vulnerability audits, linting, formatting, tests, static analysis, license checks, coverage enforcement, accessibility scans, and more. It also validates all `AGENTS.md` files.
+8. If a job fails, fix the issue and push updates. The Codex Agent will attempt automatic formatting or dependency updates and then rerun the workflow.

@@ -47,3 +47,8 @@ comprehensive security and quality scans on every push and Pull Request:
 
 All jobs must pass before code can be merged. The Codex Agent automatically
 tries to fix any failing check and re-runs the workflow.
+
+The workflow also validates all AGENTS files using `scripts/validate_agents.py`.
+The Codex Agent must ensure every check succeeds before merging. If a check
+fails, the agent will attempt to auto-correct issues (formatting, linting,
+dependency updates) and rerun the workflow.
