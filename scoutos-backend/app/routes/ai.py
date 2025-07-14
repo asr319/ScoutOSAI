@@ -73,13 +73,13 @@ class TagRequest(BaseModel):
 
 
 @router.post("/tags")
-async def ai_tags(req: TagRequest) -> Dict[str, List[str]]:
-async def ai_tags(req: TagRequest, db: Session = Depends(get_db)) -> Dict[str, List[str]]:
+async def ai_tags(
+    req: TagRequest, db: Session = Depends(get_db)
+) -> Dict[str, List[str]]:
     service = AgentService()
     tags = await service.generate_tags(req.text)
     _notify("tags", {"detail": ",".join(tags)})
     AnalyticsService(db).record_event(None, "ai_tags", {"text": req.text})
-    tags = await service.generate_tags(req.text)
     return {"tags": tags}
 
 

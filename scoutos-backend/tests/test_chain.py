@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from app.main import app  # noqa: E402
+import uuid
 
 client = TestClient(app)
 
@@ -11,7 +12,8 @@ client = TestClient(app)
 def test_chain_create_list_and_run(monkeypatch):
     monkeypatch.setenv("AGENT_BACKEND", "local")
     actions = [{"type": "chat", "prompt": "hello"}]
-    resp = client.post("/chain/create", json={"name": "chain1", "actions": actions})
+    name = f"chain_{uuid.uuid4().hex[:8]}"
+    resp = client.post("/chain/create", json={"name": name, "actions": actions})
     assert resp.status_code == 200
     chain_id = resp.json()["id"]
 
