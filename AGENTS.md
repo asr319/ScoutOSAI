@@ -88,6 +88,13 @@ Add new agent to registry/config (example pseudocode):
 }
 ```
 
+### Registering New Agent Types
+
+Agent metadata is stored in the `agent_configs` table. Create or update a record
+by posting the `name`, `enabled` flag and optional `settings` JSON to
+`/agent/config`. Toggle an agent on or off with `/agent/enable` and retrieve all
+entries using `GET /agent/config`.
+
 ## 7. Checklist for New Agent
 
 - Exposes clear endpoint or hook
@@ -112,6 +119,41 @@ If an agent can’t complete a task:
 - ScoutOSAI’s success relies on reliable, transparent, and extensible agent collaboration.
 - Agents: Always be helpful, clear, and secure.
 
+## 10. Current Agent Endpoints
+
+The backend exposes several agent-related routes. Input and output schemas are summarized below. All payloads are JSON.
+
+| Method | Path | Request Schema | Response Schema |
+|-------|------|---------------|----------------|
+|`GET`|`/agent/status`|None|`{"status": "string"}`|
+|`POST`|`/agent/merge`|`{"user_id": int, "memory_ids": [int]}`|`{"memory": {"id": int, "user_id": int, "content": "string", "topic": "string", "tags": ["string"]}}`|
+|`POST`|`/ai/chat`|`{"prompt": "string"}`|`{"response": "string"}`|
+|`POST`|`/ai/tags`|`{"text": "string"}`|`{"tags": ["string"]}`|
+|`POST`|`/ai/merge`|`{"memory_ids": [int]}`|`{"verdict": "string"}`|
+|`POST`|`/ai/summary`|`{"content": "string"}`|`{"summary": "string"}`|
+
+## 11. Example Plugin Manifest
+
+Agents can also be packaged as plugins. A minimal `manifest.json` might look like:
+```json
+{
+  "name": "scoutosai-ai",
+  "description": "Provides AI tagging and chat endpoints",
+  "endpoints": [
+    {"path": "/ai/chat", "method": "POST"},
+    {"path": "/ai/tags", "method": "POST"}
+  ],
+  "env": ["OPENAI_API_KEY"]
+}
+```
+
+## 12. Onboarding Instructions
+
+1. Fork this repository and clone your fork.
+2. Add your agent code under `scoutos-backend` or as an external plugin using the manifest above.
+3. Register any new endpoints and document their schemas in this file.
+4. Open a pull request describing your agent and provide sample usage.
+5. Update the README and other docs to link to your additions.
 ---
 
 **Would you like to add a section for agent “personalities” (e.g., formal, friendly, concise), or want a template for agent-specific markdown files?

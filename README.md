@@ -43,6 +43,7 @@ uvicorn app.main:app --reload
 ```
 
 The service reads `DATABASE_URL` to connect to PostgreSQL (tests override this with SQLite). Set both `FERNET_KEY` and `APP_ENCRYPTION_KEY` to random strings so `Memory.content` can be encrypted. See [`scoutos-backend/README.md`](scoutos-backend/README.md) for more details on environment variables and endpoints.
+Additional agent documentation and plugin examples are in [AGENTS.md](AGENTS.md).
 
 Run the backend unit tests from the same directory:
 
@@ -50,6 +51,12 @@ Run the backend unit tests from the same directory:
 pip install -r requirements.txt -r requirements-dev.txt
 pytest
 ```
+
+### Enabling Two-Factor Authentication
+
+User registration now returns a `totp_secret` value. Scan this key in any TOTP
+app (Google Authenticator, Authy, etc.) and provide the generated code when
+logging in via `/user/login` using the `totp_code` field.
 
 ## Frontend Setup
 
@@ -75,11 +82,11 @@ pnpm run dev
 The UI includes a dark mode toggle in the navigation bar. Use it to switch
 between light and dark themes.
 
-Lint and run tests with:
+Lint and run tests with (`pnpm test` starts watch mode):
 
 ```bash
 npm run lint
-pnpm test
+pnpm test -- --run
 ```
 
 ## Security Notes
@@ -96,3 +103,5 @@ Review [`SECURITY.md`](SECURITY.md) and your organization’s compliance require
 
 Full details of the REST endpoints, including example requests, can be found in
 [`scoutos-backend/README.md`](scoutos-backend/README.md).
+
+Additional agent documentation and plugin examples are in [AGENTS.md](AGENTS.md).
