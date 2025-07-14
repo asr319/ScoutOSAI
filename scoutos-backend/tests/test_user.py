@@ -11,11 +11,16 @@ client = TestClient(app)
 def _auth():
     username = f"u_{uuid.uuid4().hex[:8]}"
     password = "pw"
-    r = client.post("/user/register", json={"username": username, "password": password})
-    user_id = r.json()["id"]
-    r = client.post("/user/login", json={"username": username, "password": password})
-    token = r.json()["token"]
-    return user_id, token
+    r = client.post(
+        "/user/register", json={"username": username, "password": password}
+    )
+    body = r.json()
+    totp = pyotp.TOTP(body["totp_secret"]).now()
+    r = client.post(
+        "/user/login",
+        json={"username": username, "password": password, "totp_code": totp},
+    )
+    return body["id"], r.json()["token"]
 
 def test_register_and_login():
     username = f"u_{uuid.uuid4().hex[:8]}"

@@ -150,7 +150,8 @@ def test_chain_service_create_and_list():
     db = SessionLocal()
     service = ChainService(db)
     actions = [{"type": "chat", "prompt": "hi"}]
-    chain = service.create_chain("test", actions)
+    name = f"test_{uuid.uuid4().hex[:8]}"
+    chain = service.create_chain(name, actions)
     assert chain.id is not None
     listed = service.list_chains()
     assert any(c.id == chain.id for c in listed)
