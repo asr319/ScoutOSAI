@@ -52,6 +52,12 @@ pip install -r requirements.txt -r requirements-dev.txt
 pytest
 ```
 
+### Enabling Two-Factor Authentication
+
+User registration now returns a `totp_secret` value. Scan this key in any TOTP
+app (Google Authenticator, Authy, etc.) and provide the generated code when
+logging in via `/user/login` using the `totp_code` field.
+
 ## Frontend Setup
 
 The React frontend is found in [`scoutos-frontend`](scoutos-frontend/). Use `pnpm` for dependency management:
