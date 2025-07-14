@@ -17,6 +17,13 @@ Run the API locally with
 uvicorn app.main:app --reload
 ```
 
+When running via Docker, auto-reload can be enabled by setting the
+`UVICORN_RELOAD` environment variable:
+
+```bash
+docker run -e UVICORN_RELOAD="--reload" your-image
+```
+
 The service reads the `DATABASE_URL` environment variable to connect to
 PostgreSQL. The backend uses SQLAlchemy's **sync** engine so the URL must
 use the standard `postgresql://` scheme (not the `postgresql+asyncpg://`
@@ -57,7 +64,7 @@ purpose.
 | `POST` | `/memory/add` | Store a memory |
 | `PUT` | `/memory/update/{id}` | Update a memory |
 | `GET` | `/memory/list` | List memories for a user |
-| `GET` | `/memory/search` | Filter by topic/tag |
+| `GET` | `/memory/search` | Filter by topic, tag, or content |
 | `DELETE` | `/memory/delete/{id}` | Delete a memory |
 | `POST` | `/ai/chat` | Chat with OpenAI |
 | `POST` | `/ai/tags` | Suggest tags for text |

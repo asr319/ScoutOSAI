@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { toast } from 'react-hot-toast'
 import { useUser } from "../hooks/useUser"
-import LogoutButton from "./LogoutButton"
 import LoadingSpinner from './LoadingSpinner'
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";

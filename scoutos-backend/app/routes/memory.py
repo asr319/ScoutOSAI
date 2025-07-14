@@ -98,6 +98,7 @@ def search_memories(
     user_id: int,
     topic: Optional[str] = None,
     tag: Optional[str] = None,
+    content: Optional[str] = None,
     current_user: Dict[str, Any] = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> List[Dict[str, Any]]:
@@ -105,7 +106,7 @@ def search_memories(
         raise HTTPException(status_code=403, detail="Unauthorized")
 
     service = MemoryService(db)
-    mems = service.search_memories(user_id, topic=topic, tag=tag)
+    mems = service.search_memories(user_id, topic=topic, tag=tag, content=content)
     return [_serialize(m) for m in mems]
 
 

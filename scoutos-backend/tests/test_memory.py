@@ -153,6 +153,28 @@ def test_search_memory_filters_by_topic_and_tag():
     assert [m["content"] for m in both.json()] == ["b"]
 
 
+def test_search_memory_filters_by_content():
+    user_id, token = _auth()
+
+    mems = [
+        {"content": "find me", "topic": "alpha", "tags": []},
+        {"content": "other", "topic": "alpha", "tags": []},
+    ]
+    for m in mems:
+        client.post(
+            "/memory/add",
+            json={"user_id": user_id, **m},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+    by_content = client.get(
+        "/memory/search",
+        params={"user_id": user_id, "content": "find"},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert [m["content"] for m in by_content.json()] == ["find me"]
+
+
 def test_search_memory_returns_all_without_filters():
     user_id, token = _auth()
 

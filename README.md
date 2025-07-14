@@ -27,6 +27,9 @@ docker-compose --env-file .env up
 The backend service uses these values when constructing `DATABASE_URL` and when
 calling the OpenAI API for the demo AI endpoints.
 
+The compose file also builds the React frontend so the full stack runs with a
+single command. Visit `http://localhost:3000` after running `docker-compose up`.
+
 ScoutOSAI is a demo full-stack project that pairs a FastAPI backend with a React + Vite frontend. The application exposes a small API for managing user information and storing short text "memories". The web client provides a minimal chat interface for experimenting with the API.
 
 ## Backend Setup
@@ -68,6 +71,9 @@ Start the development server with:
 ```bash
 pnpm run dev
 ```
+
+The UI includes a dark mode toggle in the navigation bar. Use it to switch
+between light and dark themes.
 
 Lint and run tests with:
 

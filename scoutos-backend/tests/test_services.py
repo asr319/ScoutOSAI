@@ -69,8 +69,8 @@ def test_memory_service_crud():
 def test_memory_service_unauthorized_operations():
     db = SessionLocal()
     user_service = UserService(db)
-    user_a = user_service.create_user({"username": "ua", "password": "pw"})
-    user_b = user_service.create_user({"username": "ub", "password": "pw"})
+    user_a = user_service.create_user({"username": f"ua_{uuid.uuid4().hex[:8]}", "password": "pw"})
+    user_b = user_service.create_user({"username": f"ub_{uuid.uuid4().hex[:8]}", "password": "pw"})
 
     mem_service = MemoryService(db)
     mem = mem_service.add_memory({"user_id": user_a.id, "content": "c", "topic": "t", "tags": []})
