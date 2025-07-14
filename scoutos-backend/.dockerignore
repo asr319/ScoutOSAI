@@ -1,0 +1,11 @@
+node_modules/
+tests/
+dist/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.db
+.env
+build/
+test.db
+.git
