@@ -1,5 +1,7 @@
 # Backend Guidelines
 
+Last updated: 2025-07-14
+
 ## Style
 
 - Follow **PEP8** for formatting and code structure.
@@ -28,6 +30,13 @@ Install dependencies first with `pip install -r requirements.txt -r requirements
 uvicorn app.main:app --reload
 ```
 
+## Agent Contracts and Validation
+
+Backend agents use Pydantic models located in `app/models` to enforce input and
+output schemas. Any new agent must document its schema and add tests. The
+`scripts/validate_agents.py` script checks that AGENTS files include required
+policy lines.
+
 ## CI/CD and Automation Policy
 
 The backend participates in the global `full-checks.yml` workflow. Backend jobs
@@ -36,3 +45,7 @@ tests with `pytest` and coverage enforcement. Static analysis (`bandit`),
 dead code checks (`vulture`), license validation, and container image scanning are also run.
 Commit and PR messages must state `All CI/CD, security, and agent checks passed.` Failures trigger the Codex Agent to attempt auto-fixes before re-running the workflow.
 Keep this AGENTS file aligned with project policies. Record updates in `logs/agents.log`.
+
+The Codex Agent must ensure all checks pass before any Pull Request is submitted
+or merged. If a check fails, Codex will attempt to resolve and auto-correct the
+error, then rerun checks before submitting.

@@ -22,8 +22,6 @@ jobs:
         run: gitleaks detect --redact --no-git --source .
       - name: Custom secret scan
         run: python scripts/scan_for_secrets.py
-    permissions:
-      contents: read
 
   audit-node:
     runs-on: ubuntu-latest
@@ -47,7 +45,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - run: pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt pip-audit
       - run: pip-audit
     permissions:
@@ -73,7 +71,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - run: pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt flake8 black
       - run: flake8 scoutos-backend
       - run: black --check scoutos-backend
@@ -98,7 +96,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - run: pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt pytest
       - run: pytest --cov=scoutos-backend --cov-fail-under=85
         working-directory: scoutos-backend
@@ -109,7 +107,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - run: python scripts/check_duplicates.py
 
   agents-validate:
@@ -118,7 +116,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - run: python scripts/validate_agents.py
 
   formatting:
@@ -131,7 +129,7 @@ jobs:
           cache: pnpm
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - run: npm install -g pnpm prettier codespell
       - run: pnpm install
         working-directory: scoutos-frontend
@@ -150,7 +148,7 @@ jobs:
           cache: pnpm
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - run: npm install -g license-checker
       - run: pnpm install
         working-directory: scoutos-frontend
@@ -169,7 +167,7 @@ jobs:
           cache: pnpm
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - run: pnpm install
         working-directory: scoutos-frontend
       - run: npm audit --audit-level high
@@ -187,7 +185,7 @@ jobs:
           cache: pnpm
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - run: pnpm install
         working-directory: scoutos-frontend
       - run: npx depcheck
@@ -215,7 +213,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: aquasecurity/trivy-action@0.17.0
         with:
-          image-ref: 'docker.io/library/python:3.11'
+          image-ref: "docker.io/library/python:3.11"
 
   changelog-version:
     runs-on: ubuntu-latest
@@ -223,7 +221,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - run: python scripts/check_changelog.py
 
   history-secrets:
@@ -231,5 +229,3 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: gitleaks detect --redact --no-git -v
-
-

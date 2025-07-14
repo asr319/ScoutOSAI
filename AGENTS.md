@@ -1,5 +1,7 @@
 # AGENTS.md – ScoutOSAI
 
+Last updated: 2025-07-14
+
 ## Purpose
 
 This document provides guidance for any agent (bot, AI model, plugin, or service) that assists with the ScoutOSAI project.
@@ -67,6 +69,8 @@ Agents include:
 Input and output schemas for built-in agents reside in
 `scoutos-backend/app/models` and are enforced via Pydantic models. Agents must
 conform to these schemas or extend them with backward-compatible fields.
+The script `scripts/validate_agents.py` verifies all AGENTS files contain the
+required policy lines and metadata.
 
 ---
 
@@ -190,3 +194,9 @@ If any check fails, the Codex Agent automatically attempts to resolve the issue
 and re-run the workflow. The agent only submits or approves the PR when all
 checks succeed. AGENTS files themselves are kept in sync and validated during
 CI.
+
+## Policy Enforcement
+
+The Codex Agent must ensure all checks pass before any Pull Request is submitted
+or merged. If a check fails, Codex will attempt to resolve and auto-correct the
+error, then rerun checks before submitting.
