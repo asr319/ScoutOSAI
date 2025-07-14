@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
 from app.services.memory_service import MemoryService
+from app.services.analytics_service import AnalyticsService
 from app.services.auth_service import verify_token
 
 security = HTTPBearer()
@@ -65,6 +66,11 @@ async def add_memory(
         {"type": "memory", "action": "added", "memory": _serialize(new_mem)},
         mem.user_id,
     )
+    AnalyticsService(db).record_event(
+        mem.user_id,
+        "memory_created",
+        {"memory_id": new_mem.id},
+    )
     return {"message": "Memory added", "memory": _serialize(new_mem)}
 
 
@@ -88,6 +94,11 @@ async def update_memory(
     await manager.send_personal_message(
         {"type": "memory", "action": "updated", "memory": _serialize(updated)},
         mem.user_id,
+    )
+    AnalyticsService(db).record_event(
+        mem.user_id,
+        "memory_updated",
+        {"memory_id": memory_id},
     )
     return {"message": "Memory updated", "memory": _serialize(updated)}
 
@@ -145,5 +156,10 @@ async def delete_memory(
     await manager.send_personal_message(
         {"type": "memory", "action": "deleted", "memory": _serialize(existing)},
         user_id,
+    )
+    AnalyticsService(db).record_event(
+        user_id,
+        "memory_deleted",
+        {"memory_id": memory_id},
     )
     return {"message": "Memory deleted"}
