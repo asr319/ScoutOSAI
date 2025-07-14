@@ -70,11 +70,17 @@ def test_memory_service_crud():
 def test_memory_service_unauthorized_operations():
     db = SessionLocal()
     user_service = UserService(db)
-    user_a = user_service.create_user({"username": f"ua_{uuid.uuid4().hex[:8]}", "password": "pw"})
-    user_b = user_service.create_user({"username": f"ub_{uuid.uuid4().hex[:8]}", "password": "pw"})
+    user_a = user_service.create_user(
+        {"username": f"ua_{uuid.uuid4().hex[:8]}", "password": "pw"}
+    )
+    user_b = user_service.create_user(
+        {"username": f"ub_{uuid.uuid4().hex[:8]}", "password": "pw"}
+    )
 
     mem_service = MemoryService(db)
-    mem = mem_service.add_memory({"user_id": user_a.id, "content": "c", "topic": "t", "tags": []})
+    mem = mem_service.add_memory(
+        {"user_id": user_a.id, "content": "c", "topic": "t", "tags": []}
+    )
 
     assert mem_service.update_memory(mem.id, user_b.id, {"content": "bad"}) is None
     assert mem_service.delete_memory(mem.id, user_b.id) is False
@@ -112,12 +118,20 @@ def test_memory_service_merge():
 def test_merge_memories_user_mismatch():
     db = SessionLocal()
     user_service = UserService(db)
-    u1 = user_service.create_user({"username": f"u1_{uuid.uuid4().hex[:8]}", "password": "pw"})
-    u2 = user_service.create_user({"username": f"u2_{uuid.uuid4().hex[:8]}", "password": "pw"})
+    u1 = user_service.create_user(
+        {"username": f"u1_{uuid.uuid4().hex[:8]}", "password": "pw"}
+    )
+    u2 = user_service.create_user(
+        {"username": f"u2_{uuid.uuid4().hex[:8]}", "password": "pw"}
+    )
 
     mem_service = MemoryService(db)
-    m1 = mem_service.add_memory({"user_id": u1.id, "content": "a", "topic": "t", "tags": []})
-    m2 = mem_service.add_memory({"user_id": u2.id, "content": "b", "topic": "t", "tags": []})
+    m1 = mem_service.add_memory(
+        {"user_id": u1.id, "content": "a", "topic": "t", "tags": []}
+    )
+    m2 = mem_service.add_memory(
+        {"user_id": u2.id, "content": "b", "topic": "t", "tags": []}
+    )
 
     merged = mem_service.merge_memories([m1.id, m2.id], u1.id)
     assert merged is None
@@ -156,4 +170,3 @@ def test_chain_service_create_and_list():
     listed = service.list_chains()
     assert any(c.id == chain.id for c in listed)
     db.close()
-

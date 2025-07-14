@@ -1,6 +1,6 @@
 # ScoutOSAI Frontend
 
-This directory contains the React + Vite web client.  The UI communicates with
+This directory contains the React + Vite web client. The UI communicates with
 the backend API and provides a simple chat interface.
 
 ## Setup

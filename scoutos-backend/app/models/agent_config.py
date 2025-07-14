@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, JSON
 from .base import Base
 
+
 class AgentConfig(Base):
     __tablename__ = "agent_configs"
 

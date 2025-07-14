@@ -1,2 +1,9 @@
 pytest
 pytest-cov
+pip-audit
+flake8
+black
+bandit
+vulture
+pip-licenses
+codespell
