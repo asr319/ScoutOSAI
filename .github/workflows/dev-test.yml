@@ -24,8 +24,8 @@ jobs:
       VITE_USE_MOCK_AI: "true"
       VITE_API_URL: http://localhost:8000
       VITE_ENV: development
-      SCOUTOS_CUSTOM_DOMAIN: dev.scoutos.local
-      SCOUTOS_ALLOWED_DOMAINS: localhost,127.0.0.1,scoutos.local,asr319.github.io,dev.scoutos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org
+      BEKONOS_CUSTOM_DOMAIN: dev.bekonos.local
+      BEKONOS_ALLOWED_DOMAINS: localhost,127.0.0.1,scoutos.local,asr319.github.io,dev.bekonos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org
 
     steps:
       - name: Checkout repository
@@ -35,7 +35,7 @@ jobs:
         run: |
           echo "SECRET_KEY=$SECRET_KEY"
           echo "DATABASE_URL=$DATABASE_URL"
-          echo "SCOUTOS_ALLOWED_DOMAINS=$SCOUTOS_ALLOWED_DOMAINS"
+          echo "BEKONOS_ALLOWED_DOMAINS=$BEKONOS_ALLOWED_DOMAINS"
 
       - name: Set up Node.js and pnpm
         uses: actions/setup-node@v4
