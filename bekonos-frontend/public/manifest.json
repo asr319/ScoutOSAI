@@ -4,7 +4,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#1C7CF6",
+  "theme_color": "#20467A",
   "icons": [
     {
       "src": "/bekonos-logo.svg",

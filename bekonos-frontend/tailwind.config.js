@@ -4,10 +4,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#1C7CF6",
-        accent: "#FFC857",
-        background: "#E9EEF6",
-        dark: "#181E29",
+        primary: "#20467A",
+        accent: "#5376A6",
+        yellow: "#FFD94A",
+        aqua: "#60C6C9",
+        background: "#F6F8FA",
+        dark: "#2D3137",
       },
       fontFamily: {
         headline: ["Montserrat", "Inter", "sans-serif"],

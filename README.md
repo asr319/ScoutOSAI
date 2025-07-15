@@ -186,6 +186,6 @@ Proprietary – BekonOS (c) 2025 asr319. All rights reserved. No use, copying, o
 ## BekonOS Brand Kit
 
 - Logo: assets/bekonos-logo.svg
-- Colors: Beacon Blue #1C7CF6, Signal Yellow #FFC857, Background #E9EEF6/#FFFFFF, Dark #181E29
+- Colors: Deep Sapphire #20467A, Slate Blue #5376A6, Sunbeam Yellow #FFD94A, Soft Aqua #60C6C9, Graphite #2D3137, Background #F6F8FA
 - Fonts: Montserrat headlines, Inter body
 - UI components: dashboard layout, rounded primary buttons, cards, timeline UI, pill tags, sidebar navigation, toasts

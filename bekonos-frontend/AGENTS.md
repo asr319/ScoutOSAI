@@ -55,4 +55,4 @@ required policy sections.
 
 ## BekonOS Brand Kit
 
-Use assets/bekonos-logo.svg in UI and docs. Primary color #1C7CF6, accent #FFC857. Headlines use Montserrat; body uses Inter. Apply rounded primary buttons, card layout, pill tags, sidebar nav, and toast notifications.
+Use assets/bekonos-logo.svg in UI and docs. Primary color #20467A, accent #5376A6, yellow #FFD94A. Headlines use Montserrat; body uses Inter. Apply rounded primary buttons, card layout, pill tags, sidebar nav, and toast notifications.
