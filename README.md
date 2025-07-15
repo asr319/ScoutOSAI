@@ -71,21 +71,21 @@ single command. Visit `http://localhost:3000` after running `docker-compose up`.
 ### Offline / Mock Mode
 
 To develop completely offline set `AGENT_BACKEND=local` (or `MOCK_AI=true`) for
-the backend and `VITE_USE_MOCK=true` in `scoutos-frontend/.env`. Mock mode
+the backend and `VITE_USE_MOCK=true` in `bekonos-frontend/.env`. Mock mode
 returns canned responses so you can explore the UI without network access or API
 keys.
 
 ## Backend Setup
 
-The backend lives in [`scoutos-backend`](scoutos-backend/). Install dependencies and start the server with:
+The backend lives in [`bekonos-backend`](bekonos-backend/). Install dependencies and start the server with:
 
 ```bash
-cd scoutos-backend
+cd bekonos-backend
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-The service reads `DATABASE_URL` to connect to PostgreSQL (tests override this with SQLite). Set both `FERNET_KEY` and `APP_ENCRYPTION_KEY` to random strings so `Memory.content` can be encrypted. See [`scoutos-backend/README.md`](scoutos-backend/README.md) for more details on environment variables and endpoints.
+The service reads `DATABASE_URL` to connect to PostgreSQL (tests override this with SQLite). Set both `FERNET_KEY` and `APP_ENCRYPTION_KEY` to random strings so `Memory.content` can be encrypted. See [`bekonos-backend/README.md`](bekonos-backend/README.md) for more details on environment variables and endpoints.
 Additional agent documentation and plugin examples are in [AGENTS.md](AGENTS.md).
 
 Run the backend unit tests from the same directory:
@@ -103,14 +103,14 @@ logging in via `/user/login` using the `totp_code` field.
 
 ## Frontend Setup
 
-The React frontend is found in [`scoutos-frontend`](scoutos-frontend/). Use `pnpm` for dependency management:
+The React frontend is found in [`bekonos-frontend`](bekonos-frontend/). Use `pnpm` for dependency management:
 
 ```bash
-cd scoutos-frontend
+cd bekonos-frontend
 pnpm install
 ```
 
-Copy `scoutos-frontend/.env.example` to `.env` and adjust as needed:
+Copy `bekonos-frontend/.env.example` to `.env` and adjust as needed:
 
 ```
 VITE_API_URL=http://localhost:8000
@@ -154,7 +154,7 @@ All pushes and pull requests to `main` or `develop` run [Gitleaks](https://githu
 ## API Reference
 
 Full details of the REST endpoints, including example requests, can be found in
-[`scoutos-backend/README.md`](scoutos-backend/README.md).
+[`bekonos-backend/README.md`](bekonos-backend/README.md).
 
 Additional agent documentation and plugin examples are in [AGENTS.md](AGENTS.md).
 

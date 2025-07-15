@@ -8,11 +8,11 @@ REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 corepack enable pnpm
 
 # Install backend dependencies (including development requirements)
-cd "$REPO_ROOT/scoutos-backend"
+cd "$REPO_ROOT/bekonos-backend"
 pip install -r requirements.txt -r requirements-dev.txt
 
 # Install frontend dependencies
-cd "$REPO_ROOT/scoutos-frontend"
+cd "$REPO_ROOT/bekonos-frontend"
 pnpm install
 
 # Return to the repository root when finished

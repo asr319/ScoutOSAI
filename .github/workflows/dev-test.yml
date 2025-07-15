@@ -51,17 +51,17 @@ jobs:
 
       - name: Install backend requirements
         run: |
-          cd scoutos-backend
+          cd bekonos-backend
           pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Install frontend requirements
         run: |
-          cd scoutos-frontend
+          cd bekonos-frontend
           pnpm install
 
       - name: Initialize database if script exists
         run: |
-          cd scoutos-backend
+          cd bekonos-backend
           if [ -f scripts/init_db.py ]; then
             python scripts/init_db.py
           else
@@ -71,12 +71,12 @@ jobs:
 
       - name: Run backend tests
         run: |
-          cd scoutos-backend
+          cd bekonos-backend
           pytest || echo "No backend tests found."
 
       - name: Run frontend tests
         run: |
-          cd scoutos-frontend
+          cd bekonos-frontend
           pnpm test || echo "No frontend tests found."
 
       - name: List directories for debug

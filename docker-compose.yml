@@ -1,7 +1,7 @@
 version: "3"
 services:
   backend:
-    build: ./scoutos-backend
+    build: ./bekonos-backend
     ports:
       - "8000:8000"
     environment:
@@ -11,7 +11,7 @@ services:
     depends_on:
       - db
   frontend:
-    build: ./scoutos-frontend
+    build: ./bekonos-frontend
     ports:
       - "3000:3000"
     environment:

@@ -35,9 +35,9 @@ jobs:
           cache: pnpm
       - run: npm install -g pnpm
       - run: pnpm install --frozen-lockfile
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: pnpm audit --audit-level high
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
     permissions:
       contents: read
 
@@ -48,7 +48,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt pip-audit
+      - run: pip install -r bekonos-backend/requirements.txt -r bekonos-backend/requirements-dev.txt pip-audit
       - run: pip-audit
     permissions:
       contents: read
@@ -63,9 +63,9 @@ jobs:
           cache: pnpm
       - run: npm install -g pnpm
       - run: pnpm install
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: pnpm lint
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
 
   lint-backend:
     runs-on: ubuntu-latest
@@ -74,9 +74,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt flake8 black
-      - run: flake8 scoutos-backend
-      - run: black --check scoutos-backend
+      - run: pip install -r bekonos-backend/requirements.txt -r bekonos-backend/requirements-dev.txt flake8 black
+      - run: flake8 bekonos-backend
+      - run: black --check bekonos-backend
 
   test-frontend:
     runs-on: ubuntu-latest
@@ -88,9 +88,9 @@ jobs:
           cache: pnpm
       - run: npm install -g pnpm
       - run: pnpm install
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: pnpm test -- --run
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
 
   test-backend:
     runs-on: ubuntu-latest
@@ -99,9 +99,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt pytest
-      - run: pytest --cov=scoutos-backend --cov-fail-under=85
-        working-directory: scoutos-backend
+      - run: pip install -r bekonos-backend/requirements.txt -r bekonos-backend/requirements-dev.txt pytest
+      - run: pytest --cov=bekonos-backend --cov-fail-under=85
+        working-directory: bekonos-backend
 
   duplicate-check:
     runs-on: ubuntu-latest
@@ -135,11 +135,11 @@ jobs:
       - run: npm install -g pnpm prettier
       - run: pip install pyspelling
       - run: pnpm install
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: prettier --check .
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: pyspelling
-      - run: black --check scoutos-backend
+      - run: black --check bekonos-backend
 
   license-check:
     runs-on: ubuntu-latest
@@ -154,9 +154,9 @@ jobs:
           python-version: "3.11"
       - run: npm install -g license-checker
       - run: pnpm install
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: license-checker --summary
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: pip install pip-licenses
       - run: pip-licenses --fail-on non-free
 
@@ -172,11 +172,11 @@ jobs:
         with:
           python-version: "3.11"
       - run: pnpm install
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: pnpm audit --audit-level high
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: pip install bandit
-      - run: bandit -r scoutos-backend
+      - run: bandit -r bekonos-backend
 
   dead-code:
     runs-on: ubuntu-latest
@@ -190,11 +190,11 @@ jobs:
         with:
           python-version: "3.11"
       - run: pnpm install
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: npx depcheck
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: pip install vulture
-      - run: vulture scoutos-backend
+      - run: vulture bekonos-backend
 
   accessibility:
     runs-on: ubuntu-latest
@@ -206,9 +206,9 @@ jobs:
           cache: pnpm
       - run: npm install -g pnpm
       - run: pnpm install
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
       - run: npx axe ./index.html
-        working-directory: scoutos-frontend
+        working-directory: bekonos-frontend
 
   container-scan:
     runs-on: ubuntu-latest
