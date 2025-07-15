@@ -1,3 +1,5 @@
+# ⚠️ Automation/AI Policy:
+# All code, dependency, and agent changes must pass secret scanning, license checks, tests, and AGENTS file update.
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
@@ -10,13 +12,12 @@ defaults:
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -25,18 +26,18 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        run_install: false
-        package_json_file: scoutos-frontend/package.json
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
-        cache-dependency-path: scoutos-frontend/pnpm-lock.yaml
-    - run: pnpm install --frozen-lockfile
-    - run: pnpm run --if-present build
-    - run: pnpm test --if-present
+      - uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+          package_json_file: scoutos-frontend/package.json
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+          cache-dependency-path: scoutos-frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run --if-present build
+      - run: pnpm test --if-present

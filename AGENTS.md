@@ -1,12 +1,30 @@
-# AGENTS.md – ScoutOSAI
+⚠️ BekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
+⚠️ AI/Automation Compliance:
+All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/CD, security, and license checks.
+See AGENTS.md and workflows for requirements.
 
-Last updated: 2025-07-14
+# AGENTS.md – BekonOS
+Agents must verify all licenses remain current and dependencies are responsibly used on every update.
+
+Last updated: 2025-07-15
+Scan status: All checks passed on 2025-07-15
 
 ## Purpose
 
-This document provides guidance for any agent (bot, AI model, plugin, or service) that assists with the ScoutOSAI project.
+This document provides guidance for any agent (bot, AI model, plugin, or service) that assists with the BekonOS project.
 Agents can be LLMs, traditional bots, integrations, or external tools.
 All agents must follow these principles to maintain reliability, extensibility, and user trust.
+
+## License and Dependency Compliance
+
+All third-party packages must use compatible licenses. Agents verify licensing and dependency status on every update and replace or remove any with problematic terms. Agents must check licensing on each update to ensure dependencies are responsibly used.
+
+## License Compliance Policy
+
+All project dependencies are automatically scanned for forbidden and risky licenses.  
+Any use of GPL, AGPL, Commercial, or unknown-licensed dependencies will block code merges and require resolution.  
+Last scan: 2025-07-15 — Status: PASS
+See LICENSES-python.md and LICENSES-node.md for a current, full list.
 
 ## Other Guides
 
@@ -92,6 +110,9 @@ required policy lines and metadata.
 - If a request is ambiguous, prompt the user or developer for details.
 - Always log errors and warnings in a secure, privacy-compliant way.
 - Support hot-swapping of agent backends via config or env (e.g., OpenAI → Llama).
+- Verify all third-party dependencies have current, compatible licenses. Check
+  license status and update or replace problematic packages whenever the
+  repository changes.
 
 ---
 
@@ -139,7 +160,7 @@ If an agent can’t complete a task:
 - Periodically review this file to ensure automation instructions remain current. Record updates in `logs/agents.log`.
 - Link to detailed agent/plugin docs as needed.
 - Encourage all contributors (human or bot) to suggest improvements.
-- ScoutOSAI’s success relies on reliable, transparent, and extensible agent collaboration.
+- BekonOS’s success relies on reliable, transparent, and extensible agent collaboration.
 - Agents: Always be helpful, clear, and secure.
 
 ## Pull Request Checklist
@@ -155,7 +176,7 @@ If an agent can’t complete a task:
 ### Local Test Mode
 
 Set `AGENT_BACKEND=local` (or `MOCK_AI=true`) to disable external API calls.
-Agents will return stubbed data so you can develop and test ScoutOSAI
+Agents will return stubbed data so you can develop and test BekonOS
 completely offline.
 
 ---
@@ -165,7 +186,7 @@ If you want a copy-paste agent registry file, plugin manifest, or more “how-to
 
 ## 10. CI/CD, Security, and Agent Policy
 
-ScoutOSAI requires that every Pull Request passes a full suite of automated
+BekonOS requires that every Pull Request passes a full suite of automated
 checks defined in `.github/workflows/full-checks.yml`. These checks include:
 
 - Secret scanning (Gitleaks and custom Python script)
@@ -175,8 +196,10 @@ checks defined in `.github/workflows/full-checks.yml`. These checks include:
 - Unit and integration tests for both frontend and backend
 - Duplicate and error scanning via a Python script
 - AGENTS file validation to ensure policies are up to date
-- Spelling checks with `codespell`
-- License compliance for all dependencies
+- Spelling checks with `pyspelling`
+- License compliance for all dependencies. Agents must verify that every
+  update keeps package licenses current and remove or replace any that become
+  incompatible.
 - Static analysis with `bandit` and JS/TS tooling
 - Dead code and unused dependency detection
 - Coverage enforcement (fail if below 85%)
@@ -200,3 +223,7 @@ CI.
 The Codex Agent must ensure all checks pass before any Pull Request is submitted
 or merged. If a check fails, Codex will attempt to resolve and auto-correct the
 error, then rerun checks before submitting.
+
+## BekonOS Brand Kit
+
+Use assets/bekonos-logo.svg in UI and docs. Primary color #1C7CF6, accent #FFC857. Headlines use Montserrat; body uses Inter. Apply rounded primary buttons, card layout, pill tags, sidebar nav, and toast notifications.

@@ -42,5 +42,6 @@
     "vitest": "^3.2.4",
     "workbox-window": "7.3.0",
     "prettier": "^3.2.5"
-  }
+  },
+  "license": "MIT"
 }

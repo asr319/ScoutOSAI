@@ -1,18 +1,21 @@
-import { useEffect, useState } from 'react';
-import { toast } from 'react-hot-toast';
-import { useUser } from '../hooks/useUser';
-import LoadingSpinner from './LoadingSpinner';
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { useUser } from "../hooks/useUser";
+import LoadingSpinner from "./LoadingSpinner";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 interface Preferences {
-  theme: 'light' | 'dark';
+  theme: "light" | "dark";
   notify: boolean;
 }
 
 export default function ProfileEditor() {
   const { user } = useUser();
-  const [prefs, setPrefs] = useState<Preferences>({ theme: 'light', notify: true });
+  const [prefs, setPrefs] = useState<Preferences>({
+    theme: "light",
+    notify: true,
+  });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -24,7 +27,10 @@ export default function ProfileEditor() {
       if (res.ok) {
         const data = await res.json();
         if (data.preferences) {
-          setPrefs({ theme: data.preferences.theme || 'light', notify: data.preferences.notify ?? true });
+          setPrefs({
+            theme: data.preferences.theme || "light",
+            notify: data.preferences.notify ?? true,
+          });
         }
       }
     }
@@ -36,18 +42,18 @@ export default function ProfileEditor() {
     setLoading(true);
     try {
       const res = await fetch(`${API_URL}/user/profile`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           ...(user.token ? { Authorization: `Bearer ${user.token}` } : {}),
         },
         body: JSON.stringify({ user_id: user.id, preferences: prefs }),
       });
       if (res.ok) {
-        toast.success('Profile saved');
+        toast.success("Profile saved");
       } else {
         const body = await res.json().catch(() => ({}));
-        toast.error(body.detail || 'Failed to save');
+        toast.error(body.detail || "Failed to save");
       }
     } finally {
       setLoading(false);
@@ -63,7 +69,12 @@ export default function ProfileEditor() {
           <select
             className="border p-2 rounded"
             value={prefs.theme}
-            onChange={e => setPrefs({ ...prefs, theme: e.target.value as Preferences['theme'] })}
+            onChange={(e) =>
+              setPrefs({
+                ...prefs,
+                theme: e.target.value as Preferences["theme"],
+              })
+            }
           >
             <option value="light">Light</option>
             <option value="dark">Dark</option>
@@ -73,12 +84,12 @@ export default function ProfileEditor() {
           <input
             type="checkbox"
             checked={prefs.notify}
-            onChange={e => setPrefs({ ...prefs, notify: e.target.checked })}
+            onChange={(e) => setPrefs({ ...prefs, notify: e.target.checked })}
           />
           Enable Notifications
         </label>
         <button
-          className="bg-blue-600 text-white rounded p-2 flex items-center justify-center gap-2"
+          className="bg-primary text-white rounded p-2 flex items-center justify-center gap-2"
           onClick={save}
           disabled={loading}
         >

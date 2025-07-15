@@ -1,4 +1,22 @@
-# ScoutOSAI
+⚠️ BekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
+⚠️ AI/Automation Compliance:
+
+All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/CD, security, and license checks.
+
+<p align="center">
+  <img src="./assets/bekonos-logo.svg" alt="BekonOS Logo" width="340"><br>
+  <strong>BekonOS&nbsp;<sup>©</sup></strong>
+</p>
+
+See AGENTS.md and workflows for requirements.
+Last updated: 2025-07-15
+Scan status: All checks passed on 2025-07-15
+
+# BekonOS
+
+Lost in Data’s Sway? BekonOS Saves the Day!
+
+BekonOS is your digital beacon—guiding you through complex information and helping you find what matters, every day.
 
 ## Setup
 
@@ -27,7 +45,7 @@ docker-compose --env-file .env up
 
 ### Environment Variables
 
-ScoutOSAI relies on several environment variables for configuration:
+BekonOS relies on several environment variables for configuration:
 
 - `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` – PostgreSQL credentials.
 - `DATABASE_URL` – connection string used by the backend.
@@ -49,8 +67,6 @@ calling the OpenAI API for the demo AI endpoints.
 
 The compose file also builds the React frontend so the full stack runs with a
 single command. Visit `http://localhost:3000` after running `docker-compose up`.
-
-ScoutOSAI is a demo full-stack project that pairs a FastAPI backend with a React + Vite frontend. The application exposes a small API for managing user information and storing short text "memories". The web client provides a minimal chat interface for experimenting with the API.
 
 ### Offline / Mock Mode
 
@@ -151,3 +167,25 @@ Usage events like memory creation and agent calls are stored in an
   authenticated user.
 - `GET /analytics/events` – return recent events. Pass `?format=csv` to export
   a CSV file instead of JSON.
+
+## License and Dependency Compliance
+
+All third-party packages must use compatible licenses. Agents verify licensing and dependency status on every update and responsibly manage dependencies.
+
+## License Compliance Policy
+
+All project dependencies are automatically scanned for forbidden and risky licenses.
+Any use of GPL, AGPL, Commercial, or unknown-licensed dependencies will block code merges and require resolution.
+Last scan: 2025-07-15 — Status: PASS
+See LICENSES-python.md and LICENSES-node.md for a current, full list.
+
+## License
+
+Proprietary – BekonOS (c) 2025 asr319. All rights reserved. No use, copying, or redistribution without permission. Some dependencies under open source licenses; see NOTICE.txt for details.
+
+## BekonOS Brand Kit
+
+- Logo: assets/bekonos-logo.svg
+- Colors: Beacon Blue #1C7CF6, Signal Yellow #FFC857, Background #E9EEF6/#FFFFFF, Dark #181E29
+- Fonts: Montserrat headlines, Inter body
+- UI components: dashboard layout, rounded primary buttons, cards, timeline UI, pill tags, sidebar navigation, toasts

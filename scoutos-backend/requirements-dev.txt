@@ -6,4 +6,4 @@ black
 bandit
 vulture
 pip-licenses
-codespell
+pyspelling

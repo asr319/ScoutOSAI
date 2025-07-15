@@ -1,3 +1,4 @@
+# BekonOS (c) 2025 asr319. All rights reserved. Proprietary.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import memory, user, agent, ai, analytics
@@ -13,7 +14,7 @@ def _get_allowed_origins() -> list[str]:
     return [origin.strip() for origin in origins.split(",") if origin.strip()]
 
 
-app = FastAPI(title="ScoutOSAI Backend")
+app = FastAPI(title="BekonOS Backend")
 
 # Configure CORS
 allowed_origins = _get_allowed_origins()
@@ -39,4 +40,4 @@ app.include_router(ws.router)
 @app.get("/")
 async def root() -> dict[str, str]:
     """Health check endpoint."""
-    return {"status": "ScoutOSAI backend running"}
+    return {"status": "BekonOS backend running"}

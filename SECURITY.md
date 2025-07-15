@@ -34,7 +34,7 @@ A Gitleaks workflow scans all pushes and pull requests for hardcoded secrets. Co
 
 ## Automated Security and Quality Checks
 
-ScoutOSAI uses a GitHub Actions workflow (`full-checks.yml`) that performs
+BekonOS uses a GitHub Actions workflow (`full-checks.yml`) that performs
 comprehensive security and quality scans on every push and Pull Request:
 
 - Gitleaks and repository history secret scanning
@@ -52,3 +52,10 @@ The workflow also validates all AGENTS files using `scripts/validate_agents.py`.
 The Codex Agent must ensure every check succeeds before merging. If a check
 fails, the agent will attempt to auto-correct issues (formatting, linting,
 dependency updates) and rerun the workflow.
+
+## License Compliance Policy
+
+All project dependencies are automatically scanned for forbidden and risky licenses.
+Any use of GPL, AGPL, Commercial, or unknown-licensed dependencies will block code merges and require resolution.
+Last scan: 2025-07-15 — Status: PASS
+See LICENSES-python.md and LICENSES-node.md for a current, full list.

@@ -1,4 +1,6 @@
-name: Deploy ScoutOS Frontend to GitHub Pages
+# ⚠️ Automation/AI Policy:
+# All code, dependency, and agent changes must pass secret scanning, license checks, tests, and AGENTS file update.
+name: Deploy BekonOS Frontend to GitHub Pages
 
 on:
   push:
