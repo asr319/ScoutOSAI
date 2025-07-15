@@ -130,7 +130,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: npm install -g pnpm prettier codespell
+      - run: npm install -g pnpm prettier
+      - run: pip install codespell
       - run: pnpm install
         working-directory: scoutos-frontend
       - run: prettier --check .
@@ -170,7 +171,7 @@ jobs:
           python-version: "3.11"
       - run: pnpm install
         working-directory: scoutos-frontend
-      - run: npm audit --audit-level high
+      - run: pnpm audit --audit-level high
         working-directory: scoutos-frontend
       - run: pip install bandit
       - run: bandit -r scoutos-backend
@@ -228,4 +229,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: gitleaks detect --redact --no-git -v
+      - uses: gitleaks/gitleaks-action@v2
+        with:
+          args: detect --redact --no-git -v
