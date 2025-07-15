@@ -11,10 +11,10 @@ dist/
 !.env.example
 !.env.staging.example
 !.env.prod.example
-!scoutos-frontend/.env.example
+!bekonos-frontend/.env.example
 .DS_Store
 # Ignore SQLite test database
-scoutos-backend/test.db
+bekonos-backend/test.db
 
 # Logs
 logs/*

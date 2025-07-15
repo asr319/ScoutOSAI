@@ -8,7 +8,7 @@ permissions:
   contents: read
 defaults:
   run:
-    working-directory: scoutos-frontend
+    working-directory: bekonos-frontend
 
 on:
   push:
@@ -31,13 +31,13 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           run_install: false
-          package_json_file: scoutos-frontend/package.json
+          package_json_file: bekonos-frontend/package.json
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
-          cache-dependency-path: scoutos-frontend/pnpm-lock.yaml
+          cache-dependency-path: bekonos-frontend/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --if-present build
       - run: pnpm test --if-present

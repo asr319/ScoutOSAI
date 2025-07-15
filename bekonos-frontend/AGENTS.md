@@ -4,6 +4,7 @@ All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/C
 See AGENTS.md and workflows for requirements.
 
 # AGENTS instructions
+
 Agents must verify all licenses remain current and dependencies are responsibly used on every update.
 
 Last updated: 2025-07-15

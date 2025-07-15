@@ -4,6 +4,7 @@ All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/C
 See AGENTS.md and workflows for requirements.
 
 # Backend Guidelines
+
 Agents must verify all licenses remain current and dependencies are responsibly used on every update.
 
 Last updated: 2025-07-15
@@ -28,7 +29,7 @@ See ../../LICENSES-python.md for a current list.
 ## Testing
 
 - Tests rely on **SQLite**. The `conftest.py` in `tests/` sets `DATABASE_URL` to `sqlite:///./test.db` automatically.
-- Run tests from the `scoutos-backend` directory with:
+- Run tests from the `bekonos-backend` directory with:
 
 ```bash
 pytest

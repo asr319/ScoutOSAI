@@ -4,6 +4,7 @@ All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/C
 See AGENTS.md and workflows for requirements.
 
 # AGENTS.md – BekonOS
+
 Agents must verify all licenses remain current and dependencies are responsibly used on every update.
 
 Last updated: 2025-07-15
@@ -28,10 +29,10 @@ See LICENSES-python.md and LICENSES-node.md for a current, full list.
 
 ## Other Guides
 
-Additional `AGENTS.md` files are available in `scoutos-backend/` and `scoutos-frontend/`.
+Additional `AGENTS.md` files are available in `bekonos-backend/` and `bekonos-frontend/`.
 Refer to those documents for backend- and frontend-specific instructions.
 
-All agents must install project dependencies before starting any tasks. Use `pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt` and run `pnpm install` inside `scoutos-frontend`.
+All agents must install project dependencies before starting any tasks. Use `pip install -r bekonos-backend/requirements.txt -r bekonos-backend/requirements-dev.txt` and run `pnpm install` inside `bekonos-frontend`.
 
 ## All logs should be stored in the `logs/` directory (e.g., `logs/agents.log`). Do not record logs inside source files.
 
@@ -85,7 +86,7 @@ Agents include:
 ### Current Agent Contracts
 
 Input and output schemas for built-in agents reside in
-`scoutos-backend/app/models` and are enforced via Pydantic models. Agents must
+`bekonos-backend/app/models` and are enforced via Pydantic models. Agents must
 conform to these schemas or extend them with backward-compatible fields.
 The script `scripts/validate_agents.py` verifies all AGENTS files contain the
 required policy lines and metadata.
@@ -168,8 +169,8 @@ If an agent can’t complete a task:
 - Fetch the latest changes from the repository before creating a branch or pull request.
 - Check for merge conflicts and resolve them locally.
 - Ensure all conflicts are addressed before submitting the pull request.
-- Install backend dependencies with `pip install -r scoutos-backend/requirements.txt -r scoutos-backend/requirements-dev.txt`.
-- Install frontend dependencies with `pnpm install` in `scoutos-frontend`.
+- Install backend dependencies with `pip install -r bekonos-backend/requirements.txt -r bekonos-backend/requirements-dev.txt`.
+- Install frontend dependencies with `pnpm install` in `bekonos-frontend`.
 - Run the redundancy checker `python scripts/check_duplicates.py` from the repository root and remove or merge any duplicates.
 - Format all project files with `prettier --write .` to keep the codebase tidy. Generate `.min.js` and `.min.css` files using your preferred minifier.
 

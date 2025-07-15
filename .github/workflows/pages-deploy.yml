@@ -20,11 +20,11 @@ jobs:
       - run: npm install -g pnpm corepack
       - name: Install frontend dependencies
         run: |
-          cd scoutos-frontend
+          cd bekonos-frontend
           pnpm install
       - name: Set build environment variables
         run: |
-          cd scoutos-frontend
+          cd bekonos-frontend
           echo "VITE_API_URL=https://your-backend-endpoint.com" >> .env
           echo "VITE_ENV=production" >> .env
           echo "VITE_USE_MOCK_AI=false" >> .env
@@ -32,10 +32,10 @@ jobs:
           echo "SCOUTOS_ALLOWED_DOMAINS=localhost,127.0.0.1,scoutos.local,asr319.github.io,dev.scoutos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org" >> .env
       - name: Build static site
         run: |
-          cd scoutos-frontend
+          cd bekonos-frontend
           pnpm run build
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: scoutos-frontend/dist
+          publish_dir: bekonos-frontend/dist
