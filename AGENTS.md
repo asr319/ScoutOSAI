@@ -172,7 +172,10 @@ If an agent can’t complete a task:
 - Install backend dependencies with `pip install -r bekonos-backend/requirements.txt -r bekonos-backend/requirements-dev.txt`.
 - Install frontend dependencies with `pnpm install` in `bekonos-frontend`.
 - Run the redundancy checker `python scripts/check_duplicates.py` from the repository root and remove or merge any duplicates.
-- Format all project files with `prettier --write .` to keep the codebase tidy. Generate `.min.js` and `.min.css` files using your preferred minifier.
+- Format all project files with `prettier --write .` to keep the source tidy.
+- Generate minified `.min.js` and `.min.css` assets for the web portal.
+- Place these minified files in the `docs/` directory (or `public/`) so GitHub Pages serves only the optimized build.
+- Ensure GitHub Pages points to the `gh-pages` branch and `/docs` folder.
 
 ### Local Test Mode
 

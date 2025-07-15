@@ -17,7 +17,7 @@ jobs:
 
     env:
       SECRET_KEY: devsecret1234567890abcdefg
-      DATABASE_URL: postgresql://scoutos:devpass@localhost:5432/scoutos
+      DATABASE_URL: postgresql://bekonos:devpass@localhost:5432/bekonos
       OPENAI_API_KEY: test-testkey-doesnotwork123456
       ENV: development
       MOCK_AI: "true"
@@ -25,7 +25,7 @@ jobs:
       VITE_API_URL: http://localhost:8000
       VITE_ENV: development
       BEKONOS_CUSTOM_DOMAIN: dev.bekonos.local
-      BEKONOS_ALLOWED_DOMAINS: localhost,127.0.0.1,scoutos.local,asr319.github.io,dev.bekonos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org
+      BEKONOS_ALLOWED_DOMAINS: localhost,127.0.0.1,bekonos.local,asr319.github.io,dev.bekonos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org
 
     steps:
       - name: Checkout repository

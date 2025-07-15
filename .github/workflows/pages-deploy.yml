@@ -29,7 +29,7 @@ jobs:
           echo "VITE_ENV=production" >> .env
           echo "VITE_USE_MOCK_AI=false" >> .env
           echo "BEKONOS_CUSTOM_DOMAIN=dev.bekonos.local" >> .env
-          echo "BEKONOS_ALLOWED_DOMAINS=localhost,127.0.0.1,scoutos.local,asr319.github.io,dev.bekonos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org" >> .env
+          echo "BEKONOS_ALLOWED_DOMAINS=localhost,127.0.0.1,bekonos.local,asr319.github.io,dev.bekonos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org" >> .env
       - name: Build static site
         run: |
           cd bekonos-frontend
