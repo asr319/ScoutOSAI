@@ -57,8 +57,8 @@ BekonOS relies on several environment variables for configuration:
 - `VITE_API_URL` – URL to the backend API.
 - `VITE_USE_MOCK` or `VITE_USE_MOCK_AI` – enable the mock API during local development.
 - `VITE_ENV` – build environment identifier (`development` or `production`).
-- `SCOUTOS_CUSTOM_DOMAIN` – domain name for GitHub Pages or local testing.
-- `SCOUTOS_ALLOWED_DOMAINS` – comma-separated list of allowed hosts for network calls.
+- `BEKONOS_CUSTOM_DOMAIN` – domain name for GitHub Pages or local testing.
+- `BEKONOS_ALLOWED_DOMAINS` – comma-separated list of allowed hosts for network calls.
 
 Sample `.env` files include these variables with placeholder values.
 
@@ -117,8 +117,8 @@ VITE_API_URL=http://localhost:8000
 VITE_ENV=development
 VITE_USE_MOCK_AI=true
 VITE_USE_MOCK=true
-SCOUTOS_CUSTOM_DOMAIN=dev.scoutos.local
-SCOUTOS_ALLOWED_DOMAINS=localhost,127.0.0.1,scoutos.local,asr319.github.io,dev.scoutos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org
+BEKONOS_CUSTOM_DOMAIN=dev.bekonos.local
+BEKONOS_ALLOWED_DOMAINS=localhost,127.0.0.1,scoutos.local,asr319.github.io,dev.bekonos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org
 ```
 
 Start the development server with:

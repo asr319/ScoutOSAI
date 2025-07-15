@@ -28,8 +28,8 @@ jobs:
           echo "VITE_API_URL=https://your-backend-endpoint.com" >> .env
           echo "VITE_ENV=production" >> .env
           echo "VITE_USE_MOCK_AI=false" >> .env
-          echo "SCOUTOS_CUSTOM_DOMAIN=dev.scoutos.local" >> .env
-          echo "SCOUTOS_ALLOWED_DOMAINS=localhost,127.0.0.1,scoutos.local,asr319.github.io,dev.scoutos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org" >> .env
+          echo "BEKONOS_CUSTOM_DOMAIN=dev.bekonos.local" >> .env
+          echo "BEKONOS_ALLOWED_DOMAINS=localhost,127.0.0.1,scoutos.local,asr319.github.io,dev.bekonos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org" >> .env
       - name: Build static site
         run: |
           cd bekonos-frontend
