@@ -1,13 +1,1 @@
-@import url(https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Inter:wght@400;600&display=swap);
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-body {
-  font-family: Inter, Nunito, "Open Sans", sans-serif;
-  background-color: theme("colors.background");
-}
-h1,
-h2,
-h3 {
-  font-family: Montserrat, Inter, sans-serif;
-}
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Inter:wght@400;600&display=swap");@tailwind base;@tailwind components;@tailwind utilities;body{font-family:"Inter","Nunito","Open Sans",sans-serif;background-color:theme("colors.background")}h1,h2,h3{font-family:"Montserrat","Inter",sans-serif}

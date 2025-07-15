@@ -29,7 +29,7 @@ VITE_ENV=development
 VITE_USE_MOCK_AI=true
 VITE_USE_MOCK=true
 BEKONOS_CUSTOM_DOMAIN=dev.bekonos.local
-BEKONOS_ALLOWED_DOMAINS=localhost,127.0.0.1,scoutos.local,asr319.github.io,dev.bekonos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org
+BEKONOS_ALLOWED_DOMAINS=localhost,127.0.0.1,bekonos.local,asr319.github.io,dev.bekonos.local,api.openai.com,registry.npmjs.org,pypi.org,pnpm.io,vitest.dev,github.com,files.pythonhosted.org
 ```
 
 Run the development server with

@@ -44,6 +44,8 @@ Install dependencies first with `pip install -r requirements.txt -r requirements
 - From the repository root run `python scripts/check_duplicates.py` to remove any redundant files.
 - Backend logs should be written to `logs/backend.log`. Do not keep logs in source files.
 - Format all project files with `prettier --write .` and create `.min.js`/`.min.css` assets using a minifier.
+- Place minified assets used by the website in the `docs/` or `public/` directory, keeping formatted source files under version control.
+- GitHub Pages must deploy from the `gh-pages` branch targeting the `/docs` folder.
 
 ```bash
 uvicorn app.main:app --reload

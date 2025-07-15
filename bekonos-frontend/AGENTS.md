@@ -30,6 +30,8 @@ See ../../LICENSES-node.md for a current list.
 - Format all project files with `pnpm exec prettier --write .` and generate `.min.js` and `.min.css` files using Vite or another minifier.
 - From the repository root run `python scripts/check_duplicates.py` to detect redundant files and clean them up.
 - Frontend logs should be written to `logs/frontend.log` instead of embedded in source files.
+- Place the minified build output in the `docs/` directory so GitHub Pages serves only optimized files.
+- Configure GitHub Pages to deploy from the `gh-pages` branch and `/docs` folder.
 
 ## CI/CD and Automation Policy
 
