@@ -1,25 +1,4 @@
-bekonos_codex_onboarding:
-  last_updated: "2025-07-14"
-  project: "bekonOS"
-  instructions: |
-    ## bekonOS 1-Click Project Setup (Codex)
 
-    **Warning:**  
-    - Never paste your GitHub token or secret into ChatGPT or any public chat.  
-    - Always use environment variables or secure secrets.
-
-    ### What Codex Will Do:
-    1. Prompt you to **set your GitHub Personal Access Token** in your local terminal:
-        ```
-        export GITHUB_TOKEN=your_token_here
-        ```
-    2. Download and run the one-click setup script below.
-    3. The script will:
-        - Rename your repository to `bekonOS`
-        - Update GitHub Pages config to serve from `gh-pages` branch and `/docs` folder
-        - Set all repository-level variables for bekonOS brand colors and config
-
-    ---
     ### 1-Click Codex Script (Save as `codex-setup.sh` and run locally)
 
     ```bash
@@ -82,25 +61,4 @@ bekonos_codex_onboarding:
     echo "=== bekonOS Repo, Pages, and Actions variables are updated! ==="
     echo "Done! (If you just renamed the repo, update your remotes and verify your Pages build at:"
     echo "https://$GITHUB_USER.github.io/$NEW_REPO/ )"
-    ```
-
-    ---
-
-    ### How to use this Codex onboarding:
-
-    1. Open your local terminal.
-    2. Run:
-        ```
-        export GITHUB_TOKEN=your_token_here
-        ```
-    3. Save the above script as `codex-setup.sh` in your repo root.
-    4. Run:
-        ```
-        chmod +x codex-setup.sh
-        ./codex-setup.sh
-        ```
-    5. All repo branding, variables, and Pages setup will be done automatically.
-
-    ---
-    **For security:** Never store your token in the repo, in code, or paste it into public tools.
-    For more info on GitHub API auth, see: https://docs.github.com/en/rest
+ 
