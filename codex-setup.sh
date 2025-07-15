@@ -61,4 +61,4 @@
     echo "=== bekonOS Repo, Pages, and Actions variables are updated! ==="
     echo "Done! (If you just renamed the repo, update your remotes and verify your Pages build at:"
     echo "https://$GITHUB_USER.github.io/$NEW_REPO/ )"
- 
+``` 
