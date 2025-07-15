@@ -1,8 +1,15 @@
-import { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { useUser } from '../hooks/useUser';
+import { useEffect, useState } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { useUser } from "../hooks/useUser";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 interface SummaryData {
   name: string;
@@ -20,7 +27,10 @@ export default function AnalyticsChart() {
     })
       .then((r) => r.json())
       .then((d) => {
-        const arr = Object.entries<number>(d).map(([name, count]) => ({ name, count }));
+        const arr = Object.entries<number>(d).map(([name, count]) => ({
+          name,
+          count,
+        }));
         setData(arr);
       });
   }, [user]);

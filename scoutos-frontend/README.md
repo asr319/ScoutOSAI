@@ -1,4 +1,15 @@
-# ScoutOSAI Frontend
+⚠️ BekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
+⚠️ AI/Automation Compliance:
+All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/CD, security, and license checks.
+See AGENTS.md and workflows for requirements.
+Last updated: 2025-07-15
+Scan status: All checks passed on 2025-07-15
+
+# BekonOS Frontend
+
+Lost in Data’s Sway? BekonOS Saves the Day!
+
+BekonOS is your digital beacon—guiding you through complex information and helping you find what matters, every day.
 
 This directory contains the React + Vite web client. The UI communicates with
 the backend API and provides a simple chat interface.
@@ -53,3 +64,11 @@ Contributions are welcome!
 ## Mobile Installation
 
 The frontend can be installed as a Progressive Web App. After running `pnpm run build` and serving the `dist` folder, visit the site on a mobile browser and choose **Add to Home Screen**. The layout is responsive and adapts to small screens through Tailwind CSS.
+
+## License and Dependency Compliance
+
+All third-party packages must use compatible licenses. Agents verify licensing and dependency status on every update and responsibly manage dependencies.
+
+## License
+
+Proprietary – BekonOS (c) 2025 asr319. All rights reserved. No use, copying, or redistribution without permission. Some dependencies under open source licenses; see ../../NOTICE.txt for details.

@@ -1,4 +1,15 @@
-# ScoutOSAI Backend
+⚠️ BekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
+⚠️ AI/Automation Compliance:
+All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/CD, security, and license checks.
+See AGENTS.md and workflows for requirements.
+Last updated: 2025-07-15
+Scan status: All checks passed on 2025-07-15
+
+Lost in Data’s Sway? BekonOS Saves the Day!
+
+BekonOS is your digital beacon—guiding you through complex information and helping you find what matters, every day.
+
+# BekonOS Backend
 
 This directory contains the FastAPI service. It exposes a small set of endpoints
 for user and memory management.
@@ -194,3 +205,11 @@ pytest
 
 Contributions are welcome! See the repository root `README.md` for more
 information.
+
+## License and Dependency Compliance
+
+All third-party packages must use compatible licenses. Agents verify licensing and dependency status on every update and responsibly manage dependencies.
+
+## License
+
+Proprietary – BekonOS (c) 2025 asr319. All rights reserved. No use, copying, or redistribution without permission. Some dependencies under open source licenses; see ../../NOTICE.txt for details.

@@ -1,10 +1,12 @@
-name: ScoutOS Dev/Test CI
+# ⚠️ Automation/AI Policy:
+# All code, dependency, and agent changes must pass secret scanning, license checks, tests, and AGENTS file update.
+name: BekonOS Dev/Test CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 permissions:
   contents: read
@@ -81,4 +83,4 @@ jobs:
         run: ls -l
 
       - name: Success message
-        run: echo "ScoutOS dev/test environment CI script completed!"
+        run: echo "BekonOS dev/test environment CI script completed!"

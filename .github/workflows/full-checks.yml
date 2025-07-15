@@ -1,3 +1,5 @@
+# ⚠️ Automation/AI Policy:
+# All code, dependency, and agent changes must pass secret scanning, license checks, tests, and AGENTS file update.
 name: Full Checks
 
 on:
@@ -131,12 +133,12 @@ jobs:
         with:
           python-version: "3.11"
       - run: npm install -g pnpm prettier
-      - run: pip install codespell
+      - run: pip install pyspelling
       - run: pnpm install
         working-directory: scoutos-frontend
       - run: prettier --check .
         working-directory: scoutos-frontend
-      - run: codespell
+      - run: pyspelling
       - run: black --check scoutos-backend
 
   license-check:
