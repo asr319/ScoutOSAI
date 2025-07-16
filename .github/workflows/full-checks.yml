@@ -149,6 +149,8 @@ jobs:
         with:
           node-version: 18
           cache: pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm corepack
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -168,6 +170,8 @@ jobs:
         with:
           node-version: 18
           cache: pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm corepack
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -186,6 +190,8 @@ jobs:
         with:
           node-version: 18
           cache: pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm corepack
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
