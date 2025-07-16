@@ -1,9 +1,9 @@
-⚠️ BekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
+⚠️ bekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
 ⚠️ AI/Automation Compliance:
 All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/CD, security, and license checks.
 See AGENTS.md and workflows for requirements.
 
-# AGENTS.md – BekonOS
+# AGENTS.md – bekonOS
 
 Agents must verify all licenses remain current and dependencies are responsibly used on every update.
 
@@ -12,7 +12,7 @@ Scan status: All checks passed on 2025-07-15
 
 ## Purpose
 
-This document provides guidance for any agent (bot, AI model, plugin, or service) that assists with the BekonOS project.
+This document provides guidance for any agent (bot, AI model, plugin, or service) that assists with the bekonOS project.
 Agents can be LLMs, traditional bots, integrations, or external tools.
 All agents must follow these principles to maintain reliability, extensibility, and user trust.
 
@@ -161,7 +161,7 @@ If an agent can’t complete a task:
 - Periodically review this file to ensure automation instructions remain current. Record updates in `logs/agents.log`.
 - Link to detailed agent/plugin docs as needed.
 - Encourage all contributors (human or bot) to suggest improvements.
-- BekonOS’s success relies on reliable, transparent, and extensible agent collaboration.
+- bekonOS’s success relies on reliable, transparent, and extensible agent collaboration.
 - Agents: Always be helpful, clear, and secure.
 
 ## Pull Request Checklist
@@ -180,7 +180,7 @@ If an agent can’t complete a task:
 ### Local Test Mode
 
 Set `AGENT_BACKEND=local` (or `MOCK_AI=true`) to disable external API calls.
-Agents will return stubbed data so you can develop and test BekonOS
+Agents will return stubbed data so you can develop and test bekonOS
 completely offline.
 
 ---
@@ -190,7 +190,7 @@ If you want a copy-paste agent registry file, plugin manifest, or more “how-to
 
 ## 10. CI/CD, Security, and Agent Policy
 
-BekonOS requires that every Pull Request passes a full suite of automated
+bekonOS requires that every Pull Request passes a full suite of automated
 checks defined in `.github/workflows/full-checks.yml`. These checks include:
 
 - Secret scanning (Gitleaks and custom Python script)
@@ -228,6 +228,6 @@ The Codex Agent must ensure all checks pass before any Pull Request is submitted
 or merged. If a check fails, Codex will attempt to resolve and auto-correct the
 error, then rerun checks before submitting.
 
-## BekonOS Brand Kit
+## bekonOS Brand Kit
 
 Use assets/bekonos-logo.svg in UI and docs. Primary color #20467A, accent #5376A6, yellow #FFD94A. Headlines use Montserrat; body uses Inter. Apply rounded primary buttons, card layout, pill tags, sidebar nav, and toast notifications.

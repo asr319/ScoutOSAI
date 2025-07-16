@@ -34,7 +34,7 @@ A Gitleaks workflow scans all pushes and pull requests for hardcoded secrets. Co
 
 ## Automated Security and Quality Checks
 
-BekonOS uses a GitHub Actions workflow (`full-checks.yml`) that performs
+bekonOS uses a GitHub Actions workflow (`full-checks.yml`) that performs
 comprehensive security and quality scans on every push and Pull Request:
 
 - Gitleaks and repository history secret scanning

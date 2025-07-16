@@ -1,6 +1,6 @@
-# Contributing to BekonOS
+# Contributing to bekonOS
 
-Thank you for contributing! BekonOS enforces automated CI/CD and security workflows for all changes. Before opening a Pull Request, ensure the following:
+Thank you for contributing! bekonOS enforces automated CI/CD and security workflows for all changes. Before opening a Pull Request, ensure the following:
 
 1. Run the full test and lint suite locally (`pnpm lint`, `pnpm test`, `flake8`, `black`, `pytest`).
 2. Run `prettier --write .` and generate `.min.js`/`.min.css` assets as needed.

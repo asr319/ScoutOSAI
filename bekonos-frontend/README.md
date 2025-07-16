@@ -1,15 +1,15 @@
-⚠️ BekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
+⚠️ bekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
 ⚠️ AI/Automation Compliance:
 All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/CD, security, and license checks.
 See AGENTS.md and workflows for requirements.
 Last updated: 2025-07-15
 Scan status: All checks passed on 2025-07-15
 
-# BekonOS Frontend
+# bekonOS Frontend
 
-Lost in Data’s Sway? BekonOS Saves the Day!
+Lost in Data’s Sway? bekonOS Saves the Day!
 
-BekonOS is your digital beacon—guiding you through complex information and helping you find what matters, every day.
+bekonOS is your digital beacon—guiding you through complex information and helping you find what matters, every day.
 
 This directory contains the React + Vite web client. The UI communicates with
 the backend API and provides a simple chat interface.
@@ -71,4 +71,4 @@ All third-party packages must use compatible licenses. Agents verify licensing a
 
 ## License
 
-Proprietary – BekonOS (c) 2025 asr319. All rights reserved. No use, copying, or redistribution without permission. Some dependencies under open source licenses; see ../../NOTICE.txt for details.
+Proprietary – bekonOS (c) 2025 asr319. All rights reserved. No use, copying, or redistribution without permission. Some dependencies under open source licenses; see ../../NOTICE.txt for details.

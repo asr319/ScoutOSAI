@@ -1,5 +1,5 @@
-⚠️ BekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
-BekonOS License Notice
+⚠️ bekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
+bekonOS License Notice
 
 This project automatically scans dependencies for forbidden or risky licenses.
 
