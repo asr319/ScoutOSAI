@@ -1,0 +1,7 @@
+node_modules
+.vite/
+bekonos-backend/test.db
+.pytest_cache/
+dist/
+*.min.js
+*.min.css
