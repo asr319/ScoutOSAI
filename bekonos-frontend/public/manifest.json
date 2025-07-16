@@ -1,6 +1,6 @@
 {
-  "name": "BekonOS",
-  "short_name": "BekonOS",
+  "name": "bekonOS",
+  "short_name": "bekonOS",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

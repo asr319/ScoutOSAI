@@ -1,6 +1,6 @@
 # ⚠️ Automation/AI Policy:
 # All code, dependency, and agent changes must pass secret scanning, license checks, tests, and AGENTS file update.
-name: BekonOS Dev/Test CI
+name: bekonOS Dev/Test CI
 
 on:
   push:
@@ -89,4 +89,4 @@ jobs:
         run: ls -l
 
       - name: Success message
-        run: echo "BekonOS dev/test environment CI script completed!"
+        run: echo "bekonOS dev/test environment CI script completed!"

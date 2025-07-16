@@ -104,7 +104,7 @@ export default function ChatInterface() {
           className="flex-1 border p-2 rounded-xl"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask BekonOS..."
+          placeholder="Ask bekonOS..."
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
         <button

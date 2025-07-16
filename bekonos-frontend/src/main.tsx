@@ -1,4 +1,4 @@
-// BekonOS (c) 2025 asr319. All rights reserved. Proprietary.
+// bekonOS (c) 2025 asr319. All rights reserved. Proprietary.
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";

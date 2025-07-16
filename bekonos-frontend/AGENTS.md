@@ -1,4 +1,4 @@
-⚠️ BekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
+⚠️ bekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
 ⚠️ AI/Automation Compliance:
 All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/CD, security, and license checks.
 See AGENTS.md and workflows for requirements.
@@ -55,6 +55,6 @@ Schemas live alongside components in `src/` and are validated with TypeScript.
 The `scripts/validate_agents.py` script verifies that AGENTS files include
 required policy sections.
 
-## BekonOS Brand Kit
+## bekonOS Brand Kit
 
 Use assets/bekonos-logo.svg in UI and docs. Primary color #20467A, accent #5376A6, yellow #FFD94A. Headlines use Montserrat; body uses Inter. Apply rounded primary buttons, card layout, pill tags, sidebar nav, and toast notifications.

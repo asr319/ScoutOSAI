@@ -1,22 +1,22 @@
-⚠️ BekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
+⚠️ bekonOS (c) 2025 asr319. All rights reserved. Proprietary License – see LICENSE for terms.
 ⚠️ AI/Automation Compliance:
 
 All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/CD, security, and license checks.
 
 <p align="center">
-  <img src="./assets/bekonos-logo.svg" alt="BekonOS Logo" width="340"><br>
-  <strong>BekonOS&nbsp;<sup>©</sup></strong>
+  <img src="./assets/bekonos-logo.svg" alt="bekonOS Logo" width="340"><br>
+  <strong>bekonOS&nbsp;<sup>©</sup></strong>
 </p>
 
 See AGENTS.md and workflows for requirements.
 Last updated: 2025-07-15
 Scan status: All checks passed on 2025-07-15
 
-# BekonOS
+# bekonOS
 
-Lost in Data’s Sway? BekonOS Saves the Day!
+Lost in Data’s Sway? bekonOS Saves the Day!
 
-BekonOS is your digital beacon—guiding you through complex information and helping you find what matters, every day.
+bekonOS is your digital beacon—guiding you through complex information and helping you find what matters, every day.
 
 ## Setup
 
@@ -45,7 +45,7 @@ docker-compose --env-file .env up
 
 ### Environment Variables
 
-BekonOS relies on several environment variables for configuration:
+bekonOS relies on several environment variables for configuration:
 
 - `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` – PostgreSQL credentials.
 - `DATABASE_URL` – connection string used by the backend.
@@ -181,9 +181,9 @@ See LICENSES-python.md and LICENSES-node.md for a current, full list.
 
 ## License
 
-Proprietary – BekonOS (c) 2025 asr319. All rights reserved. No use, copying, or redistribution without permission. Some dependencies under open source licenses; see NOTICE.txt for details.
+Proprietary – bekonOS (c) 2025 asr319. All rights reserved. No use, copying, or redistribution without permission. Some dependencies under open source licenses; see NOTICE.txt for details.
 
-## BekonOS Brand Kit
+## bekonOS Brand Kit
 
 - Logo: assets/bekonos-logo.svg
 - Colors: Deep Sapphire #20467A, Slate Blue #5376A6, Sunbeam Yellow #FFD94A, Soft Aqua #60C6C9, Graphite #2D3137, Background #F6F8FA
