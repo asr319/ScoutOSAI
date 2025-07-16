@@ -4,7 +4,7 @@
 All contributors—including GitHub Copilot, Codex, and AIs—must pass all CI/CD, security, and license checks.
 
 <p align="center">
-  <img src="./assets/bekonos-logo.svg" alt="bekonOS Logo" width="340"><br>
+  <img src="./assets/bekonos_logo_fullsize.svg" alt="bekonOS Logo" width="340"><br>
   <strong>bekonOS&nbsp;<sup>©</sup></strong>
 </p>
 
@@ -185,7 +185,7 @@ Proprietary – bekonOS (c) 2025 asr319. All rights reserved. No use, copying, o
 
 ## bekonOS Brand Kit
 
-- Logo: assets/bekonos-logo.svg
+- Logo: assets/bekonos_logo_fullsize.svg
 - Colors: Deep Sapphire #20467A, Slate Blue #5376A6, Sunbeam Yellow #FFD94A, Soft Aqua #60C6C9, Graphite #2D3137, Background #F6F8FA
 - Fonts: Montserrat headlines, Inter body
 - UI components: dashboard layout, rounded primary buttons, cards, timeline UI, pill tags, sidebar navigation, toasts
