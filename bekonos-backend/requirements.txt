@@ -7,7 +7,7 @@ python-dotenv==1.1.1
 httpx>=0.25,<0.29
 openai==1.95.1
 argon2-cffi==25.1.0
-starlette==0.47.1
+starlette==0.47.2
 PyJWT==2.10.1
 cryptography==45.0.5
 pyotp==2.9.0
